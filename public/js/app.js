@@ -8840,21 +8840,15 @@ function Navbar() {
               afterSignOutUrl: "/"
             })
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_clerk_clerk_react__WEBPACK_IMPORTED_MODULE_2__.SignedOut, {
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
               className: "auth-buttons flex items-center gap-4",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_clerk_clerk_react__WEBPACK_IMPORTED_MODULE_2__.SignInButton, {
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_clerk_clerk_react__WEBPACK_IMPORTED_MODULE_2__.SignInButton, {
                 mode: "modal",
                 children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
                   className: "btn-nav-auth login",
                   children: "Sign In"
                 })
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_clerk_clerk_react__WEBPACK_IMPORTED_MODULE_2__.SignUpButton, {
-                mode: "modal",
-                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-                  className: "btn-nav-auth register !bg-[#eca840] !text-white px-6 py-2 rounded-xl font-bold text-sm",
-                  children: "Register"
-                })
-              })]
+              })
             })
           })]
         })]

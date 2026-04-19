@@ -127,10 +127,8 @@ export default function Navbar() {
                                 <SignInButton mode="modal">
                                     <button className="btn-nav-auth login">Sign In</button>
                                 </SignInButton>
-                                <SignUpButton mode="modal">
-                                    <button className="btn-nav-auth register !bg-[#eca840] !text-white px-6 py-2 rounded-xl font-bold text-sm">Register</button>
-                                </SignUpButton>
                             </div>
+
                         </SignedOut>
 
 
