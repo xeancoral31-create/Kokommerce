@@ -61,10 +61,26 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-        <OrderStat label="Today's Revenue" value={`₱${stats.today_revenue.toLocaleString()}`} change="+12.5% vs yesterday" changeType="positive" />
-        <OrderStat label="Average Prep Time" value={stats.avg_prep_time} change="On target (Goal < 15m)" changeType="neutral" showIcon="target" />
-        <OrderStat label="Fulfillment Rate" value={stats.fulfillment_rate} change="Excellent performance" changeType="positive" showIcon="check" />
-
+        <OrderStat 
+          label="Today's Revenue" 
+          value={`₱${stats.today_revenue.toLocaleString()}`} 
+          change={stats.today_revenue > 0 ? "+12.5% vs yesterday" : "No sales today"} 
+          changeType={stats.today_revenue > 0 ? "positive" : "neutral"} 
+        />
+        <OrderStat 
+          label="Average Prep Time" 
+          value={stats.avg_prep_time} 
+          change={stats.avg_prep_time !== 'No data yet' ? "On target (Goal < 15m)" : "Awaiting first delivery"} 
+          changeType="neutral" 
+          showIcon="target" 
+        />
+        <OrderStat 
+          label="Fulfillment Rate" 
+          value={stats.fulfillment_rate} 
+          change={stats.fulfillment_rate !== 'No data yet' ? "Excellent performance" : "No orders completed yet"} 
+          changeType={stats.fulfillment_rate !== 'No data yet' ? "positive" : "neutral"} 
+          showIcon="check" 
+        />
       </div>
 
       <div className="mb-12">

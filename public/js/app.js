@@ -12119,21 +12119,24 @@ function SellerActivity(_ref) {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ActivityStatCard, {
         label: "Total Actions",
         value: stats.total_actions.toLocaleString(),
-        change: "+12%",
+        change: stats.action_growth || "0%",
         icon: "actions",
-        color: "#f5a623"
+        color: "#f5a623",
+        progress: Math.min(100, stats.total_actions / 1000 * 100)
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ActivityStatCard, {
         label: "Inventory Syncs",
         value: stats.inventory_syncs.toString(),
-        change: "Stable",
+        change: stats.inventory_syncs > 0 ? "Active" : "Stable",
         icon: "sync",
-        color: "#3b82f6"
+        color: "#3b82f6",
+        progress: Math.min(100, stats.inventory_syncs / 500 * 100)
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ActivityStatCard, {
         label: "Order Updates",
         value: stats.order_updates.toString(),
-        change: "Active",
+        change: stats.order_updates > 0 ? "Frequent" : "Live",
         icon: "orders",
-        color: "#8b5cf6"
+        color: "#8b5cf6",
+        progress: Math.min(100, stats.order_updates / 300 * 100)
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden mb-16",
@@ -12200,7 +12203,8 @@ var ActivityStatCard = function ActivityStatCard(_ref2) {
     value = _ref2.value,
     change = _ref2.change,
     icon = _ref2.icon,
-    color = _ref2.color;
+    color = _ref2.color,
+    progress = _ref2.progress;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-sm group",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -12245,9 +12249,15 @@ var ActivityStatCard = function ActivityStatCard(_ref2) {
             d: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
           })
         })]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        className: "text-[10px] font-black uppercase tracking-widest ".concat(change.includes('%') ? 'text-green-500' : 'text-gray-400'),
-        children: change
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "flex flex-col items-end",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: "text-[10px] font-black uppercase tracking-widest ".concat(change.includes('%') && !change.includes('-') ? 'text-green-500' : 'text-gray-400'),
+          children: change
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: "text-[8px] font-bold text-gray-300 uppercase tracking-tighter",
+          children: "THIS WEEK"
+        })]
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
       className: "text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2",
@@ -12260,9 +12270,9 @@ var ActivityStatCard = function ActivityStatCard(_ref2) {
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "h-1 flex-1 bg-gray-50 rounded-full mb-3 overflow-hidden",
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "h-full bg-current opacity-60 rounded-full",
+          className: "h-full bg-current opacity-60 rounded-full transition-all duration-1000",
           style: {
-            width: '65%',
+            width: "".concat(progress || 0, "%"),
             color: color
           }
         })
@@ -14417,19 +14427,19 @@ function SellerOrders(_ref) {
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(OrderStat, {
         label: "Today's Revenue",
         value: "\u20B1".concat(stats.today_revenue.toLocaleString()),
-        change: "+12.5% vs yesterday",
-        changeType: "positive"
+        change: stats.today_revenue > 0 ? "+12.5% vs yesterday" : "No sales today",
+        changeType: stats.today_revenue > 0 ? "positive" : "neutral"
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(OrderStat, {
         label: "Average Prep Time",
         value: stats.avg_prep_time,
-        change: "On target (Goal < 15m)",
+        change: stats.avg_prep_time !== 'No data yet' ? "On target (Goal < 15m)" : "Awaiting first delivery",
         changeType: "neutral",
         showIcon: "target"
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(OrderStat, {
         label: "Fulfillment Rate",
         value: stats.fulfillment_rate,
-        change: "Excellent performance",
-        changeType: "positive",
+        change: stats.fulfillment_rate !== 'No data yet' ? "Excellent performance" : "No orders completed yet",
+        changeType: stats.fulfillment_rate !== 'No data yet' ? "positive" : "neutral",
         showIcon: "check"
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -14623,10 +14633,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _Components_SellerLayout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Components/SellerLayout */ "./resources/js/Components/SellerLayout.tsx");
 /* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -14661,6 +14677,7 @@ function SellerProducts(_ref) {
       price: '',
       stock: '',
       image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=400&fit=crop',
+      image_file: null,
       status: 'in_stock'
     }),
     data = _useForm.data,
@@ -14671,13 +14688,19 @@ function SellerProducts(_ref) {
     reset = _useForm.reset,
     processing = _useForm.processing,
     errors = _useForm.errors;
+  var _React$useState7 = react__WEBPACK_IMPORTED_MODULE_1__.useState(null),
+    _React$useState8 = _slicedToArray(_React$useState7, 2),
+    modalPreview = _React$useState8[0],
+    setModalPreview = _React$useState8[1];
   var openAddModal = function openAddModal() {
     setEditingProduct(null);
+    setModalPreview(null);
     reset();
     setIsModalOpen(true);
   };
   var openEditModal = function openEditModal(product) {
     setEditingProduct(product);
+    setModalPreview(product.image);
     setData({
       name: product.name,
       category_id: product.category_id,
@@ -14685,14 +14708,32 @@ function SellerProducts(_ref) {
       price: product.price,
       stock: product.stock,
       image: product.image,
+      image_file: null,
       status: product.status
     });
     setIsModalOpen(true);
   };
+  var handleFileChange = function handleFileChange(e) {
+    var _e$target$files;
+    var file = (_e$target$files = e.target.files) === null || _e$target$files === void 0 ? void 0 : _e$target$files[0];
+    if (file) {
+      setData('image_file', file);
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        setModalPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
     if (editingProduct) {
-      put(route('seller.products.update', editingProduct.id), {
+      // Use POST with _method spoofing for file uploads in PUT requests
+      post(route('seller.products.update', editingProduct.id), {
+        forceFormData: true,
+        data: _objectSpread(_objectSpread({}, data), {}, {
+          _method: 'PUT'
+        }),
         onSuccess: function onSuccess() {
           return setIsModalOpen(false);
         }
@@ -14959,6 +15000,56 @@ function SellerProducts(_ref) {
                   })]
                 })]
               })]
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: "space-y-2",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
+                className: "text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1",
+                children: "Masterpiece Visual"
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "flex gap-6 items-center bg-gray-50 p-6 rounded-[2rem]",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                  className: "relative w-28 h-28 bg-white rounded-2xl overflow-hidden border border-gray-100 flex-shrink-0",
+                  children: modalPreview ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+                    src: modalPreview,
+                    alt: "Preview",
+                    className: "w-full h-full object-cover"
+                  }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                    className: "w-full h-full flex items-center justify-center text-gray-200",
+                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                      className: "w-10 h-10",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      stroke: "currentColor",
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 2,
+                        d: "M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      })
+                    })
+                  })
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "flex-1",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                    className: "text-xs font-bold text-gray-700 mb-2",
+                    children: "Upload a high-resolution image"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                    className: "text-[10px] text-gray-400 font-medium mb-4",
+                    children: "Craftsmanship is best shown in detail."
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("label", {
+                    className: "inline-block px-6 py-2.5 bg-white border border-gray-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-600 cursor-pointer hover:bg-gray-100 transition-all",
+                    children: ["Select File", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+                      type: "file",
+                      className: "hidden",
+                      onChange: handleFileChange,
+                      accept: "image/*"
+                    })]
+                  }), errors.image_file && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                    className: "text-red-500 text-[10px] font-bold mt-2",
+                    children: errors.image_file
+                  })]
+                })]
+              })]
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
               type: "submit",
               disabled: processing,
@@ -15161,6 +15252,14 @@ function SellerSettings(_ref) {
     _React$useState6 = _slicedToArray(_React$useState5, 2),
     isUpdatingPassword = _React$useState6[0],
     setIsUpdatingPassword = _React$useState6[1];
+  var _React$useState7 = react__WEBPACK_IMPORTED_MODULE_1__.useState(false),
+    _React$useState8 = _slicedToArray(_React$useState7, 2),
+    showPassword = _React$useState8[0],
+    setShowPassword = _React$useState8[1];
+  var _React$useState9 = react__WEBPACK_IMPORTED_MODULE_1__.useState(false),
+    _React$useState0 = _slicedToArray(_React$useState9, 2),
+    showConfirmPassword = _React$useState0[0],
+    setShowConfirmPassword = _React$useState0[1];
   var handleImageChange = function handleImageChange(e) {
     var _e$target$files;
     var file = (_e$target$files = e.target.files) === null || _e$target$files === void 0 ? void 0 : _e$target$files[0];
@@ -15512,32 +15611,106 @@ function SellerSettings(_ref) {
                 children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
                   className: "text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]",
                   children: "New Password"
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
-                  type: "password",
-                  value: passwordData.newPassword,
-                  onChange: function onChange(e) {
-                    return setPasswordData(_objectSpread(_objectSpread({}, passwordData), {}, {
-                      newPassword: e.target.value
-                    }));
-                  },
-                  placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
-                  className: "w-full bg-gray-50 border border-gray-100 rounded-xl px-6 py-4 text-sm font-bold text-gray-900 focus:ring-1 focus:ring-[#eca840] focus:bg-white transition-all shadow-inner"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "relative",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+                    type: showPassword ? "text" : "password",
+                    value: passwordData.newPassword,
+                    onChange: function onChange(e) {
+                      return setPasswordData(_objectSpread(_objectSpread({}, passwordData), {}, {
+                        newPassword: e.target.value
+                      }));
+                    },
+                    placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+                    className: "w-full bg-gray-50 border border-gray-100 rounded-xl px-6 py-4 pr-12 text-sm font-bold text-gray-900 focus:ring-1 focus:ring-[#eca840] focus:bg-white transition-all shadow-inner"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                    type: "button",
+                    onClick: function onClick() {
+                      return setShowPassword(!showPassword);
+                    },
+                    className: "absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#eca840] transition-colors",
+                    children: showPassword ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("svg", {
+                      className: "w-5 h-5",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      stroke: "currentColor",
+                      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 2,
+                        d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 2,
+                        d: "M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      })]
+                    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                      className: "w-5 h-5",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      stroke: "currentColor",
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 2,
+                        d: "M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"
+                      })
+                    })
+                  })]
                 })]
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
                 className: "space-y-2",
                 children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
                   className: "text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]",
                   children: "Confirm Password"
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
-                  type: "password",
-                  value: passwordData.confirmPassword,
-                  onChange: function onChange(e) {
-                    return setPasswordData(_objectSpread(_objectSpread({}, passwordData), {}, {
-                      confirmPassword: e.target.value
-                    }));
-                  },
-                  placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
-                  className: "w-full bg-gray-50 border border-gray-100 rounded-xl px-6 py-4 text-sm font-bold text-gray-900 focus:ring-1 focus:ring-[#eca840] focus:bg-white transition-all shadow-inner"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "relative",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+                    type: showConfirmPassword ? "text" : "password",
+                    value: passwordData.confirmPassword,
+                    onChange: function onChange(e) {
+                      return setPasswordData(_objectSpread(_objectSpread({}, passwordData), {}, {
+                        confirmPassword: e.target.value
+                      }));
+                    },
+                    placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+                    className: "w-full bg-gray-50 border border-gray-100 rounded-xl px-6 py-4 pr-12 text-sm font-bold text-gray-900 focus:ring-1 focus:ring-[#eca840] focus:bg-white transition-all shadow-inner"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                    type: "button",
+                    onClick: function onClick() {
+                      return setShowConfirmPassword(!showConfirmPassword);
+                    },
+                    className: "absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#eca840] transition-colors",
+                    children: showConfirmPassword ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("svg", {
+                      className: "w-5 h-5",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      stroke: "currentColor",
+                      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 2,
+                        d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 2,
+                        d: "M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      })]
+                    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                      className: "w-5 h-5",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      stroke: "currentColor",
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 2,
+                        d: "M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"
+                      })
+                    })
+                  })]
                 })]
               })]
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {

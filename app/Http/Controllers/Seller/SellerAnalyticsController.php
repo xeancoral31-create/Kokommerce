@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -62,10 +63,13 @@ class SellerAnalyticsController extends Controller
         foreach ($orders as $order) {
             $hourlyActivity[$order->created_at->hour]++;
             $items = $order->items_data;
-            if ($items) {
+            if ($items && is_array($items)) {
                 foreach ($items as $item) {
                     $catName = $item['category'] ?? 'Artisanal';
-                    $categorySales[$catName] = ($categorySales[$catName] ?? 0) + ($item['price'] * ($item['quantity'] ?? 1));
+                    $price = (float)($item['price'] ?? 0);
+                    $qty = (int)($item['quantity'] ?? 1);
+                    
+                    $categorySales[$catName] = ($categorySales[$catName] ?? 0) + ($price * $qty);
                     
                     $prodName = $item['name'] ?? 'Unknown Collection';
                     if (!isset($productSales[$prodName])) {
@@ -75,25 +79,12 @@ class SellerAnalyticsController extends Controller
                             'revenue' => 0
                         ];
                     }
-                    $productSales[$prodName]['units_sold'] += ($item['quantity'] ?? 1);
-                    $productSales[$prodName]['revenue'] += ($item['price'] * ($item['quantity'] ?? 1));
+                    $productSales[$prodName]['units_sold'] += $qty;
+                    $productSales[$prodName]['revenue'] += ($price * $qty);
                 }
             }
         }
 
-        // Detect Peak Hours
-        $peakHour = array_search(max($hourlyActivity), $hourlyActivity);
-        $peakPeriod = Carbon::createFromTime($peakHour)->format('gA') . ' - ' . Carbon::createFromTime(($peakHour + 2) % 24)->format('gA') . ' Peak';
-        
-        $totalSales = array_sum($categorySales);
-        $categoryPerf = [];
-        foreach ($categorySales as $name => $amount) {
-            $categoryPerf[] = [
-                'name' => $name,
-                'percentage' => $totalSales > 0 ? round(($amount / $totalSales) * 100) : 0
-            ];
-        }
-        
         // Finalize Bestselling
         usort($productSales, fn($a, $b) => $b['revenue'] <=> $a['revenue']);
         $bestselling = array_slice($productSales, 0, 3);
@@ -101,13 +92,76 @@ class SellerAnalyticsController extends Controller
             $p['status'] = $p['revenue'] > 2000 ? 'Top Performer' : ($p['revenue'] > 1000 ? 'Steady Demand' : 'Trending up');
         }
 
-        // Customer Insights Logic
-        $allCustomers = User::where('role', 'customer')->get();
-        $totalCustomers = $allCustomers->count();
-        $returningCustomers = Order::select('buyer_id')->groupBy('buyer_id')->havingRaw('count(*) > 1')->count();
-        $retentionRate = $totalCustomers > 0 ? round(($returningCustomers / $totalCustomers) * 100) : 68;
+        // Fallback for Bestselling if no sales: Use products from DB
+        if (empty($bestselling)) {
+            $realProducts = Product::latest()->take(3)->get();
+            foreach ($realProducts as $rp) {
+                $bestselling[] = [
+                    'name' => $rp->name,
+                    'units_sold' => 0,
+                    'revenue' => 0,
+                    'status' => 'New Addition'
+                ];
+            }
+        }
 
-        $avgRepeat = $returningCustomers > 0 ? round(Order::count() / $totalCustomers, 1) : 3.2;
+        // Category Perf: Use real categories from DB
+        $allCategories = Category::all();
+        $categoryPerf = [];
+        
+        $totalItemsSold = 0;
+        foreach ($allCategories as $cat) {
+            $soldCount = 0;
+            // Catch sales from the $categorySales array computed earlier during order processing
+            $salesValue = $categorySales[$cat->name] ?? 0;
+            
+            // Also count item volume from items_data to get "pila ka item ang na gamit"
+            foreach ($orders as $order) {
+                $items = $order->items_data;
+                if ($items && is_array($items)) {
+                    foreach ($items as $item) {
+                        if (($item['category'] ?? '') === $cat->name) {
+                            $soldCount += ($item['quantity'] ?? 1);
+                        }
+                    }
+                }
+            }
+            
+            $categoryPerf[] = [
+                'name' => $cat->name,
+                'items_sold' => $soldCount,
+                'revenue' => $salesValue,
+                'product_count' => Product::where('category_id', $cat->id)->count()
+            ];
+            $totalItemsSold += $soldCount;
+        }
+
+        // Calculate percentages based on item volume (or revenue if you prefer, but "pila ka item" suggests volume)
+        foreach ($categoryPerf as &$cp) {
+            $cp['percentage'] = $totalItemsSold > 0 ? round(($cp['items_sold'] / $totalItemsSold) * 100) : 0;
+        }
+
+        // If no sales, distribute by product inventory count as a baseline
+        if ($totalItemsSold === 0) {
+            $totalProducts = Product::count();
+            foreach ($categoryPerf as &$cp) {
+                $cp['percentage'] = $totalProducts > 0 ? round(($cp['product_count'] / $totalProducts) * 100) : 0;
+            }
+        }
+
+        // Customer Insights Logic
+        $allCustomers = User::where('role', 'customer')->count();
+        $ordersCount = Order::count();
+        $uniqueBuyers = Order::distinct('buyer_id')->count('buyer_id');
+        $returningCustomers = Order::select('buyer_id')->groupBy('buyer_id')->havingRaw('count(*) > 1')->count();
+        
+        $retentionRate = $uniqueBuyers > 0 ? round(($returningCustomers / $uniqueBuyers) * 100) : 0;
+        $avgRepeat = $uniqueBuyers > 0 ? round($ordersCount / $uniqueBuyers, 1) : 0;
+
+        // Peak Hours Logic
+        $peakHourValue = max($hourlyActivity);
+        $peakHour = $peakHourValue > 0 ? array_search($peakHourValue, $hourlyActivity) : 9;
+        $peakPeriod = Carbon::createFromTime($peakHour)->format('gA') . ' - ' . Carbon::createFromTime(($peakHour + 2) % 24)->format('gA') . ' Peak';
 
         return Inertia::render('Seller/SellerAnalytics', [
             'metrics' => [
@@ -117,22 +171,14 @@ class SellerAnalyticsController extends Controller
                 'revenue_change' => $revenueChange,
             ],
             'revenue_overview' => $revenueOverview,
-            'category_performance' => !empty($categoryPerf) ? array_slice($categoryPerf, 0, 3) : [
-                ['name' => 'Sourdough', 'percentage' => 45],
-                ['name' => 'Pastries', 'percentage' => 30],
-                ['name' => 'Beverages', 'percentage' => 25],
-            ],
-            'bestselling_products' => !empty($bestselling) ? $bestselling : [
-                ['name' => 'Butter Croissants', 'units_sold' => 421, 'revenue' => 1894.50, 'status' => 'Top Performer'],
-                ['name' => 'Signature Sourdough', 'units_sold' => 388, 'revenue' => 3104.00, 'status' => 'Steady Demand'],
-                ['name' => 'Wild Berry Muffin', 'units_sold' => 215, 'revenue' => 860.00, 'status' => 'Trending up'],
-            ],
+            'category_performance' => $categoryPerf,
+            'bestselling_products' => $bestselling,
             'customer_insights' => [
                 'peak_hours' => ['6AM', '12PM', '6PM', '12AM'],
                 'peak_period' => $peakPeriod,
                 'retention_rate' => $retentionRate . '%',
                 'repeat_purchases' => $avgRepeat . ' avg/month',
-                'raw_customer_count' => $totalCustomers,
+                'raw_customer_count' => $allCustomers,
                 'hourly_activity' => $hourlyActivity
             ]
         ]);

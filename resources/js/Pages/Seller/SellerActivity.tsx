@@ -8,6 +8,7 @@ interface ActivityProps {
     total_actions: number;
     inventory_syncs: number;
     order_updates: number;
+    action_growth?: string;
   };
 }
 
@@ -78,9 +79,30 @@ export default function SellerActivity({ logs, stats }: ActivityProps) {
 
       {/* Stats Summary Panel */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-         <ActivityStatCard label="Total Actions" value={stats.total_actions.toLocaleString()} change="+12%" icon="actions" color="#f5a623" />
-         <ActivityStatCard label="Inventory Syncs" value={stats.inventory_syncs.toString()} change="Stable" icon="sync" color="#3b82f6" />
-         <ActivityStatCard label="Order Updates" value={stats.order_updates.toString()} change="Active" icon="orders" color="#8b5cf6" />
+         <ActivityStatCard 
+            label="Total Actions" 
+            value={stats.total_actions.toLocaleString()} 
+            change={stats.action_growth || "0%"} 
+            icon="actions" 
+            color="#f5a623" 
+            progress={Math.min(100, (stats.total_actions / 1000) * 100)}
+          />
+         <ActivityStatCard 
+            label="Inventory Syncs" 
+            value={stats.inventory_syncs.toString()} 
+            change={stats.inventory_syncs > 0 ? "Active" : "Stable"} 
+            icon="sync" 
+            color="#3b82f6" 
+            progress={Math.min(100, (stats.inventory_syncs / 500) * 100)}
+          />
+         <ActivityStatCard 
+            label="Order Updates" 
+            value={stats.order_updates.toString()} 
+            change={stats.order_updates > 0 ? "Frequent" : "Live"} 
+            icon="orders" 
+            color="#8b5cf6" 
+            progress={Math.min(100, (stats.order_updates / 300) * 100)}
+          />
       </div>
 
       {/* Activity Table */}
@@ -121,7 +143,7 @@ export default function SellerActivity({ logs, stats }: ActivityProps) {
   );
 }
 
-const ActivityStatCard = ({ label, value, change, icon, color }: any) => (
+const ActivityStatCard = ({ label, value, change, icon, color, progress }: any) => (
   <div className="bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-sm group">
      <div className="flex justify-between items-start mb-8">
         <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: `${color}10`, color }}>
@@ -129,13 +151,16 @@ const ActivityStatCard = ({ label, value, change, icon, color }: any) => (
            {icon === 'sync' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m0 0H5" /></svg>}
            {icon === 'orders' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>}
         </div>
-        <span className={`text-[10px] font-black uppercase tracking-widest ${change.includes('%') ? 'text-green-500' : 'text-gray-400'}`}>{change}</span>
+        <div className="flex flex-col items-end">
+          <span className={`text-[10px] font-black uppercase tracking-widest ${change.includes('%') && !change.includes('-') ? 'text-green-500' : 'text-gray-400'}`}>{change}</span>
+          <span className="text-[8px] font-bold text-gray-300 uppercase tracking-tighter">THIS WEEK</span>
+        </div>
      </div>
      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">{label}</p>
      <div className="flex items-end gap-3">
         <h2 className="text-4xl font-black text-gray-900">{value}</h2>
         <div className="h-1 flex-1 bg-gray-50 rounded-full mb-3 overflow-hidden">
-           <div className="h-full bg-current opacity-60 rounded-full" style={{ width: '65%', color }}></div>
+           <div className="h-full bg-current opacity-60 rounded-full transition-all duration-1000" style={{ width: `${progress || 0}%`, color }}></div>
         </div>
      </div>
   </div>
