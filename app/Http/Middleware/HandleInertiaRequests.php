@@ -37,14 +37,20 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'seller_notifications' => [
-                'low_stock' => \App\Models\Product::where('stock', '<=', 8)->get(['id', 'name', 'stock']),
+                'low_stock' => \App\Models\Product::where('stock', '<', 5)->get(),
+                'recent' => \App\Models\SellerNotification::where('is_read', false)->latest()->take(10)->get()
             ],
             'store_profile' => session('store_profile', [
-                'name' => 'The Golden Crust',
+                'name' => 'Kokommerce Artisanal',
                 'tagline' => 'Handcrafted Joy in Every Crumb',
                 'description' => 'Authentic sourdough techniques passed down through three generations...',
                 'image' => 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop'
             ]),
+            'auth_user' => \Illuminate\Support\Facades\Auth::check() ? [
+                'name'   => \Illuminate\Support\Facades\Auth::user()->name,
+                'image'  => \Illuminate\Support\Facades\Auth::user()->image,
+                'online' => true,
+            ] : null,
         ]);
     }
 }

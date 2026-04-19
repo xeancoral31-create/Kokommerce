@@ -17,23 +17,24 @@ class SellerAnalyticsController extends Controller
     public function index()
     {
         // Real Metrics Calculation for Sales Analytics
-        $todayRevenue = Order::whereDate('created_at', today())->where('status', 'Delivered')->sum('total_amount');
-        $yesterdayRevenue = Order::whereDate('created_at', today()->subDay())->where('status', 'Delivered')->sum('total_amount');
+        // Revenue: sum all orders today (any status)
+        $todayRevenue = Order::whereDate('created_at', today())->sum('total_amount');
+        $yesterdayRevenue = Order::whereDate('created_at', today()->subDay())->sum('total_amount');
         
         $revenueDiff = $yesterdayRevenue > 0 ? (($todayRevenue - $yesterdayRevenue) / $yesterdayRevenue) * 100 : 0;
         $revenueChange = ($revenueDiff >= 0 ? '+' : '') . round($revenueDiff, 1) . '% vs yesterday';
 
-        // Calculate Average Prep Time (Proxy: Time from creation to 'Delivered' status)
+        // Average Prep Time: calculate from delivered orders; fallback to 0
         $deliveredOrdersObjs = Order::where('status', 'Delivered')->get();
         $totalMinutes = 0;
         foreach ($deliveredOrdersObjs as $order) {
             $totalMinutes += $order->updated_at->diffInMinutes($order->created_at);
         }
-        $avgPrepTime = $deliveredOrdersObjs->count() > 0 ? round($totalMinutes / $deliveredOrdersObjs->count(), 1) : 14.2;
+        $avgPrepTime = $deliveredOrdersObjs->count() > 0 ? round($totalMinutes / $deliveredOrdersObjs->count(), 1) : 0;
 
         $totalOrders = Order::count();
         $deliveredOrdersCount = $deliveredOrdersObjs->count();
-        $fulfillmentRate = $totalOrders > 0 ? round(($deliveredOrdersCount / $totalOrders) * 100, 1) : 99.2;
+        $fulfillmentRate = $totalOrders > 0 ? round(($deliveredOrdersCount / $totalOrders) * 100, 1) : 0;
 
         // Dynamic Revenue Overview (Last 6 Months)
         $revenueOverview = [];
@@ -110,7 +111,7 @@ class SellerAnalyticsController extends Controller
 
         return Inertia::render('Seller/SellerAnalytics', [
             'metrics' => [
-                'today_revenue' => (float)($todayRevenue ?: 2840.50),
+                'today_revenue' => (float)$todayRevenue,
                 'avg_prep_time' => $avgPrepTime, 
                 'fulfillment_rate' => $fulfillmentRate,
                 'revenue_change' => $revenueChange,

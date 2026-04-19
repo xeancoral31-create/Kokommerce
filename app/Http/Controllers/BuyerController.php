@@ -19,7 +19,7 @@ class BuyerController extends Controller
     public function shop()
     {
         return Inertia::render('Buyer/BuyerShop', [
-            'products' => Product::all()
+            'products' => Product::with('category')->get()
         ]);
     }
 

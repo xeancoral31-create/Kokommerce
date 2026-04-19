@@ -9,8 +9,10 @@ interface OffersProps {
   products: any[];
   stats: {
     total_reach: string;
+    reach_growth: string;
     active_offers: number;
     conversion_rate: string;
+    users_converted: number;
   };
 }
 
@@ -92,9 +94,9 @@ export default function SellerOffers({ promotions, products, stats }: OffersProp
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-         <PromoStatCard label="Total Reach" value={stats.total_reach} change="+12% this month" icon="reach" />
+         <PromoStatCard label="Total Reach" value={stats.total_reach} change={stats.reach_growth} icon="reach" />
          <PromoStatCard label="Active Offers" value={stats.active_offers.toString()} change="Currently running live" icon="offers" />
-         <PromoStatCard label="Conversion Rate" value={stats.conversion_rate} change="Top 5% in Bakery" icon="conversion" />
+         <PromoStatCard label="Conversion Rate" value={stats.conversion_rate} change={`${stats.users_converted} users converted`} icon="conversion" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

@@ -82,36 +82,48 @@ export default function SellerCategories({ categories, total_products }: Categor
           <div className="lg:col-span-2 group bg-white rounded-[3rem] overflow-hidden border border-gray-100 shadow-sm transition-all hover:shadow-2xl">
             <div className="relative aspect-[21/9] overflow-hidden bg-gray-50">
                <img 
-                 src={categories[0].name === "Kakanin" ? "/artisanal_kakanin_collection_1776604208581.png" : categories[0].image} 
+                 src={categories[0].image || "/artisanal_kakanin_collection_1776604208581.png"} 
                  alt={categories[0].name} 
                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
                />
                <div className="absolute top-8 right-8 flex gap-3">
                   <span className="bg-white/90 backdrop-blur-md text-[#f5a623] text-[10px] font-black px-4 py-2 rounded-xl border border-white/20 shadow-xl uppercase tracking-widest">Featured Collection</span>
                </div>
+               
+               <div className="absolute bottom-8 left-8">
+                  <div className="bg-[#1a1c23]/60 backdrop-blur-xl px-6 py-3 rounded-2xl border border-white/10 shadow-2xl flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-full bg-green-500 animate-pulse border-2 border-white/20"></div>
+                      <span className="text-white text-[10px] font-black uppercase tracking-widest">Collection Active</span>
+                  </div>
+               </div>
             </div>
             <div className="p-10 flex justify-between items-center bg-white border-t border-gray-50">
                <div>
-                  <div className="flex items-center gap-4 mb-2">
-                     <h2 className="text-3xl font-extrabold text-gray-900">{categories[0].name}</h2>
-                     <span className={`text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest ${categories[0].status === 'Active' ? 'bg-green-50 text-green-500' : 'bg-gray-50 text-gray-400'}`}>
-                       {categories[0].status}
-                     </span>
+                  <h2 className="text-4xl font-extrabold text-gray-900 mb-2 tracking-tight">{categories[0].name}</h2>
+                  <div className="flex items-center gap-3">
+                      <div className="flex -space-x-2">
+                          {[...Array(3)].map((_, i) => (
+                              <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-gray-100"></div>
+                          ))}
+                      </div>
+                      <p className="text-[#f5a623] font-black uppercase tracking-widest text-[10px] flex items-center">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#f5a623] mr-2"></span>
+                          {categories[0].products_count} Artistic Creations
+                      </p>
                   </div>
-                  <p className="text-gray-400 font-bold uppercase tracking-widest text-[11px]">{categories[0].products_count} Items in Catalog</p>
                </div>
                <div className="flex gap-4">
                   <button 
                     onClick={() => openEditModal(categories[0])}
-                    className="px-8 py-3 bg-gray-50 border border-transparent rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-100 transition-all active:scale-95"
+                    className="px-8 py-3 bg-gray-50 border border-transparent rounded-xl text-xs font-black text-gray-900 hover:bg-white hover:border-gray-100 hover:shadow-sm transition-all active:scale-95 uppercase tracking-widest"
                   >
-                    Edit
+                    Manage
                   </button>
                   <button 
                     onClick={() => handleDelete(categories[0])}
                     className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-red-400 hover:bg-red-50 transition-all active:scale-95"
                   >
-                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                   </button>
                </div>
             </div>
@@ -126,8 +138,8 @@ export default function SellerCategories({ categories, total_products }: Categor
            <div className="w-16 h-16 rounded-full bg-[#f5a623]/10 flex items-center justify-center text-[#f5a623] mb-8 group-hover:scale-110 transition-all">
               <svg className="w-8 h-8 font-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
            </div>
-           <h3 className="text-xl font-bold text-gray-900 mb-2">New Category</h3>
-           <p className="text-xs text-gray-400 font-medium leading-relaxed max-w-[160px]">Expand your menu with a fresh artisanal collection.</p>
+           <h3 className="text-xl font-bold text-gray-900 mb-2">New Collection</h3>
+           <p className="text-xs text-gray-400 font-medium leading-relaxed max-w-[160px]">Expand your sensory menu with a fresh artisanal range.</p>
         </div>
 
         {categories.slice(1).map((category: any) => (
@@ -263,22 +275,28 @@ const SmallCategoryCard = ({ category, onEdit, onDelete }: any) => (
   <div className="group bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-sm transition-all hover:shadow-2xl hover:-translate-y-1">
     <div className="relative aspect-[16/10] overflow-hidden bg-gray-50">
       <img 
-        src={category.name === "Kakanin" ? "/artisanal_kakanin_collection_1776604208581.png" : category.image} 
+        src={category.image || "/artisanal_kakanin_collection_1776604208581.png"} 
         alt={category.name} 
         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
       />
-      <span className={`absolute top-4 right-4 text-[9px] font-black px-3 py-1 rounded shadow-sm ${category.status === 'Active' ? 'bg-green-500 text-white' : 'bg-gray-400 text-white'}`}>{category.status.toUpperCase()}</span>
+      <div className="absolute top-4 left-4">
+          <div className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-lg border border-white/20 shadow-sm flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#f5a623]"></div>
+              <span className="text-[9px] font-black text-gray-800 uppercase tracking-widest">{category.products_count} Items</span>
+          </div>
+      </div>
+      <span className={`absolute top-4 right-4 text-[8px] font-black px-2.5 py-1 rounded-md shadow-sm border ${category.status === 'Active' ? 'bg-green-500 border-green-400 text-white' : 'bg-gray-400 border-gray-300 text-white'}`}>{category.status.toUpperCase()}</span>
     </div>
     <div className="p-8">
-      <h3 className="text-2xl font-black text-gray-900 mb-2 truncate group-hover:text-[#f5a623] transition-colors">{category.name}</h3>
-      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-8">{category.products_count} Items</p>
+      <h3 className="text-2xl font-extrabold text-gray-900 mb-2 truncate group-hover:text-[#f5a623] transition-colors tracking-tight">{category.name}</h3>
+      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-8 leading-relaxed line-clamp-1">{category.description || "Masterfully curated artisanal range."}</p>
       
       <div className="flex gap-4">
          <button 
           onClick={onEdit}
-          className="flex-1 py-4 bg-gray-50 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-700 hover:bg-gray-100 transition-all border border-gray-50 active:scale-95"
+          className="flex-1 py-4 bg-gray-50 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-700 hover:bg-[#1a1c23] hover:text-white transition-all active:scale-95"
          >
-           Edit
+           Refine
          </button>
          <button 
           onClick={onDelete}

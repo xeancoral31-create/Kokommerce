@@ -41,6 +41,13 @@ class SellerProductController extends Controller
         $validated['reviews_count'] = 0;
         
         Product::create($validated);
+        
+        \App\Models\SellerNotification::create([
+            'type' => 'product_added',
+            'title' => 'New Product Added',
+            'message' => "Fresh batch alert! '{$validated['name']}' has been added to your inventory.",
+            'is_read' => false
+        ]);
 
         return redirect()->back()->with('success', 'Product created successfully!');
     }

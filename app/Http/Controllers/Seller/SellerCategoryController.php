@@ -13,8 +13,22 @@ class SellerCategoryController extends Controller
 {
     public function index()
     {
+        // Heuristic: Link products to category_id if they have a matching 'category' string but no ID
+        $unlinkedProducts = Product::whereNull('category_id')->get();
+        if ($unlinkedProducts->count() > 0) {
+            foreach ($unlinkedProducts as $product) {
+                // Try matching by the 'category' string field if it exists
+                if ($product->category) {
+                    $match = Category::where('name', 'LIKE', '%' . $product->category . '%')->first();
+                    if ($match) {
+                        $product->update(['category_id' => $match->id]);
+                    }
+                }
+            }
+        }
+
         return Inertia::render('Seller/SellerCategories', [
-            'categories' => Category::withCount('products')->get(),
+            'categories' => Category::withCount('products')->orderBy('name')->get(),
             'total_products' => Product::count()
         ]);
     }

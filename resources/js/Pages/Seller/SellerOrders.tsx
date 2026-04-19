@@ -67,9 +67,9 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
 
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+      <div className="mb-12">
         {/* Order Table */}
-        <div className="lg:col-span-2 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+        <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
           <div className="p-8 pb-4 flex justify-between items-center border-b border-gray-50">
              <div className="flex bg-gray-50 p-1 rounded-2xl gap-2">
                {tabs.map(tab => (
@@ -133,43 +133,6 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
                 <button className="w-10 h-10 rounded-xl border border-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-all"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg></button>
              </div>
           </div>
-        </div>
-
-        {/* Efficiency Sidebar */}
-        <div className="space-y-8">
-           <div className="bg-[#1a1c23] rounded-[2.5rem] p-10 text-white relative overflow-hidden group">
-              <h3 className="text-xl font-bold mb-2">Delivery Network Status</h3>
-              <p className="text-xs text-gray-400 font-medium mb-8">Real-time visualization of current fulfillment zones.</p>
-              
-              <div className="relative aspect-square rounded-full border border-gray-800 flex items-center justify-center overflow-hidden">
-                 <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-transparent animate-pulse"></div>
-                 <div className="w-4/5 h-4/5 rounded-full bg-[#eca840]/5 border border-[#eca840]/10 flex items-center justify-center">
-                    <div className="w-1/2 h-1/2 rounded-full bg-[#eca840]/10 border border-[#eca840]/20 flex items-center justify-center">
-                       <div className="relative">
-                          <div className="w-4 h-4 bg-[#eca840] rounded-full animate-ping absolute -top-2 -left-2 opacity-50"></div>
-                          <div className="w-4 h-4 bg-[#eca840] rounded-full relative z-10 border-2 border-white shadow-lg"></div>
-                       </div>
-                    </div>
-                 </div>
-                 <div className="absolute bottom-10 left-0 right-0 text-center">
-                    <span className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest">12 Active Routes</span>
-                 </div>
-              </div>
-           </div>
-
-           <div className="bg-orange-50 rounded-[2.5rem] p-10 border border-orange-100 relative overflow-hidden group">
-              <div className="absolute -top-12 -right-12 w-48 h-48 bg-orange-100/50 rounded-full group-hover:scale-110 transition-transform"></div>
-              <div className="relative z-10">
-                 <span className="text-3xl mb-6 block">⚡</span>
-                 <h3 className="text-xl font-bold text-gray-900 mb-4">Efficiency Insight</h3>
-                 <p className="text-sm text-gray-600 font-medium leading-relaxed mb-10">
-                    Batch printing reduced label prep time by 22% this morning. Keep using bulk actions to maintain the 14.2m average.
-                 </p>
-                 <button className="w-full py-4 bg-[#2d2a26] text-white rounded-2xl text-xs font-bold hover:bg-black transition-all">
-                    Optimize Workflow
-                 </button>
-              </div>
-           </div>
         </div>
       </div>
 

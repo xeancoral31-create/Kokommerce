@@ -12,13 +12,38 @@ class SellerPromotionController extends Controller
 {
     public function index()
     {
+        $promotions   = Promotion::with('product')->latest()->get();
+        $activeOffers = Promotion::where('status', 'active')->count();
+
+        // Total Reach: all registered users in the system (potential audience)
+        $totalUsers = \App\Models\User::count();
+        $totalReach = $totalUsers >= 1000
+            ? round($totalUsers / 1000, 1) . 'K'
+            : (string) $totalUsers;
+
+        // Conversion Rate: % of users who have placed at least one order
+        $usersWithOrders = \App\Models\Order::distinct('buyer_id')->count('buyer_id');
+        $conversionRate  = $totalUsers > 0
+            ? round(($usersWithOrders / $totalUsers) * 100, 1) . '%'
+            : '0%';
+
+        // Month-over-month user growth
+        $lastMonthUsers  = \App\Models\User::whereDate('created_at', '<', now()->startOfMonth())->count();
+        $newUsersThisMonth = \App\Models\User::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)->count();
+        $reachGrowth = $lastMonthUsers > 0
+            ? ($newUsersThisMonth >= 0 ? '+' : '') . round(($newUsersThisMonth / $lastMonthUsers) * 100, 1) . '% this month'
+            : ($newUsersThisMonth > 0 ? "+{$newUsersThisMonth} new this month" : 'No new users this month');
+
         return Inertia::render('Seller/SellerOffers', [
-            'promotions' => Promotion::with('product')->latest()->get(),
-            'products' => \App\Models\Product::all(),
-            'stats' => [
-                'total_reach' => '124.8K',
-                'active_offers' => Promotion::where('status', 'active')->count(),
-                'conversion_rate' => '4.2%'
+            'promotions' => $promotions,
+            'products'   => \App\Models\Product::all(),
+            'stats'      => [
+                'total_reach'     => $totalReach,
+                'reach_growth'    => $reachGrowth,
+                'active_offers'   => $activeOffers,
+                'conversion_rate' => $conversionRate,
+                'users_converted' => $usersWithOrders,
             ]
         ]);
     }
@@ -36,6 +61,13 @@ class SellerPromotionController extends Controller
         ]);
 
         Promotion::create($validated);
+        
+        \App\Models\SellerNotification::create([
+            'type' => 'offer_created',
+            'title' => 'New Special Offer Created',
+            'message' => "Campaign '{$validated['title']}' is now live. Customers are ready for these deals!",
+            'is_read' => false
+        ]);
 
         return redirect()->back();
     }

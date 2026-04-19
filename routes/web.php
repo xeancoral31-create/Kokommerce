@@ -12,7 +12,17 @@ Route::post('/auth/sync', [AuthSyncController::class, 'sync'])->name('auth.sync'
 
 // Professional and Formal UI Flow Routes
 Route::get('/', function () {
-    return Inertia::render('Home');
+    return Inertia::render('Home', [
+        'favorites' => \App\Models\Product::with('category')
+            ->where('is_top_rated', true)
+            ->orWhere('rating', '>=', 4.8)
+            ->take(4)
+            ->get(),
+        'new_arrivals' => \App\Models\Product::with('category')
+            ->latest()
+            ->take(3)
+            ->get()
+    ]);
 });
 
 Route::get('/about', function () {
@@ -21,7 +31,7 @@ Route::get('/about', function () {
 
 Route::get('/shop', function () {
     return Inertia::render('Shop', [
-        'products' => \App\Models\Product::all()
+        'products' => \App\Models\Product::with('category')->get()
     ]);
 });
 

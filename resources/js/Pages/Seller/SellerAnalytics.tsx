@@ -68,26 +68,25 @@ export default function SellerAnalytics({ metrics, revenue_overview, category_pe
         </div>
       </div>
 
-      {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16">
         <MetricCard 
           label="Today's Revenue" 
-          value={`₱${(metrics?.today_revenue || 0).toLocaleString()}`} 
+          value={`₱${(metrics?.today_revenue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} 
           subtext={metrics?.revenue_change}
           subIcon="trend"
           icon="revenue" 
         />
         <MetricCard 
           label="Average Prep Time" 
-          value={`${metrics?.avg_prep_time || 0} min`} 
-          subtext="On target (Goal < 15m)"
-          subIcon="target"
+          value={metrics?.avg_prep_time > 0 ? `${metrics.avg_prep_time} min` : '—'} 
+          subtext={metrics?.avg_prep_time > 0 ? ((metrics.avg_prep_time <= 15) ? 'On target (Goal < 15m)' : `Over target by ${Math.round(metrics.avg_prep_time - 15)}m`) : 'No delivered orders yet'}
+          subIcon={metrics?.avg_prep_time > 0 ? ((metrics.avg_prep_time <= 15) ? 'target' : 'warn') : 'target'}
           icon="timer" 
         />
         <MetricCard 
           label="Fulfillment Rate" 
-          value={`${metrics?.fulfillment_rate || 0}%`} 
-          subtext="Excellent performance"
+          value={metrics?.fulfillment_rate > 0 ? `${metrics.fulfillment_rate}%` : '—'} 
+          subtext={metrics?.fulfillment_rate > 0 ? ((metrics.fulfillment_rate >= 90) ? 'Excellent performance' : (metrics.fulfillment_rate >= 70) ? 'Good performance' : 'Needs attention') : 'No delivered orders yet'}
           subIcon="check"
           icon="fulfillment" 
         />
@@ -100,24 +99,33 @@ export default function SellerAnalytics({ metrics, revenue_overview, category_pe
               <h3 className="text-2xl font-black text-gray-900">Revenue Overview</h3>
               <div className="flex items-center gap-2">
                  <div className="w-3 h-3 bg-[#f5a623] rounded-full"></div>
-                 <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Revenue</span>
+                 <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Monthly Revenue</span>
               </div>
            </div>
            
-           <div className="flex items-end justify-between h-72 gap-6 px-4">
-              {(() => {
-                const maxRevenue = Math.max(...revenue_overview.map(r => r.revenue), 10000);
-                return revenue_overview?.map((item) => (
-                  <div key={item.month} className="flex-1 flex flex-col items-center group">
-                     <div 
-                      style={{ height: `${(item.revenue / maxRevenue) * 100}%` }} 
-                      className={`w-full rounded-2xl transition-all duration-700 cursor-pointer ${item.month === new Date().toLocaleString('default', { month: 'short' }) ? 'bg-[#f5a623] shadow-lg shadow-[#f5a623]/30' : 'bg-[#fff1de] group-hover:bg-[#ffe5c4]'}`}
-                     ></div>
-                     <span className="mt-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{item.month.toUpperCase()}</span>
-                  </div>
-                ));
-              })()}
-           </div>
+            <div className="flex items-end justify-between h-64 gap-4 px-2">
+               {(() => {
+                 const revenues = revenue_overview?.map(r => Number(r.revenue) || 0);
+                 const maxRevenue = Math.max(...revenues, 1);
+                 const currentMonth = new Date().toLocaleString('default', { month: 'short' });
+                 return revenue_overview?.map((item, idx) => {
+                   const pct = Math.max((revenues[idx] / maxRevenue) * 100, 8);
+                   const isCurrent = item.month === currentMonth;
+                   return (
+                     <div key={item.month} className="flex-1 flex flex-col items-center gap-3 group relative">
+                        <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[9px] font-black px-2 py-1 rounded-lg whitespace-nowrap transition-all pointer-events-none z-10">
+                          ₱{(revenues[idx] || 0).toLocaleString()}
+                        </div>
+                        <div
+                         style={{ height: `${pct}%` }}
+                         className={`w-full rounded-2xl transition-all duration-700 cursor-pointer ${isCurrent ? 'bg-[#f5a623] shadow-lg shadow-[#f5a623]/30' : 'bg-[#fff1de] group-hover:bg-[#ffd99a]'}`}
+                        ></div>
+                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${isCurrent ? 'text-[#f5a623]' : 'text-gray-400'}`}>{item.month.toUpperCase()}</span>
+                     </div>
+                   );
+                 });
+               })()}
+            </div>
         </div>
 
         {/* Category Performance */}
@@ -261,7 +269,12 @@ const MetricCard = ({ label, value, subtext, subIcon, icon }: any) => (
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
          </div>
        )}
-       <span className={`text-xs font-bold leading-none ${subIcon === 'trend' ? 'text-green-500' : (subIcon === 'target' ? 'text-gray-400' : 'text-green-500')}`}>
+     {subIcon === 'warn' && (
+         <div className="w-5 h-5 rounded-md bg-orange-50 flex items-center justify-center text-orange-400">
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /></svg>
+         </div>
+       )}
+       <span className={`text-xs font-bold leading-none ${subIcon === 'trend' ? 'text-green-500' : (subIcon === 'warn' ? 'text-orange-500' : (subIcon === 'target' ? 'text-gray-400' : 'text-green-500'))}`}>
           {subtext}
        </span>
     </div>

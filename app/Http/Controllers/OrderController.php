@@ -10,28 +10,28 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function index()
     {
-        //
+        return redirect()->route('buyer.history');
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function create()
     {
-        //
+        return redirect()->route('buyer.shop');
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -49,6 +49,13 @@ class OrderController extends Controller
         $validated['status'] = 'Pending';
 
         $order = Order::create($validated);
+        
+        \App\Models\SellerNotification::create([
+            'type' => 'order_paid',
+            'title' => 'New Order Received',
+            'message' => "Cha-ching! You have a new order {$validated['order_reference']} for ₱" . number_format($validated['total_amount'], 2),
+            'is_read' => false
+        ]);
 
         return redirect()->route('buyer.history')->with('success', 'Order placed successfully!');
     }
@@ -57,22 +64,22 @@ class OrderController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function show(Order $order)
     {
-        //
+        return back();
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function edit(Order $order)
     {
-        //
+        return back();
     }
 
     /**
@@ -80,21 +87,21 @@ class OrderController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Order $order)
     {
-        //
+        return back();
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Order $order)
     {
-        //
+        return back();
     }
 }

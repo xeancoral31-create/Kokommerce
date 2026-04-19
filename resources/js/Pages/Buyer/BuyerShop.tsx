@@ -11,7 +11,9 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
     const itemsPerPage = 6;
 
     const products = dbProducts || [];
-    const categories = ['All', ...new Set(products.map(p => p.category || 'Uncategorized'))];
+    const coreCategories = ['All', 'Kakanin', 'Bread', 'Cookies', 'Cakes'];
+    const dynamicCategories = [...new Set(products.map(p => p.category?.name || p.category))];
+    const categories = [...new Set([...coreCategories, ...dynamicCategories])].filter(Boolean);
 
 
     const handleCategoryChange = (cat: string) => {
@@ -30,7 +32,7 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
 
     const filteredProducts = selectedCategory === 'All' 
         ? products 
-        : products.filter(p => p.category === selectedCategory);
+        : products.filter(p => (p.category?.name || p.category) === selectedCategory);
 
     // Pagination Logic
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
@@ -66,32 +68,48 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
                 </div>
             </div>
 
-            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 transition-opacity duration-300 ${isFiltering ? 'opacity-0' : 'opacity-100'}`}>
+            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 transition-opacity duration-300 ${isFiltering ? 'opacity-0' : 'opacity-100'}`}>
                 {currentProducts.map(product => (
-                    <div key={product.id} className="buyer-card flex flex-col group cursor-pointer">
-                        <div className="relative overflow-hidden rounded-[2.5rem] mb-8 aspect-square shadow-xl shadow-gray-200/50">
-                            <img src={product.img} alt={product.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                            <div className="absolute inset-x-4 bottom-4 translate-y-20 group-hover:translate-y-0 transition-transform duration-500">
+                    <div key={product.id} className="group flex flex-col bg-white rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                        <div className="relative aspect-square overflow-hidden bg-gray-50">
+                            <img src={product.image || product.img} alt={product.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                            
+                            {/* Top Rated Badge from Screenshot */}
+                            {(product.is_top_rated || product.rating >= 4.8) && (
+                                <div className="absolute top-6 left-6 bg-[#eca840] text-white text-[9px] font-black px-4 py-2 rounded-xl shadow-lg border border-[#eca840]">
+                                    Top Rated
+                                </div>
+                            )}
+
+                            <button className="absolute top-6 right-6 w-11 h-11 bg-white/90 backdrop-blur-md rounded-2xl flex items-center justify-center text-gray-300 hover:text-red-500 transition-all shadow-sm">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                            </button>
+                        </div>
+
+                        <div className="p-10 flex-1 flex flex-col">
+                            <div className="flex justify-between items-start mb-4">
+                                <h3 className="text-xl font-black text-gray-900 group-hover:text-[#eca840] transition-colors tracking-tight leading-tight">{product.name}</h3>
+                                <div className="flex items-center text-[#eca840] text-[11px] font-black mt-1">
+                                    <svg className="w-3 h-3 fill-current mr-1.5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                    {product.rating || '4.9'}
+                                </div>
+                            </div>
+                            
+                            <p className="text-sm text-gray-400 font-medium line-clamp-1 mb-8">
+                                {product.description || "Masterfully baked using heirloom recipes and premium ingredients."}
+                            </p>
+                            
+                            <div className="mt-auto flex items-center justify-between">
+                                <span className="text-2xl font-black text-[#2d2a26]">₱{parseFloat(String(product.price)).toLocaleString()}</span>
                                 <button 
-                                    onClick={(e) => { e.stopPropagation(); handleAddToBasket(product.name); }}
-                                    className="w-full py-4 bg-white/90 backdrop-blur-md rounded-2xl text-[10px] font-black uppercase tracking-widest text-[#2d2a26] shadow-xl hover:bg-[#2d2a26] hover:text-white transition-all"
+                                    onClick={() => handleAddToBasket(product.name)}
+                                    className="bg-[#eca840] text-white font-black py-4 px-8 rounded-2xl text-[11px] flex items-center gap-3 hover:bg-[#d69635] shadow-xl shadow-[#eca840]/20 transition-all active:scale-95 uppercase tracking-widest"
                                 >
-                                    Quick Add
+                                    <ShoppingBagIcon />
+                                    Add
                                 </button>
                             </div>
                         </div>
-                        <div className="flex justify-between items-start mb-3">
-                            <span className="text-[10px] font-black text-gold uppercase tracking-[0.2em]">{product.category}</span>
-                            <span className="text-lg font-black text-[#2d2a26]">₱{product.price.toLocaleString()}</span>
-                        </div>
-                        <h3 className="text-2xl font-black text-[#2d2a26] group-hover:text-gold transition-colors tracking-tight leading-tight">{product.name}</h3>
-                        <p className="text-sm text-gray-400 font-medium mt-3 mb-8 leading-relaxed">Masterfully baked using heirloom recipes and premium ingredients for a truly artisanal experience.</p>
-                        <button 
-                            onClick={() => handleAddToBasket(product.name)}
-                            className="mt-auto w-full py-5 rounded-2xl border-2 border-[#2d2a26] font-black text-[10px] uppercase tracking-[0.2em] text-[#2d2a26] hover:bg-[#2d2a26] hover:text-white hover:shadow-2xl hover:shadow-black/20 transition-all leading-none"
-                        >
-                            Add to Basket
-                        </button>
                     </div>
                 ))}
             </div>

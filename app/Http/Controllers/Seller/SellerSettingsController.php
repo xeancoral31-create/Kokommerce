@@ -14,7 +14,7 @@ class SellerSettingsController extends Controller
     {
         // Fetch from dynamic settings or session if available
         $profile = session('store_profile', [
-            'name' => 'The Golden Crust',
+            'name' => 'Kokommerce Artisanal',
             'tagline' => 'Handcrafted Joy in Every Crumb',
             'description' => 'Authentic sourdough techniques passed down through three generations...',
             'image' => 'https://images.unsplash.com/photo-1517433367423-c7e5b0f35086?w=400&h=400&fit=crop'
@@ -45,6 +45,7 @@ class SellerSettingsController extends Controller
             'tagline' => 'nullable|string',
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
+            'image_url' => 'nullable|string',
         ]);
 
         $profile = $request->only(['name', 'tagline', 'description']);
@@ -52,6 +53,8 @@ class SellerSettingsController extends Controller
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('store', 'public');
             $profile['image'] = '/storage/' . $path;
+        } elseif ($request->filled('image_url')) {
+            $profile['image'] = $request->image_url;
         } else {
             $profile['image'] = session('store_profile.image', 'https://images.unsplash.com/photo-1517433367423-c7e5b0f35086?w=400&h=400&fit=crop');
         }

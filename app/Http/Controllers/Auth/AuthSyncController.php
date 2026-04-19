@@ -16,12 +16,14 @@ class AuthSyncController extends Controller
         $request->validate([
             'email' => 'required|email',
             'clerk_id' => 'required',
-            'name' => 'required'
+            'name' => 'required',
+            'image' => 'nullable|string'
         ]);
 
         $email = $request->email;
         $clerk_id = $request->clerk_id;
         $name = $request->name;
+        $image = $request->image;
 
         // Whitelist Logic (Image 1 Req)
         $isWhitelisted = DB::table('seller_whitelist')->where('email', $email)->exists();
@@ -33,8 +35,11 @@ class AuthSyncController extends Controller
             [
                 'name' => $name,
                 'role' => $role,
+                'image' => $image,
+                'status' => 'Active',
                 'email_verified_at' => now(),
-                'password' => bcrypt(Str::random(24)) // Secure placeholder for Clerk-managed accounts
+                'password' => bcrypt(Str::random(24)), // Secure placeholder for Clerk-managed accounts
+                'last_active_at' => now()
             ]
         );
 
