@@ -1,0 +1,226 @@
+@import 'variables';
+
+
+// Seller Dashboard Theme
+$seller-bg: #f8f9fa;
+$seller-sidebar-bg: #ffffff;
+$seller-card-bg: #ffffff;
+$seller-primary: #eca840;
+$seller-secondary: #2d2a26;
+$seller-text-main: #1a1a1a;
+$seller-text-muted: #6b7280;
+$seller-border: #f3f4f6;
+
+.seller-sidebar {
+    width: 320px;
+    background: rgba(white, 0.95);
+    backdrop-filter: blur(20px);
+    height: 100vh;
+    border-right: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem 1.5rem;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    transition: all 0.5s ease;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: rgba($seller-primary, 0.2);
+        border-radius: 10px;
+    }
+    
+    .sidebar-branding {
+        padding: 0 1rem;
+        margin-bottom: 3.5rem;
+        border-bottom: 1px solid rgba(0,0,0,0.03);
+        padding-bottom: 2rem;
+        
+        img {
+            filter: drop-shadow(0 10px 15px rgba($seller-primary, 0.2));
+        }
+    }
+    
+    .sidebar-nav {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+        
+        &::-webkit-scrollbar { width: 0; } // Hide nav internal scroll
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1.15rem 1.5rem;
+            color: #4b5563;
+            text-decoration: none;
+            border-radius: 1.25rem;
+            font-size: 0.85rem;
+            font-weight: 800;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 0.5rem;
+            gap: 1.15rem;
+            border: 1px solid transparent;
+            
+            svg { 
+                width: 1.25rem; 
+                height: 1.25rem; 
+                opacity: 0.5;
+                transition: all 0.3s;
+            }
+            
+            &:hover {
+                background: #fdfaf5;
+                color: $seller-primary;
+                border-color: rgba($seller-primary, 0.1);
+                
+                svg { opacity: 1; transform: scale(1.1); }
+            }
+            
+            &.active {
+                background: $seller-secondary;
+                color: white;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                
+                svg { opacity: 1; color: $seller-primary; }
+            }
+        }
+    }
+}
+
+.seller-main {
+    margin-left: 320px;
+    background: #fafafa;
+    min-height: 100vh;
+    
+    .seller-header {
+        height: 100px;
+        background: rgba(white, 0.8);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 4rem;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        
+        .header-search {
+            background: #f5f5f5;
+            border: 1.5px solid transparent;
+            border-radius: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            width: 480px;
+            transition: all 0.3s;
+            
+            &:focus-within {
+                background: white;
+                border-color: $seller-primary;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            }
+        }
+    }
+    
+    .seller-content {
+        padding: 3rem;
+    }
+}
+
+// Stats Cards
+.stat-card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    border: 1px solid $seller-border;
+    transition: transform 0.2s;
+    
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+    }
+    
+    .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        
+        .stat-icon-bg {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba($seller-primary, 0.1);
+            color: $seller-primary;
+        }
+        
+        .stat-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            
+            &.positive { background: #e6f7ef; color: #10b981; }
+            &.neutral { background: #f3f4f6; color: #6b7280; }
+        }
+    }
+    
+    .stat-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: $seller-text-muted; margin-bottom: 0.5rem; }
+    .stat-value { font-size: 2rem; font-weight: 800; color: $seller-text-main; }
+}
+
+// Data Tables
+.seller-table {
+    width: 100%;
+    background: white;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    border: 1px solid $seller-border;
+    
+    th {
+        background: #fafafa;
+        padding: 1.25rem 2rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #9ca3af;
+        text-align: left;
+    }
+    
+    td {
+        padding: 1.25rem 2rem;
+        border-top: 1px solid $seller-border;
+        vertical-align: middle;
+    }
+}
+
+// Badges
+.status-badge {
+    padding: 0.35rem 1rem;
+    border-radius: 8px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    
+    &.urgent { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+    &.active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    &.pending { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+}
+
+@import 'buyer';
+

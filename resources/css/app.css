@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+:root {
+  --color-brand: #f38226;
+  --color-brand-hover: #e0721f;
+  --color-brand-light: #fef3e9;
+  --color-bg-main: #faf9f6;
+  --color-bg-alt: #f1efe9;
+  --color-bg-dark: #2a2626;
+  --color-text-main: #2d2a26;
+  --color-text-muted: #6b6661;
+  --background: var(--color-bg-main);
+  --foreground: var(--color-text-main);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-outfit), sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-main);
+  font-weight: 600;
+}
