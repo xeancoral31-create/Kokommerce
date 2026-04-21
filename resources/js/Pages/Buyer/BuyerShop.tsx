@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BuyerLayout from '../../Components/BuyerLayout';
+import { Inertia } from '@inertiajs/inertia';
 
 const ShoppingBagIcon = () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>;
 
@@ -8,6 +9,8 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
     const [notification, setNotification] = useState<string | null>(null);
     const [isFiltering, setIsFiltering] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [buyNowProduct, setBuyNowProduct] = useState<any | null>(null);
+    const [buyNowQuantity, setBuyNowQuantity] = useState(1);
     const itemsPerPage = 6;
 
     const products = dbProducts || [];
@@ -30,6 +33,31 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
         setTimeout(() => setNotification(null), 3000);
     };
 
+    const handleBuyNow = (product: any) => {
+        setBuyNowProduct(product);
+        setBuyNowQuantity(1);
+    };
+
+    const handleProceedToPayment = () => {
+        if (!buyNowProduct) return;
+        
+        // Transform the single product into a cart item format
+        const item = {
+            id: buyNowProduct.id,
+            name: buyNowProduct.name,
+            price: buyNowProduct.price,
+            qty: buyNowQuantity,
+            img: buyNowProduct.image || buyNowProduct.img
+        };
+
+        // Redirect to delivery details with this item
+        // Note: In a real app, this might be stored in session/cart, 
+        // but here we'll pass it as props for demonstration as requested
+        Inertia.get('/buyer/delivery', { 
+            items: [item] 
+        } as any);
+    };
+
     const filteredProducts = selectedCategory === 'All' 
         ? products 
         : products.filter(p => (p.category?.name || p.category) === selectedCategory);
@@ -48,6 +76,61 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
                     <div className="bg-[#2d2a26] text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border border-white/10">
                         <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold">✓</div>
                         <span className="text-sm font-black tracking-tight">{notification}</span>
+                    </div>
+                </div>
+            )}
+
+            {/* Buy Now Modal */}
+            {buyNowProduct && (
+                <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6 backdrop-blur-xl bg-black/40">
+                    <div className="bg-white rounded-[3rem] w-full max-w-xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 border border-gray-100">
+                        <div className="p-12">
+                            <div className="flex justify-between items-start mb-10">
+                                <div>
+                                    <h2 className="text-4xl font-black text-[#2d2a26] tracking-tight">Buy Now</h2>
+                                    <p className="text-gray-400 font-bold mt-2">Almost fresh out the oven!</p>
+                                </div>
+                                <button onClick={() => setBuyNowProduct(null)} className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-all">
+                                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                </button>
+                            </div>
+
+                            <div className="flex items-center gap-8 mb-12 bg-gray-50/50 p-8 rounded-[2rem] border border-dashed border-gray-200">
+                                <img src={buyNowProduct.image || buyNowProduct.img} className="w-24 h-24 rounded-3xl object-cover shadow-lg" alt="" />
+                                <div>
+                                    <h3 className="text-xl font-black text-[#2d2a26]">{buyNowProduct.name}</h3>
+                                    <span className="text-2xl font-black text-[#eca840]">₱{parseFloat(String(buyNowProduct.price)).toLocaleString()}</span>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4 mb-12">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-2">Select Quantity</label>
+                                <div className="flex items-center justify-between bg-[#fdfaf5] p-2 rounded-[2rem] border-2 border-[#fff8e6]">
+                                    <button 
+                                        onClick={() => setBuyNowQuantity(q => Math.max(1, q - 1))}
+                                        className="w-16 h-16 rounded-[1.5rem] bg-white shadow-sm flex items-center justify-center text-2xl font-black text-[#2d2a26] hover:bg-[#2d2a26] hover:text-white transition-all"
+                                    >
+                                        -
+                                    </button>
+                                    <span className="text-3xl font-black text-[#2d2a26] tabular-nums">{buyNowQuantity}</span>
+                                    <button 
+                                        onClick={() => setBuyNowQuantity(q => q + 1)}
+                                        className="w-16 h-16 rounded-[1.5rem] bg-white shadow-sm flex items-center justify-center text-2xl font-black text-[#2d2a26] hover:bg-[#2d2a26] hover:text-white transition-all"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button 
+                                onClick={handleProceedToPayment}
+                                className="w-full bg-[#2d2a26] text-white py-6 rounded-[2rem] text-sm font-black uppercase tracking-[0.2em] shadow-2xl shadow-black/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4"
+                            >
+                                <span>Proceed to Payment</span>
+                                <span className="w-8 h-px bg-white/30 hidden sm:block"></span>
+                                <span className="text-[#eca840]">₱{(buyNowProduct.price * buyNowQuantity).toLocaleString()}</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
@@ -99,15 +182,28 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
                                 {product.description || "Masterfully baked using heirloom recipes and premium ingredients."}
                             </p>
                             
-                            <div className="mt-auto flex items-center justify-between">
-                                <span className="text-2xl font-black text-[#2d2a26]">₱{parseFloat(String(product.price)).toLocaleString()}</span>
-                                <button 
-                                    onClick={() => handleAddToBasket(product.name)}
-                                    className="bg-[#eca840] text-white font-black py-4 px-8 rounded-2xl text-[11px] flex items-center gap-3 hover:bg-[#d69635] shadow-xl shadow-[#eca840]/20 transition-all active:scale-95 uppercase tracking-widest"
-                                >
-                                    <ShoppingBagIcon />
-                                    Add
-                                </button>
+                            <div className="mt-auto space-y-4">
+                                <div className="flex items-center justify-between mb-4">
+                                    <span className="text-2xl font-black text-[#2d2a26]">₱{parseFloat(String(product.price)).toLocaleString()}</span>
+                                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-lg italic">
+                                        Stock: {product.stock || '10'} units
+                                    </span>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <button 
+                                        onClick={() => handleAddToBasket(product.name)}
+                                        className="bg-gray-100 text-[#2d2a26] font-black py-4 px-4 rounded-2xl text-[10px] flex items-center justify-center gap-2 hover:bg-gray-200 transition-all uppercase tracking-widest border border-gray-200"
+                                    >
+                                        <ShoppingBagIcon />
+                                        Cart
+                                    </button>
+                                    <button 
+                                        onClick={() => handleBuyNow(product)}
+                                        className="bg-[#eca840] text-white font-black py-4 px-4 rounded-2xl text-[10px] flex items-center justify-center gap-2 hover:bg-[#d69635] shadow-lg shadow-[#eca840]/20 transition-all active:scale-95 uppercase tracking-widest"
+                                    >
+                                        Buy Now
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

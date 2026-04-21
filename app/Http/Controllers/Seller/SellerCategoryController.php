@@ -29,6 +29,7 @@ class SellerCategoryController extends Controller
 
         return Inertia::render('Seller/SellerCategories', [
             'categories' => Category::withCount('products')->orderBy('name')->get(),
+            'archived_categories' => Category::onlyTrashed()->withCount('products')->orderBy('name')->get(),
             'total_products' => Product::count()
         ]);
     }
@@ -69,10 +70,19 @@ class SellerCategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        // Optional: Reassign products to a default category before deleting?
-        // For now, simple delete.
         $category->delete();
+        return redirect()->back()->with('success', 'Collection archived successfully!');
+    }
 
-        return redirect()->back();
+    public function restore($id)
+    {
+        Category::withTrashed()->findOrFail($id)->restore();
+        return redirect()->back()->with('success', 'Collection restored successfully!');
+    }
+
+    public function forceDelete($id)
+    {
+        Category::withTrashed()->findOrFail($id)->forceDelete();
+        return redirect()->back()->with('success', 'Collection permanently deleted!');
     }
 }

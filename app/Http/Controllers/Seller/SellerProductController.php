@@ -15,6 +15,7 @@ class SellerProductController extends Controller
     {
         return Inertia::render('Seller/SellerProducts', [
             'products' => Product::with('category')->latest()->get(),
+            'archived_products' => Product::onlyTrashed()->with('category')->latest()->get(),
             'categories' => Category::all(),
             'stats' => [
                 'total_items' => Product::count(),
@@ -84,7 +85,19 @@ class SellerProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-        return redirect()->back()->with('success', 'Product deleted successfully!');
+        return redirect()->back()->with('success', 'Product archived successfully!');
+    }
+
+    public function restore($id)
+    {
+        Product::withTrashed()->findOrFail($id)->restore();
+        return redirect()->back()->with('success', 'Product restored successfully!');
+    }
+
+    public function forceDelete($id)
+    {
+        Product::withTrashed()->findOrFail($id)->forceDelete();
+        return redirect()->back()->with('success', 'Product permanently deleted!');
     }
 }
 

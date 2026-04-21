@@ -10,6 +10,7 @@ class Buyer extends Model
     use HasFactory;
 
     protected $fillable = [
+        'clerk_id',
         'name',
         'email',
         'phone',

@@ -80,6 +80,7 @@ export default function Shop({ products: initialProducts }: ShopProps) {
   }, []);
 
   const [priceRange, setPriceRange] = useState(2000);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
   const [toast, setToast] = useState<{ show: boolean; message: string; type: 'success' | 'info' }>({ show: false, message: "", type: 'success' });
@@ -105,9 +106,13 @@ export default function Shop({ products: initialProducts }: ShopProps) {
 
     filtered = filtered.filter(p => p.price <= priceRange);
 
+    if (selectedStatus) {
+      filtered = filtered.filter(p => p.status === selectedStatus);
+    }
+
     setProducts(filtered);
     setCurrentPage(1); // Reset to first page on filter change
-  }, [selectedCategories, searchQuery, priceRange, initialProducts]);
+  }, [selectedCategories, searchQuery, priceRange, selectedStatus, initialProducts]);
 
   // Pagination Logic
   const totalPages = Math.ceil(products.length / itemsPerPage);
@@ -187,8 +192,24 @@ export default function Shop({ products: initialProducts }: ShopProps) {
                   <div>
                     <h4 className="text-xs font-bold text-gray-400 uppercase mb-4">Status</h4>
                     <div className="flex flex-wrap gap-2">
-                      <button className="bg-[#eca840] text-white text-[10px] font-bold px-3 py-1.5 rounded-full">In Stock</button>
-                      <button className="bg-white border border-gray-200 text-gray-500 text-[10px] font-bold px-3 py-1.5 rounded-full hover:bg-gray-50">Pre-order</button>
+                      <button
+                        onClick={() => setSelectedStatus(selectedStatus === 'in_stock' ? null : 'in_stock')}
+                        className={`${selectedStatus === 'in_stock' ? 'bg-[#eca840] text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'} text-[10px] font-bold px-3 py-1.5 rounded-full transition-all`}
+                      >
+                        In Stock
+                      </button>
+                      <button
+                        onClick={() => setSelectedStatus(selectedStatus === 'pre_order' ? null : 'pre_order')}
+                        className={`${selectedStatus === 'pre_order' ? 'bg-[#eca840] text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'} text-[10px] font-bold px-3 py-1.5 rounded-full transition-all`}
+                      >
+                        Pre-order
+                      </button>
+                      <button
+                        onClick={() => setSelectedStatus(selectedStatus === 'sold_out' ? null : 'sold_out')}
+                        className={`${selectedStatus === 'sold_out' ? 'bg-[#eca840] text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'} text-[10px] font-bold px-3 py-1.5 rounded-full transition-all`}
+                      >
+                        Sold Out
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -227,7 +248,7 @@ export default function Shop({ products: initialProducts }: ShopProps) {
                   </div>
                   <h3 className="text-xl font-bold text-gray-900">No treats found</h3>
                   <p className="text-gray-500 mt-2">Try adjusting your filters or search query.</p>
-                  <button onClick={() => { setSelectedCategories([]); setSearchQuery(""); setPriceRange(2000); }} className="mt-6 text-[#eca840] font-bold text-sm underline underline-offset-4">Reset all filters</button>
+                  <button onClick={() => { setSelectedCategories([]); setSearchQuery(""); setPriceRange(2000); setSelectedStatus(null); }} className="mt-6 text-[#eca840] font-bold text-sm underline underline-offset-4">Reset all filters</button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -6,10 +6,12 @@ declare function route(name: string, params?: any): string;
 
 interface CategoriesProps {
   categories: any[];
+  archived_categories: any[];
   total_products: number;
 }
 
-export default function SellerCategories({ categories, total_products }: CategoriesProps) {
+export default function SellerCategories({ categories, archived_categories, total_products }: CategoriesProps) {
+  const [activeTab, setActiveTab] = React.useState('Active Collections');
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [editingCategory, setEditingCategory] = React.useState<any>(null);
 
@@ -51,8 +53,18 @@ export default function SellerCategories({ categories, total_products }: Categor
   };
 
   const handleDelete = (category: any) => {
-    if (confirm(`Are you sure you want to remove the "${category.name}" collection?`)) {
+    if (confirm(`Move the "${category.name}" collection to the archive?`)) {
       destroy(route('seller.categories.destroy', category.id));
+    }
+  };
+
+  const handleRestore = (id: number) => {
+    post(route('seller.categories.restore', id));
+  };
+
+  const handlePermanentDelete = (id: number) => {
+    if (confirm('Permanently remove this collection and all its history? This cannot be undone.')) {
+      destroy(route('seller.categories.forceDelete', id));
     }
   };
 
@@ -77,8 +89,21 @@ export default function SellerCategories({ categories, total_products }: Categor
         </button>
       </div>
 
+      <div className="flex border-b border-gray-100 mb-12 gap-12">
+        {['Active Collections', 'Archive'].map(tab => (
+            <button 
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`pb-4 text-sm font-bold transition-all relative ${activeTab === tab ? 'text-[#f5a623]' : 'text-gray-400 hover:text-gray-600'}`}
+            >
+                {tab}
+                {activeTab === tab && <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#f5a623] rounded-full"></div>}
+            </button>
+        ))}
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-16">
-        {categories.length > 0 && (
+        {activeTab === 'Active Collections' && categories.length > 0 && (
           <div className="lg:col-span-2 group bg-white rounded-[3rem] overflow-hidden border border-gray-100 shadow-sm transition-all hover:shadow-2xl">
             <div className="relative aspect-[21/9] overflow-hidden bg-gray-50">
                <img 
@@ -142,7 +167,7 @@ export default function SellerCategories({ categories, total_products }: Categor
            <p className="text-xs text-gray-400 font-medium leading-relaxed max-w-[160px]">Expand your sensory menu with a fresh artisanal range.</p>
         </div>
 
-        {categories.slice(1).map((category: any) => (
+        {activeTab === 'Active Collections' && categories.slice(1).map((category: any) => (
           <SmallCategoryCard 
             key={category.id}
             category={category}
@@ -150,6 +175,26 @@ export default function SellerCategories({ categories, total_products }: Categor
             onDelete={() => handleDelete(category)}
           />
         ))}
+
+        {activeTab === 'Archive' && archived_categories.map((category: any) => (
+          <SmallCategoryCard 
+            key={category.id}
+            category={category}
+            isArchived={true}
+            onRestore={() => handleRestore(category.id)}
+            onDelete={() => handlePermanentDelete(category.id)}
+          />
+        ))}
+
+        {activeTab === 'Archive' && archived_categories.length === 0 && (
+            <div className="lg:col-span-3 py-40 text-center">
+                <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-8 text-gray-200">
+                    <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                </div>
+                <h3 className="text-2xl font-black text-gray-900">Your archive is empty</h3>
+                <p className="text-sm text-gray-400 font-medium mt-3">Archived collections will appear here.</p>
+            </div>
+        )}
       </div>
 
       {/* Summary Footer */}
@@ -271,7 +316,7 @@ export default function SellerCategories({ categories, total_products }: Categor
   );
 }
 
-const SmallCategoryCard = ({ category, onEdit, onDelete }: any) => (
+const SmallCategoryCard = ({ category, onEdit, onDelete, isArchived, onRestore }: any) => (
   <div className="group bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-sm transition-all hover:shadow-2xl hover:-translate-y-1">
     <div className="relative aspect-[16/10] overflow-hidden bg-gray-50">
       <img 
@@ -292,18 +337,37 @@ const SmallCategoryCard = ({ category, onEdit, onDelete }: any) => (
       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-8 leading-relaxed line-clamp-1">{category.description || "Masterfully curated artisanal range."}</p>
       
       <div className="flex gap-4">
-         <button 
-          onClick={onEdit}
-          className="flex-1 py-4 bg-gray-50 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-700 hover:bg-[#1a1c23] hover:text-white transition-all active:scale-95"
-         >
-           Refine
-         </button>
-         <button 
-          onClick={onDelete}
-          className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all border border-gray-50 active:scale-95"
-         >
-           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-         </button>
+         {!isArchived ? (
+            <>
+                <button 
+                onClick={onEdit}
+                className="flex-1 py-4 bg-gray-50 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-700 hover:bg-[#1a1c23] hover:text-white transition-all active:scale-95"
+                >
+                Refine
+                </button>
+                <button 
+                onClick={onDelete}
+                className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-[#f5a623] hover:text-white transition-all border border-gray-50 active:scale-95"
+                >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                </button>
+            </>
+         ) : (
+            <>
+                <button 
+                onClick={onRestore}
+                className="flex-1 py-4 bg-green-50 text-green-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-green-500 hover:text-white transition-all active:scale-95"
+                >
+                Restore
+                </button>
+                <button 
+                onClick={onDelete}
+                className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-50 active:scale-95"
+                >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+            </>
+         )}
       </div>
     </div>
   </div>

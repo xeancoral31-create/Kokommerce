@@ -1,5 +1,5 @@
 import { Link, usePage } from "@inertiajs/inertia-react";
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/clerk-react";
 import React, { useEffect } from "react";
 import axios from "axios";
 import Logo from "./Logo";
@@ -138,14 +138,9 @@ export default function Navbar() {
                             </SignedIn>
 
                             <SignedOut>
-                                <div className="flex items-center gap-3">
-                                    <SignInButton mode="modal">
-                                        <button className="text-[10px] font-black text-gray-900 uppercase tracking-widest hover:text-[#eca840] transition-all">Sign In</button>
-                                    </SignInButton>
-                                    <SignUpButton mode="modal">
-                                        <button className="bg-[#2d2a26] text-white px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg shadow-gray-900/10">Join</button>
-                                    </SignUpButton>
-                                </div>
+                                <SignInButton mode="modal">
+                                    <button className="bg-[#2d2a26] text-white px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg shadow-gray-900/10">Sign In</button>
+                                </SignInButton>
                             </SignedOut>
                         </div>
                     </div>

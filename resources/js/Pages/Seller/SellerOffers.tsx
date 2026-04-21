@@ -6,6 +6,7 @@ declare function route(name: string, params?: any): string;
 
 interface OffersProps {
   promotions: any[];
+  archived_promotions: any[];
   products: any[];
   stats: {
     total_reach: string;
@@ -16,7 +17,8 @@ interface OffersProps {
   };
 }
 
-export default function SellerOffers({ promotions, products, stats }: OffersProps) {
+export default function SellerOffers({ promotions, archived_promotions, products, stats }: OffersProps) {
+  const [activeTab, setActiveTab] = React.useState('Active Campaigns');
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [editingPromo, setEditingPromo] = React.useState<any>(null);
 
@@ -66,8 +68,18 @@ export default function SellerOffers({ promotions, products, stats }: OffersProp
   };
 
   const handleDelete = (promo: any) => {
-    if (confirm(`Are you sure you want to remove the "${promo.title}" campaign?`)) {
+    if (confirm(`Move the "${promo.title}" campaign to the archive?`)) {
       destroy(route('seller.promotions.destroy', promo.id));
+    }
+  };
+
+  const handleRestore = (id: number) => {
+    post(route('seller.promotions.restore', id));
+  };
+
+  const handlePermanentDelete = (id: number) => {
+    if (confirm('Permanently remove this campaign? This action cannot be undone.')) {
+      destroy(route('seller.promotions.forceDelete', id));
     }
   };
 
@@ -99,8 +111,21 @@ export default function SellerOffers({ promotions, products, stats }: OffersProp
          <PromoStatCard label="Conversion Rate" value={stats.conversion_rate} change={`${stats.users_converted} users converted`} icon="conversion" />
       </div>
 
+      <div className="flex border-b border-gray-100 mb-12 gap-12">
+        {['Active Campaigns', 'Archive'].map(tab => (
+            <button 
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`pb-4 text-sm font-black uppercase tracking-widest transition-all relative ${activeTab === tab ? 'text-[#f5a623]' : 'text-gray-400 hover:text-gray-600'}`}
+            >
+                {tab}
+                {activeTab === tab && <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#f5a623] rounded-full"></div>}
+            </button>
+        ))}
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-         {promotions.map((promo) => (
+         {activeTab === 'Active Campaigns' && promotions.map((promo) => (
            <CampaignCard 
              key={promo.id} 
              promo={promo} 
@@ -108,14 +133,36 @@ export default function SellerOffers({ promotions, products, stats }: OffersProp
              onDelete={() => handleDelete(promo)}
            />
          ))}
+
+         {activeTab === 'Archive' && archived_promotions.map((promo) => (
+            <CampaignCard 
+                key={promo.id} 
+                promo={promo} 
+                isArchived={true}
+                onRestore={() => handleRestore(promo.id)}
+                onDelete={() => handlePermanentDelete(promo.id)}
+            />
+         ))}
          
-         <div onClick={openAddModal} className="bg-white/40 border-2 border-dashed border-gray-100 rounded-[3rem] p-10 flex flex-col items-center justify-center text-center group cursor-pointer hover:border-[#f5a623] transition-all">
-            <div className="w-16 h-16 rounded-full bg-[#f5a623]/10 flex items-center justify-center text-[#f5a623] mb-8 group-hover:scale-110 transition-all">
-               <svg className="w-8 h-8 font-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+         {activeTab === 'Active Campaigns' && (
+            <div onClick={openAddModal} className="bg-white/40 border-2 border-dashed border-gray-100 rounded-[3rem] p-10 flex flex-col items-center justify-center text-center group cursor-pointer hover:border-[#f5a623] transition-all">
+                <div className="w-16 h-16 rounded-full bg-[#f5a623]/10 flex items-center justify-center text-[#f5a623] mb-8 group-hover:scale-110 transition-all">
+                <svg className="w-8 h-8 font-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Create New Offer</h3>
+                <p className="text-xs text-gray-400 font-medium leading-relaxed max-w-[160px]">Add a new promotion to your list</p>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Create New Offer</h3>
-            <p className="text-xs text-gray-400 font-medium leading-relaxed max-w-[160px]">Add a new promotion to your list</p>
-         </div>
+         )}
+
+         {activeTab === 'Archive' && archived_promotions.length === 0 && (
+             <div className="lg:col-span-4 py-40 text-center">
+                 <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-8 text-gray-200">
+                     <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                 </div>
+                 <h3 className="text-2xl font-black text-gray-900">Your archive is empty</h3>
+                 <p className="text-sm text-gray-400 font-medium mt-3">Archived campaigns will appear here.</p>
+             </div>
+         )}
       </div>
 
       {/* Promotion Modal */}
@@ -211,7 +258,7 @@ const PromoStatCard = ({ label, value, change, icon }: any) => (
   </div>
 );
 
-const CampaignCard = ({ promo, onEdit, onDelete }: any) => (
+const CampaignCard = ({ promo, onEdit, onDelete, isArchived, onRestore }: any) => (
   <div className="group bg-white rounded-[3rem] overflow-hidden border border-gray-100 shadow-sm transition-all hover:shadow-2xl hover:-translate-y-2">
     <div className="relative aspect-[16/11] overflow-hidden">
       <img src={promo.image || "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=600"} alt={promo.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
@@ -234,12 +281,25 @@ const CampaignCard = ({ promo, onEdit, onDelete }: any) => (
       </div>
 
       <div className="flex gap-4">
-         <button onClick={onEdit} className="flex-1 py-4 bg-gray-50 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-700 hover:bg-gray-100 transition-all border border-gray-50 flex items-center justify-center gap-2">
-           Edit
-         </button>
-         <button onClick={onDelete} className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-red-300 hover:text-red-500 transition-all border border-gray-50">
-           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-         </button>
+         {!isArchived ? (
+            <>
+                <button onClick={onEdit} className="flex-1 py-4 bg-gray-50 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-700 hover:bg-gray-100 transition-all border border-gray-50 flex items-center justify-center gap-2">
+                    Edit
+                </button>
+                <button onClick={onDelete} className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-[#f5a623] transition-all border border-gray-50">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                </button>
+            </>
+         ) : (
+            <>
+                <button onClick={onRestore} className="flex-1 py-4 bg-green-50 text-green-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-green-500 hover:text-white transition-all border border-green-50 flex items-center justify-center gap-2">
+                    Restore
+                </button>
+                <button onClick={onDelete} className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-300 hover:text-red-500 transition-all border border-red-50">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+            </>
+         )}
       </div>
     </div>
   </div>

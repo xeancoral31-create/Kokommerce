@@ -6,6 +6,7 @@ declare function route(name: string, params?: any): string;
 
 interface ProductsProps {
   products: any[];
+  archived_products: any[];
   categories: any[];
   stats: {
     total_items: number;
@@ -14,7 +15,7 @@ interface ProductsProps {
   };
 }
 
-export default function SellerProducts({ products, categories, stats }: ProductsProps) {
+export default function SellerProducts({ products, archived_products, categories, stats }: ProductsProps) {
   const [activeFilter, setActiveFilter] = React.useState('All Products');
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [editingProduct, setEditingProduct] = React.useState<any>(null);
@@ -84,16 +85,52 @@ export default function SellerProducts({ products, categories, stats }: Products
   };
 
   const handleDelete = (id: number) => {
-    if (confirm('Are you sure you want to delete this artisanal masterpiece?')) {
-      destroy(route('seller.products.destroy', id));
+    if (confirm('Move this artisanal masterpiece to the archive?')) {
+      destroy(route('seller.products.destroy', id), {
+        onSuccess: () => {
+           // Optional: Show a fancy toast
+        }
+      });
     }
   };
 
-  const filteredProducts = activeFilter === 'All Products' 
-    ? products 
-    : products.filter(p => p.category?.name === activeFilter);
+  const handleRestore = (id: number) => {
+    post(route('seller.products.restore', id));
+  };
 
-  const filterTabs = ['All Products', ...categories.map(c => c.name)];
+  const handlePermanentDelete = (id: number) => {
+    if (confirm('This will permanently remove this masterpiece. This action cannot be undone. Proceed?')) {
+      destroy(route('seller.products.forceDelete', id));
+    }
+  };
+
+  const [selectedArchived, setSelectedArchived] = React.useState<number[]>([]);
+
+  const toggleSelectArchived = (id: number) => {
+    setSelectedArchived(prev => prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]);
+  };
+
+  const handleBulkRestore = () => {
+    if (selectedArchived.length === 0) return;
+    selectedArchived.forEach(id => handleRestore(id));
+    setSelectedArchived([]);
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedArchived.length === 0) return;
+    if (confirm(`Permanently delete ${selectedArchived.length} items?`)) {
+        selectedArchived.forEach(id => destroy(route('seller.products.forceDelete', id)));
+        setSelectedArchived([]);
+    }
+  };
+
+  const filteredProducts = activeFilter === 'Archive'
+    ? archived_products
+    : (activeFilter === 'All Products' 
+        ? products 
+        : products.filter(p => (p.category?.name || p.category) === activeFilter));
+
+  const filterTabs = ['All Products', ...categories.map(c => c.name), 'Archive'];
 
   return (
     <SellerLayout>
@@ -137,25 +174,66 @@ export default function SellerProducts({ products, categories, stats }: Products
 
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        <div 
-          onClick={openAddModal}
-          className="bg-white border-2 border-dashed border-gray-200 rounded-[2.5rem] flex flex-col items-center justify-center p-12 group cursor-pointer hover:border-[#eca840] transition-all"
-        >
-           <div className="w-16 h-16 rounded-full bg-orange-50 flex items-center justify-center text-[#eca840] mb-6 group-hover:scale-110 transition-all">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-           </div>
-           <h4 className="text-lg font-bold text-[#eca840] mb-2">Add Product</h4>
-           <p className="text-xs text-center text-gray-400 font-medium">Start a new creation</p>
-        </div>
+        {activeFilter !== 'Archive' && (
+            <div 
+            onClick={openAddModal}
+            className="bg-white border-2 border-dashed border-gray-200 rounded-[2.5rem] flex flex-col items-center justify-center p-12 group cursor-pointer hover:border-[#eca840] transition-all"
+            >
+            <div className="w-16 h-16 rounded-full bg-orange-50 flex items-center justify-center text-[#eca840] mb-6 group-hover:scale-110 transition-all">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+            </div>
+            <h4 className="text-lg font-bold text-[#eca840] mb-2">Add Product</h4>
+            <p className="text-xs text-center text-gray-400 font-medium">Start a new creation</p>
+            </div>
+        )}
+
+        {activeFilter === 'Archive' && archived_products.length > 0 && (
+            <div className="lg:col-span-4 mb-6 flex justify-between items-center bg-[#1a1c23] p-6 rounded-3xl text-white">
+                <div className="flex items-center gap-4">
+                    <span className="text-xs font-black uppercase tracking-widest text-gray-500">{selectedArchived.length} Selected</span>
+                </div>
+                <div className="flex gap-4">
+                    <button 
+                        onClick={handleBulkRestore}
+                        disabled={selectedArchived.length === 0}
+                        className="px-6 py-2.5 bg-green-500 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-green-600 transition-all disabled:opacity-30"
+                    >
+                        Bulk Restore
+                    </button>
+                    <button 
+                        onClick={handleBulkDelete}
+                        disabled={selectedArchived.length === 0}
+                        className="px-6 py-2.5 bg-red-500 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 transition-all disabled:opacity-30"
+                    >
+                        Bulk Delete
+                    </button>
+                </div>
+            </div>
+        )}
 
         {filteredProducts.map(product => (
           <ProductCard 
             key={product.id} 
             product={product} 
+            isArchived={activeFilter === 'Archive'}
+            isSelected={selectedArchived.includes(product.id)}
+            onSelect={() => toggleSelectArchived(product.id)}
             onEdit={() => openEditModal(product)}
             onDelete={() => handleDelete(product.id)}
+            onRestore={() => handleRestore(product.id)}
+            onPermanentDelete={() => handlePermanentDelete(product.id)}
           />
         ))}
+
+        {activeFilter === 'Archive' && archived_products.length === 0 && (
+            <div className="lg:col-span-4 py-20 text-center">
+                <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-200">
+                    <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                </div>
+                <h3 className="text-xl font-black text-gray-900">Your archive is empty</h3>
+                <p className="text-sm text-gray-400 font-medium mt-2">Masterpieces you archive will appear here.</p>
+            </div>
+        )}
       </div>
 
       {/* Modern Creation Modal */}
@@ -297,8 +375,18 @@ const StatsCardSimple = ({ label, value, badge, isAlert, isStatus }: any) => (
   </div>
 );
 
-const ProductCard = ({ product, onEdit, onDelete }: any) => (
-  <div className="group bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 transition-all hover:shadow-2xl hover:-translate-y-1">
+const ProductCard = ({ product, onEdit, onDelete, isArchived, isSelected, onSelect, onRestore, onPermanentDelete }: any) => (
+  <div className={`group bg-white rounded-[2.5rem] overflow-hidden border ${isSelected ? 'border-[#eca840] shadow-2xl' : 'border-gray-100'} transition-all hover:shadow-2xl hover:-translate-y-1 relative`}>
+    {isArchived && (
+        <div className="absolute top-6 left-6 z-10">
+            <input 
+                type="checkbox" 
+                checked={isSelected}
+                onChange={onSelect}
+                className="w-6 h-6 rounded-lg border-2 border-gray-200 text-[#eca840] focus:ring-[#eca840]/20 transition-all cursor-pointer"
+            />
+        </div>
+    )}
     <div className="relative aspect-square overflow-hidden bg-gray-50">
       <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
       <span className={`absolute top-4 right-4 text-[9px] font-extrabold px-3 py-1.5 rounded-lg shadow-sm ${product.status === 'in_stock' ? 'bg-green-500 text-white' : (product.status === 'pre_order' ? 'bg-blue-500 text-white' : 'bg-red-500 text-white')}`}>
@@ -319,18 +407,39 @@ const ProductCard = ({ product, onEdit, onDelete }: any) => (
           <span className={`text-xs font-bold ${product.stock < 10 ? 'text-red-500' : 'text-gray-700'}`}>{product.stock} units</span>
         </div>
         <div className="flex gap-2">
-           <button 
-             onClick={onEdit}
-             className="w-9 h-9 bg-gray-50 rounded-xl flex items-center justify-center text-gray-600 hover:bg-[#eca840] hover:text-white transition-all shadow-sm"
-           >
-             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-           </button>
-           <button 
-             onClick={onDelete}
-             className="w-9 h-9 bg-gray-50 rounded-xl flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition-all shadow-sm"
-           >
-             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-           </button>
+           {!isArchived ? (
+             <>
+                <button 
+                  onClick={onEdit}
+                  className="w-9 h-9 bg-gray-50 rounded-xl flex items-center justify-center text-gray-600 hover:bg-[#eca840] hover:text-white transition-all shadow-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                </button>
+                <button 
+                  onClick={onDelete}
+                  className="w-9 h-9 bg-gray-50 rounded-xl flex items-center justify-center text-gray-600 hover:bg-[#eca840] hover:text-white transition-all shadow-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                </button>
+             </>
+           ) : (
+             <>
+                <button 
+                  onClick={onRestore}
+                  title="Restore"
+                  className="w-9 h-9 bg-green-50 rounded-xl flex items-center justify-center text-green-600 hover:bg-green-500 hover:text-white transition-all shadow-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                </button>
+                <button 
+                  onClick={onPermanentDelete}
+                  title="Delete Permanently"
+                  className="w-9 h-9 bg-red-50 rounded-xl flex items-center justify-center text-red-600 hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+             </>
+           )}
         </div>
       </div>
     </div>

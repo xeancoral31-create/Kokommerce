@@ -73,14 +73,20 @@ Route::prefix('seller')->group(function () {
     Route::post('/products', [\App\Http\Controllers\Seller\SellerProductController::class, 'store'])->name('seller.products.store');
     Route::put('/products/{product}', [\App\Http\Controllers\Seller\SellerProductController::class, 'update'])->name('seller.products.update');
     Route::delete('/products/{product}', [\App\Http\Controllers\Seller\SellerProductController::class, 'destroy'])->name('seller.products.destroy');
+    Route::post('/products/{id}/restore', [\App\Http\Controllers\Seller\SellerProductController::class, 'restore'])->name('seller.products.restore');
+    Route::delete('/products/{id}/force', [\App\Http\Controllers\Seller\SellerProductController::class, 'forceDelete'])->name('seller.products.forceDelete');
     
     Route::post('/categories', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'store'])->name('seller.categories.store');
     Route::put('/categories/{category}', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'update'])->name('seller.categories.update');
     Route::delete('/categories/{category}', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'destroy'])->name('seller.categories.destroy');
+    Route::post('/categories/{id}/restore', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'restore'])->name('seller.categories.restore');
+    Route::delete('/categories/{id}/force', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'forceDelete'])->name('seller.categories.forceDelete');
     
     Route::post('/offers', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'store'])->name('seller.offers.store');
     Route::put('/offers/{promotion}', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'update'])->name('seller.promotions.update');
     Route::delete('/offers/{promotion}', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'destroy'])->name('seller.promotions.destroy');
+    Route::post('/offers/{id}/restore', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'restore'])->name('seller.promotions.restore');
+    Route::delete('/offers/{id}/force', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'forceDelete'])->name('seller.promotions.forceDelete');
 });
 
 

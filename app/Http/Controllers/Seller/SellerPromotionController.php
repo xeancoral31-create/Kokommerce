@@ -13,6 +13,7 @@ class SellerPromotionController extends Controller
     public function index()
     {
         $promotions   = Promotion::with('product')->latest()->get();
+        $archived     = Promotion::onlyTrashed()->with('product')->latest()->get();
         $activeOffers = Promotion::where('status', 'active')->count();
 
         // Total Reach: all registered users in the system (potential audience)
@@ -37,6 +38,7 @@ class SellerPromotionController extends Controller
 
         return Inertia::render('Seller/SellerOffers', [
             'promotions' => $promotions,
+            'archived_promotions' => $archived,
             'products'   => \App\Models\Product::all(),
             'stats'      => [
                 'total_reach'     => $totalReach,
@@ -91,7 +93,19 @@ class SellerPromotionController extends Controller
     public function destroy(Promotion $promotion)
     {
         $promotion->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Campaign archived successfully!');
+    }
+
+    public function restore($id)
+    {
+        Promotion::withTrashed()->findOrFail($id)->restore();
+        return redirect()->back()->with('success', 'Campaign restored successfully!');
+    }
+
+    public function forceDelete($id)
+    {
+        Promotion::withTrashed()->findOrFail($id)->forceDelete();
+        return redirect()->back()->with('success', 'Campaign permanently removed!');
     }
 
 }
