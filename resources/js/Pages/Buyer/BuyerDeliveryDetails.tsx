@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import BuyerLayout from '../../Components/BuyerLayout';
 import { Head, Link } from '@inertiajs/inertia-react';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 
 // Fix for Leaflet default icon issues in bundled environments
 // @ts-ignore
