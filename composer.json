@@ -12,7 +12,9 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
-        "tightenco/ziggy": "^1.8"
+        "tightenco/ziggy": "^1.8",
+        "symfony/css-selector": "^6.0 || ^7.0",
+        "doctrine/instantiator": "^1.4"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -57,7 +59,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.30"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
