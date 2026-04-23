@@ -17,7 +17,6 @@ class Product extends Model
         'description',
         'price',
         'offer_price',
-        'category', // Keep for backward compatibility if needed, or remove
         'status',
         'rating',
         'reviews_count',
@@ -39,6 +38,16 @@ class Product extends Model
         'rating' => 'decimal:1',
         'stock' => 'integer',
     ];
+
+    public function scopePreOrder($query)
+    {
+        return $query->where('status', 'pre_order');
+    }
+
+    public function scopeInStock($query)
+    {
+        return $query->where('status', 'in_stock');
+    }
 
     public function category()
     {

@@ -1,11 +1,14 @@
 import React from 'react';
 import SellerLayout from '../../Components/SellerLayout';
 import { Head } from '@inertiajs/inertia-react';
+import { Inertia } from '@inertiajs/inertia';
 
 interface OrdersProps {
   orders: any[];
   stats: {
+    total_revenue: number;
     today_revenue: number;
+    revenue_change: string;
     avg_prep_time: string;
     fulfillment_rate: string;
   };
@@ -13,7 +16,27 @@ interface OrdersProps {
 
 export default function SellerOrders({ orders, stats }: OrdersProps) {
   const [activeTab, setActiveTab] = React.useState('All Orders');
+  const [sortDateDesc, setSortDateDesc] = React.useState(true);
+  const [openDropdownId, setOpenDropdownId] = React.useState<number | null>(null);
+
   const tabs = ['All Orders', 'Pending', 'Preparing', 'Out for Delivery', 'Completed'];
+
+  const sortedOrders = [...orders].sort((a, b) => {
+    const dateA = new Date(a.created_at || 0).getTime();
+    const dateB = new Date(b.created_at || 0).getTime();
+    return sortDateDesc ? dateB - dateA : dateA - dateB;
+  });
+
+  const filteredOrders = activeTab === 'All Orders' 
+    ? sortedOrders 
+    : sortedOrders.filter(o => o.status === activeTab);
+
+  const updateOrderStatus = (orderId: number, newStatus: string) => {
+    Inertia.put(`/seller/orders/${orderId}`, { status: newStatus }, {
+      preserveScroll: true,
+      onSuccess: () => setOpenDropdownId(null)
+    });
+  };
 
   return (
     <SellerLayout>
@@ -39,7 +62,7 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
               const rows = orders.map(o => [
                 o.order_reference || 'N/A',
                 o.buyer?.name || 'Guest',
-                'Oct 24, 10:30 AM',
+                new Date(o.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }),
                 `₱${parseFloat(o.total_amount || 0).toLocaleString()}`,
                 o.status || 'Pending'
               ]);
@@ -60,24 +83,17 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
       </div>
 
       {/* Stats Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
         <OrderStat 
-          label="Today's Revenue" 
-          value={`₱${stats.today_revenue.toLocaleString()}`} 
-          change={stats.today_revenue > 0 ? "+12.5% vs yesterday" : "No sales today"} 
-          changeType={stats.today_revenue > 0 ? "positive" : "neutral"} 
-        />
-        <OrderStat 
-          label="Average Prep Time" 
-          value={stats.avg_prep_time} 
-          change={stats.avg_prep_time !== 'No data yet' ? "On target (Goal < 15m)" : "Awaiting first delivery"} 
-          changeType="neutral" 
-          showIcon="target" 
+          label="Total Revenue" 
+          value={`₱${(stats.total_revenue || 0).toLocaleString()}`} 
+          change={`Today: ₱${(stats.today_revenue || 0).toLocaleString()}`}
+          changeType="positive" 
         />
         <OrderStat 
           label="Fulfillment Rate" 
           value={stats.fulfillment_rate} 
-          change={stats.fulfillment_rate !== 'No data yet' ? "Excellent performance" : "No orders completed yet"} 
+          change={stats.fulfillment_rate !== 'No data yet' ? "System performance overview" : "No orders completed yet"} 
           changeType={stats.fulfillment_rate !== 'No data yet' ? "positive" : "neutral"} 
           showIcon="check" 
         />
@@ -98,9 +114,12 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
                  </button>
                ))}
              </div>
-             <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest cursor-pointer">
+             <div 
+                className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest cursor-pointer hover:text-gray-600 transition-colors"
+                onClick={() => setSortDateDesc(!sortDateDesc)}
+             >
                 Sorted by Date
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 12l-4-4m4 4l4-4m5-4l4 4m0 0l4-4m-4 4V20" /></svg>
+                <svg className={`w-4 h-4 transition-transform ${!sortDateDesc ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 12l-4-4m4 4l4-4m5-4l4 4m0 0l4-4m-4 4V20" /></svg>
              </div>
           </div>
 
@@ -116,34 +135,60 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
               </tr>
             </thead>
             <tbody>
-               {orders.map((order, i) => (
+               {filteredOrders.length > 0 ? filteredOrders.map((order, i) => (
                  <tr key={order.id || i}>
                    <td className="font-bold text-gray-900">#{order.order_reference || `KK-89${21-i}`}</td>
                    <td>
                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gray-100 overflow-hidden">
-                          <img src={`https://i.pravatar.cc/100?u=${i}`} alt="Customer" />
+                        <div className="w-8 h-8 rounded-full bg-gray-100 overflow-hidden shrink-0">
+                          <img src={order.buyer?.profile_image} alt="Customer" className="w-full h-full object-cover" />
                         </div>
-                        <span className="text-sm font-bold text-gray-700">{order.buyer?.name || 'Sarah Miller'}</span>
+                        <span className="text-sm font-bold text-gray-700">{order.buyer?.name || 'Guest User'}</span>
                      </div>
                    </td>
-                   <td className="text-sm text-gray-400 font-medium">Oct 24, 10:30 AM</td>
-                   <td className="font-extrabold text-gray-900">${parseFloat(order.total_amount || 45.50).toFixed(2)}</td>
+                   <td className="text-sm text-gray-400 font-medium">
+                     {order.created_at ? new Date(order.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'Unknown'}
+                   </td>
+                   <td className="font-extrabold text-gray-900">₱{parseFloat(order.total_amount || 0).toFixed(2)}</td>
                    <td>
-                     <span className={`status-badge ${i === 2 ? 'active' : (i === 1 ? 'out_delivery' : 'urgent')}`}>
-                       {i === 2 ? 'COMPLETED' : (i === 1 ? 'OUT FOR DELIVERY' : 'PREPARING')}
+                     <span className={`status-badge ${order.status === 'Completed' ? 'active' : (order.status === 'Out for Delivery' ? 'out_delivery' : 'urgent')}`}>
+                       {order.status ? order.status.toUpperCase() : 'PENDING'}
                      </span>
                    </td>
-                   <td className="text-right">
-                     <button className="p-2 text-gray-400 hover:text-gray-600 font-bold">...</button>
+                   <td className="text-right relative">
+                     <button 
+                       onClick={() => setOpenDropdownId(openDropdownId === order.id ? null : order.id)} 
+                       className="p-2 text-gray-400 hover:text-[#eca840] font-bold transition-colors"
+                     >
+                       ...
+                     </button>
+                     {openDropdownId === order.id && (
+                       <div className="absolute right-10 top-2 bg-white border border-gray-100 shadow-2xl rounded-2xl p-2 z-[60] min-w-[160px] animate-in slide-in-from-top-2 duration-200">
+                          {['Pending', 'Preparing', 'Out for Delivery', 'Completed'].map(statusOption => (
+                             <button 
+                                key={statusOption}
+                                onClick={() => updateOrderStatus(order.id, statusOption)}
+                                className={`block w-full text-left px-4 py-2.5 text-xs font-bold rounded-xl transition-all ${order.status === statusOption ? 'bg-[#eca840] text-white shadow-md shadow-[#eca840]/20' : 'text-gray-600 hover:bg-gray-50'}`}
+                             >
+                                {statusOption}
+                             </button>
+                          ))}
+                       </div>
+                     )}
                    </td>
                  </tr>
-               ))}
+               )) : (
+                 <tr>
+                   <td colSpan={6} className="text-center py-12 text-gray-400 font-medium text-sm">
+                     No orders found for this category.
+                   </td>
+                 </tr>
+               )}
             </tbody>
           </table>
           
           <div className="p-8 border-t border-gray-50 flex justify-between items-center">
-             <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Showing 4 of 248 orders</span>
+             <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Showing {filteredOrders.length} of {orders.length} orders</span>
              <div className="flex gap-2">
                 <button className="w-10 h-10 rounded-xl border border-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-all"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg></button>
                 <button className="w-10 h-10 rounded-xl border border-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-all"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg></button>

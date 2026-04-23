@@ -1,9 +1,10 @@
 import React from 'react';
 import SellerLayout from '../../Components/SellerLayout';
-import { Head } from '@inertiajs/inertia-react';
+import { Head, Link } from '@inertiajs/inertia-react';
 
 interface AnalyticsProps {
   metrics: {
+    total_revenue: number;
     today_revenue: number;
     avg_prep_time: number;
     fulfillment_rate: number;
@@ -20,10 +21,10 @@ interface AnalyticsProps {
     raw_customer_count: number;
     hourly_activity?: number[];
   };
-
+  activity_logs: any[];
 }
 
-export default function SellerAnalytics({ metrics, revenue_overview, category_performance, bestselling_products, customer_insights }: AnalyticsProps) {
+export default function SellerAnalytics({ metrics, revenue_overview, category_performance, bestselling_products, customer_insights, activity_logs = [] }: AnalyticsProps) {
   const handleBatchPrint = () => {
     window.print();
   };
@@ -68,25 +69,18 @@ export default function SellerAnalytics({ metrics, revenue_overview, category_pe
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
         <MetricCard 
-          label="Today's Revenue" 
-          value={`₱${(metrics?.today_revenue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} 
-          subtext={metrics?.revenue_change}
-          subIcon="trend"
+          label="Total Revenue" 
+          value={`₱${(metrics?.total_revenue || 0).toLocaleString()}`} 
+          subtext={`Today: ₱${(metrics?.today_revenue || 0).toLocaleString()}`}
+          subIcon="trending_up"
           icon="revenue" 
         />
         <MetricCard 
-          label="Average Prep Time" 
-          value={metrics?.avg_prep_time > 0 ? `${metrics.avg_prep_time} min` : '—'} 
-          subtext={metrics?.avg_prep_time > 0 ? ((metrics.avg_prep_time <= 15) ? 'On target (Goal < 15m)' : `Over target by ${Math.round(metrics.avg_prep_time - 15)}m`) : 'No delivered orders yet'}
-          subIcon={metrics?.avg_prep_time > 0 ? ((metrics.avg_prep_time <= 15) ? 'target' : 'warn') : 'target'}
-          icon="timer" 
-        />
-        <MetricCard 
           label="Fulfillment Rate" 
-          value={metrics?.fulfillment_rate > 0 ? `${metrics.fulfillment_rate}%` : '—'} 
-          subtext={metrics?.fulfillment_rate > 0 ? ((metrics.fulfillment_rate >= 90) ? 'Excellent performance' : (metrics.fulfillment_rate >= 70) ? 'Good performance' : 'Needs attention') : 'No delivered orders yet'}
+          value={metrics?.fulfillment_rate >= 0 ? `${metrics.fulfillment_rate}%` : '—'} 
+          subtext={metrics?.fulfillment_rate > 0 ? ((metrics.fulfillment_rate >= 90) ? 'Excellent performance' : (metrics.fulfillment_rate >= 70) ? 'Good performance' : 'Needs attention') : 'No orders completed yet'}
           subIcon="check"
           icon="fulfillment" 
         />
@@ -136,11 +130,12 @@ export default function SellerAnalytics({ metrics, revenue_overview, category_pe
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                  {category_performance?.map((cat, i) => {
                     const offset = category_performance.slice(0, i).reduce((acc, curr) => acc + (curr.percentage * 2.512), 0);
+                    const colors = ['#f5a623', '#5c4033', '#000000', '#ede7e3'];
                     return (
                        <circle 
                          key={cat.name}
                          cx="50" cy="50" r="40" 
-                         stroke={i === 0 ? "#f5a623" : (i === 1 ? "#5c4033" : "#ede7e3")} 
+                         stroke={colors[i] || '#ede7e3'} 
                          strokeWidth="12" fill="transparent" 
                          strokeDasharray="251.2" 
                          strokeDashoffset={251.2 - (cat.percentage * 2.512)}
@@ -159,7 +154,10 @@ export default function SellerAnalytics({ metrics, revenue_overview, category_pe
               {category_performance?.map((cat, i) => (
                 <div key={cat.name} className="flex justify-between items-center">
                    <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full ${i === 0 ? 'bg-[#f5a623]' : (i === 1 ? 'bg-[#5c4033]' : 'bg-[#ede7e3]')}`}></div>
+                      {(() => {
+                          const colors = ['bg-[#f5a623]', 'bg-[#5c4033]', 'bg-black', 'bg-[#ede7e3]'];
+                          return <div className={`w-3 h-3 rounded-full ${colors[i] || 'bg-[#ede7e3]'}`}></div>;
+                      })()}
                       <span className="text-sm font-bold text-gray-700">{cat.name}</span>
                    </div>
                    <span className="text-sm font-black text-gray-900">{cat.percentage}%</span>
@@ -244,6 +242,69 @@ export default function SellerAnalytics({ metrics, revenue_overview, category_pe
         </div>
       </div>
 
+      <div className="bg-white rounded-[2.5rem] p-12 border border-gray-100 shadow-sm mt-12 no-print">
+         <div className="flex justify-between items-center mb-10">
+            <div>
+               <h3 className="text-2xl font-black text-gray-900 mb-1">Operational Audit Trail</h3>
+               <p className="text-sm text-gray-400 font-medium">Detailed log of recent system events and manual inventory adjustments.</p>
+            </div>
+            <Link href="/seller/activity" className="text-xs font-black text-[#f5a623] uppercase tracking-widest hover:underline">Full System Logs</Link>
+         </div>
+
+         <div className="overflow-x-auto">
+            <table className="w-full">
+               <thead>
+                  <tr className="border-b border-gray-50">
+                     <th className="text-left py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Timestamp</th>
+                     <th className="text-left py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Operator</th>
+                     <th className="text-left py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Action</th>
+                     <th className="text-left py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Details</th>
+                     <th className="text-right py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Status</th>
+                   </tr>
+               </thead>
+               <tbody className="divide-y divide-gray-50">
+                  {activity_logs?.length > 0 ? (
+                    activity_logs.map((log: any) => (
+                      <tr key={log.id} className="group hover:bg-gray-50/50 transition-colors">
+                         <td className="py-6 whitespace-nowrap">
+                            <span className="text-xs font-bold text-gray-900">{new Date(log.created_at).toLocaleDateString()}</span>
+                            <span className="text-[10px] text-gray-400 ml-2">{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                         </td>
+                         <td className="py-6">
+                            <div className="flex items-center gap-3">
+                               <div className="w-8 h-8 rounded-full bg-[#fff1de] flex items-center justify-center text-[10px] font-black text-[#f5a623]">
+                                  {log.username?.charAt(0) || 'S'}
+                               </div>
+                               <span className="text-sm font-bold text-gray-700">{log.username || 'System'}</span>
+                            </div>
+                         </td>
+                         <td className="py-6">
+                            <span className="text-sm font-bold text-gray-900">{log.action}</span>
+                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">{log.category}</div>
+                         </td>
+                         <td className="py-6">
+                            <p className="text-xs text-gray-500 max-w-md line-clamp-1">{log.metadata?.details || 'Background operation completed.'}</p>
+                         </td>
+                         <td className="py-6 text-right">
+                            <span className={`inline-block px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
+                               log.status === 'success' ? 'bg-green-50 text-green-600' : 
+                               log.status === 'warning' ? 'bg-orange-50 text-orange-600' : 
+                               'bg-red-50 text-red-600'
+                            }`}>
+                               {log.status || 'Processed'}
+                            </span>
+                         </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                       <td colSpan={5} className="py-20 text-center text-sm text-gray-400 font-medium italic">No recent operational data found.</td>
+                    </tr>
+                  )}
+               </tbody>
+            </table>
+         </div>
+      </div>
     </SellerLayout>
   );
 }

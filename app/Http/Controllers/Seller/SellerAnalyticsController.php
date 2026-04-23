@@ -17,42 +17,48 @@ class SellerAnalyticsController extends Controller
 {
     public function index()
     {
-        // Real Metrics Calculation for Sales Analytics
-        // Revenue: sum all orders today (any status)
-        $todayRevenue = Order::whereDate('created_at', today())->sum('total_amount');
-        $yesterdayRevenue = Order::whereDate('created_at', today()->subDay())->sum('total_amount');
-        
-        $revenueDiff = $yesterdayRevenue > 0 ? (($todayRevenue - $yesterdayRevenue) / $yesterdayRevenue) * 100 : 0;
-        $revenueChange = ($revenueDiff >= 0 ? '+' : '') . round($revenueDiff, 1) . '% vs yesterday';
-
-        // Average Prep Time: calculate from delivered orders; fallback to 0
-        $deliveredOrdersObjs = Order::where('status', 'Delivered')->get();
-        $totalMinutes = 0;
-        foreach ($deliveredOrdersObjs as $order) {
-            $totalMinutes += $order->updated_at->diffInMinutes($order->created_at);
-        }
-        $avgPrepTime = $deliveredOrdersObjs->count() > 0 ? round($totalMinutes / $deliveredOrdersObjs->count(), 1) : 0;
-
-        $totalOrders = Order::count();
-        $deliveredOrdersCount = $deliveredOrdersObjs->count();
-        $fulfillmentRate = $totalOrders > 0 ? round(($deliveredOrdersCount / $totalOrders) * 100, 1) : 0;
+        // Data aggregation logic below will handle these metrics.
 
         // Dynamic Revenue Overview (Last 6 Months)
+        // Grouping in PHP for absolute reliability across different DB drivers
+        $allActiveOrders = Order::where('status', '!=', 'Cancelled')->get();
+        
         $revenueOverview = [];
         for ($i = 5; $i >= 0; $i--) {
-            $month = Carbon::today()->subMonths($i);
-            $monthlyRevenue = Order::whereMonth('created_at', $month->month)
-                ->whereYear('created_at', $month->year)
-                ->where('status', 'Delivered')
-                ->sum('total_amount');
+            $monthDate = Carbon::now()->subMonths($i);
+            $monthLabel = $monthDate->format('M');
+            $monthNum = $monthDate->month;
+            $yearNum = $monthDate->year;
             
-            if ($monthlyRevenue == 0) $monthlyRevenue = rand(5000, 15000); // Baseline for visual flow
-
+            $monthlySum = $allActiveOrders->filter(function($o) use ($monthNum, $yearNum) {
+                return $o->created_at->month === $monthNum && $o->created_at->year === $yearNum;
+            })->sum('total_amount');
+            
             $revenueOverview[] = [
-                'month' => $month->format('M'),
-                'revenue' => (float)$monthlyRevenue
+                'month' => $monthLabel,
+                'revenue' => (float)$monthlySum
             ];
         }
+
+        // Metrics Detection
+        $totalRevenue = $allActiveOrders->sum('total_amount');
+        $todayRevenue = $allActiveOrders->filter(fn($o) => $o->created_at->isToday())->sum('total_amount');
+        $yesterdayRevenue = $allActiveOrders->filter(fn($o) => $o->created_at->isYesterday())->sum('total_amount');
+        
+        $revenueDiff = $yesterdayRevenue > 0 ? (($todayRevenue - $yesterdayRevenue) / $yesterdayRevenue) * 100 : ($todayRevenue > 0 ? 100 : 0);
+        $revenueChange = ($revenueDiff >= 0 ? '+' : '') . round($revenueDiff, 1) . '% activity vs yesterday';
+
+        // Update Prep Time
+        $completedOrPrepared = $allActiveOrders->filter(fn($o) => in_array($o->status, ['Preparing', 'Out for Delivery', 'Delivered']));
+        $totalMinutes = 0;
+        foreach ($completedOrPrepared as $order) {
+            $totalMinutes += $order->updated_at->diffInMinutes($order->created_at);
+        }
+        $avgPrepTime = $completedOrPrepared->count() > 0 ? round($totalMinutes / $completedOrPrepared->count(), 1) : 0;
+
+        $totalOrdersCount = $allActiveOrders->count();
+        $completedCount = $allActiveOrders->filter(fn($o) => in_array($o->status, ['Out for Delivery', 'Delivered']))->count();
+        $fulfillmentRate = $totalOrdersCount > 0 ? round(($completedCount / $totalOrdersCount) * 100, 1) : 0;
 
         // Deep Data Mining for Categories and Products
         $orders = Order::all();
@@ -105,35 +111,44 @@ class SellerAnalyticsController extends Controller
             }
         }
 
-        // Category Perf: Use real categories from DB
+        // Category Perf: Use real categories from DB and match against normalized sales
         $allCategories = Category::all();
         $categoryPerf = [];
-        
         $totalItemsSold = 0;
+
         foreach ($allCategories as $cat) {
-            $soldCount = 0;
-            // Catch sales from the $categorySales array computed earlier during order processing
-            $salesValue = $categorySales[$cat->name] ?? 0;
+            $normalizedName = ucfirst(strtolower($cat->name));
+            $salesValue = $categorySales[$normalizedName] ?? 0;
             
-            // Also count item volume from items_data to get "pila ka item ang na gamit"
-            foreach ($orders as $order) {
-                $items = $order->items_data;
-                if ($items && is_array($items)) {
-                    foreach ($items as $item) {
-                        if (($item['category'] ?? '') === $cat->name) {
-                            $soldCount += ($item['quantity'] ?? 1);
+            $categoryPerf[] = [
+                'name' => $cat->name,
+                'items_sold' => 0, // We will fill this in a second pass or just use revenue
+                'revenue' => $salesValue,
+                'product_count' => Product::where('category_id', $cat->id)->count()
+            ];
+        }
+
+        // Second pass to fill volume (pila ka item) correctly with smart detection
+        foreach ($orders as $order) {
+            $items = $order->items_data;
+            if ($items && is_array($items)) {
+                foreach ($items as $item) {
+                    $catName = $item['category'] ?? null;
+                    $prodId = $item['id'] ?? null;
+                    if (!$catName && $prodId) {
+                        $p = Product::find($prodId);
+                        if ($p && $p->category) $catName = $p->category->name;
+                    }
+                    if (!$catName) $catName = 'Artisanal';
+                    
+                    foreach ($categoryPerf as &$cp) {
+                        if (strtolower($cp['name']) === strtolower($catName)) {
+                            $cp['items_sold'] += ($item['quantity'] ?? 1);
+                            $totalItemsSold += ($item['quantity'] ?? 1);
                         }
                     }
                 }
             }
-            
-            $categoryPerf[] = [
-                'name' => $cat->name,
-                'items_sold' => $soldCount,
-                'revenue' => $salesValue,
-                'product_count' => Product::where('category_id', $cat->id)->count()
-            ];
-            $totalItemsSold += $soldCount;
         }
 
         // Calculate percentages based on item volume (or revenue if you prefer, but "pila ka item" suggests volume)
@@ -150,7 +165,7 @@ class SellerAnalyticsController extends Controller
         }
 
         // Customer Insights Logic
-        $allCustomers = User::where('role', 'customer')->count();
+        $allCustomers = User::where('role', 'buyer')->count();
         $ordersCount = Order::count();
         $uniqueBuyers = Order::distinct('buyer_id')->count('buyer_id');
         $returningCustomers = Order::select('buyer_id')->groupBy('buyer_id')->havingRaw('count(*) > 1')->count();
@@ -165,6 +180,7 @@ class SellerAnalyticsController extends Controller
 
         return Inertia::render('Seller/SellerAnalytics', [
             'metrics' => [
+                'total_revenue' => (float)$totalRevenue,
                 'today_revenue' => (float)$todayRevenue,
                 'avg_prep_time' => $avgPrepTime, 
                 'fulfillment_rate' => $fulfillmentRate,
@@ -180,7 +196,8 @@ class SellerAnalyticsController extends Controller
                 'repeat_purchases' => $avgRepeat . ' avg/month',
                 'raw_customer_count' => $allCustomers,
                 'hourly_activity' => $hourlyActivity
-            ]
+            ],
+            'activity_logs' => \App\Models\ActivityLog::latest()->take(10)->get()
         ]);
     }
 }

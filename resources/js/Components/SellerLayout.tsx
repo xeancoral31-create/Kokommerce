@@ -4,16 +4,23 @@ import { useUser, UserButton } from '@clerk/clerk-react';
 import Logo from './Logo';
 
 const icons = {
-  dashboard: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>,
-  products: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>,
-  orders: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>,
-  categories: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>,
-  offers: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>,
-  analytics: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 0 002 2h2a2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 0 002-2m0 0V5a2 2 0 012-2h2a2 0 012 2v14a2 2 0 01-2 2h-2a2 0 01-2-2z" /></svg>,
-  users: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>,
+  dashboard: (
+    <svg fill="currentColor" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="8" height="8" rx="1" />
+      <rect x="13" y="3" width="8" height="8" rx="1" />
+      <rect x="3" y="13" width="8" height="8" rx="1" />
+      <rect x="13" y="13" width="8" height="8" rx="1" />
+    </svg>
+  ),
+  products: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>,
+  orders: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a 4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z" /></svg>,
+  categories: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>,
+  offers: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a 2 2 0 0 1 0 2.828l-7 7a 2 2 0 0 1-2.828 0l-7-7A 1.994 1.994 0 0 1 3 12V7a 4 4 0 0 1 4-4z" /></svg>,
+  analytics: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a 2 2 0 0 0-2-2H5a 2 2 0 0 0-2 2v6a 2 2 0 0 0 2 2h2a 2 2 0 0 0 2-2zm0 0V9a 2 2 0 0 1 2-2h2a 2 2 0 0 1 2 2v10m-6 0a 2 2 0 0 0 2 2h2a 2 2 0 0 0 2-2m0 0V5a 2 2 0 0 1 2-2h2a2 0 0 1 2 2v14a 2 2 0 0 1-2 2h-2a 2 2 0 0 1-2-2z" /></svg>,
+  users: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a 4 4 0 1 1 0 5.292M15 21H3v-1a 6 6 0 0 1 12 0v1zm0 0h6v-1a 6 6 0 0 0-9-5.197M13 7a 4 4 0 1 1-8 0 4 4 0 0 1 8 0z" /></svg>,
   activity: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>,
-  settings: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
-  help: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+  settings: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a 1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a 1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a 1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a 1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a 1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a 1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a 1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a 3 3 0 1 1-6 0 3 3 0 0 1 6 0z" /></svg>,
+  help: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a 9 9 0 1 1-18 0 9 9 0 0 1 18 0z" /></svg>
 };
 
 const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -77,10 +84,13 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             <Logo size={42} />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-xl font-black text-gray-900 tracking-tighter leading-none uppercase">
+            <h1 className="text-[26px] font-[1000] text-gray-900 tracking-[-0.04em] leading-none uppercase">
               Kokommerce
             </h1>
-            <span className="block text-[8px] mt-1 text-[#eca840] tracking-[0.4em] font-black uppercase">ARTISANAL BAKERY</span>
+            <span className="block text-[10px] mt-2 text-[#eca840] tracking-[0.35em] font-black uppercase flex items-center gap-2">
+              <span className="w-4 h-[1px] bg-[#eca840]/30"></span>
+              ARTISANAL BAKERY
+            </span>
           </div>
         </div>
 
@@ -99,7 +109,7 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           </div>
         </div>
 
-        <Link href="/?view_as=seller" className="mb-8 block w-full py-4 text-center text-[10px] font-black text-[#eca840] border-2 border-[#eca840]/20 rounded-2xl hover:bg-[#eca840] hover:text-white hover:border-[#eca840] transition-all uppercase tracking-[0.2em] leading-none">
+        <Link href="/?view_as=seller" className="mb-8 block w-full py-4 text-center text-[11px] font-black text-[#eca840] border-2 border-[#eca840]/20 rounded-2xl hover:bg-[#eca840] hover:text-white hover:border-[#eca840] transition-all hover:scale-[1.02] active:scale-95 uppercase tracking-[0.2em] leading-none shadow-sm hover:shadow-md">
           View Storefront
         </Link>
 
@@ -108,7 +118,7 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             <Link
               key={item.label}
               href={item.href}
-              className={`nav-item flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all duration-200 ${url.startsWith(item.href) ? 'bg-[#2d2a26] text-white shadow-lg shadow-gray-900/10' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'}`}
+              className={`nav-item group flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all duration-300 ${url.startsWith(item.href) ? 'bg-[#2d2a26] text-white shadow-xl shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'}`}
             >
               <div className={`w-5 h-5 transition-colors ${url.startsWith(item.href) ? 'text-[#eca840]' : 'text-gray-400 group-hover:text-gray-900'}`}>
                 {item.icon}
@@ -182,20 +192,42 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
               </div>
             </div>
 
-            <div className="flex items-center gap-4 pl-2">
-              <div className="text-right hidden sm:block">
-                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Master Baker</p>
-                <h5 className="text-sm font-black text-gray-900 leading-none">{profileName}</h5>
-              </div>
-              <div className="relative group flex items-center gap-2">
-                <div className="w-12 h-12 rounded-2xl bg-[#eca840] p-0.5 shadow-lg shadow-[#eca840]/20 transform group-hover:rotate-3 transition-transform">
-                  <div className="w-full h-full rounded-[0.9rem] overflow-hidden border-2 border-white/20 bg-white">
-                    <img src={profileImage} alt="User" className="w-full h-full object-cover" />
+            <div className="flex items-center gap-3 pl-4">
+              <div className="relative bg-white border border-gray-100/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-full px-6 py-2.5 flex items-center gap-4 hover:shadow-lg transition-all cursor-pointer group">
+                {/* The Custom UI visible to the user */}
+                <div className="text-left">
+                  <h5 className="text-sm font-black text-gray-900 leading-none mb-1">{profileName.split(' ')[0]}</h5>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[8px] font-black text-green-500 uppercase tracking-widest">{isOnline ? 'CONNECTED' : 'OFFLINE'}</span>
                   </div>
                 </div>
-                {/* Clerk UserButton for sign-out - placed separately so it doesn't override the profile photo */}
-                <div className="opacity-0 w-0 h-0 overflow-hidden absolute">
-                  <UserButton afterSignOutUrl="/" />
+                
+                <div className="relative">
+                  <div className={`w-11 h-11 rounded-full p-[2px] transition-all duration-500 ${isOnline ? 'bg-gradient-to-tr from-blue-500 to-indigo-600' : 'bg-gray-200'}`}>
+                    <div className="w-full h-full rounded-full overflow-hidden border-2 border-white bg-gray-100 flex items-center justify-center">
+                      {profileImage ? (
+                        <img src={profileImage} alt="User" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-sm font-black text-gray-400">{profileName.charAt(0)}</span>
+                      )}
+                    </div>
+                  </div>
+                  {isOnline && (
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                  )}
+                </div>
+
+                {/* Overlaid Clerk UserButton - hidden but clickable over the entire container */}
+                <div className="absolute inset-0 opacity-0 z-10 cursor-pointer [&_button]:w-full [&_button]:h-full [&_button]:rounded-full">
+                  <UserButton 
+                    afterSignOutUrl="/" 
+                    appearance={{
+                      elements: {
+                        userButtonTrigger: "w-full h-full",
+                        rootBox: "w-full h-full"
+                      }
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -215,4 +247,3 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 };
 
 export default SellerLayout;
-

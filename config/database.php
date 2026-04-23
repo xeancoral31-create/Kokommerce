@@ -63,6 +63,22 @@ return [
             ]) : [],
         ],
 
+        'railway' => [
+            'driver' => 'mysql',
+            'url' => env('RAILWAY_MYSQL_URL'),
+            'host' => env('RAILWAY_DB_HOST'),
+            'port' => env('RAILWAY_DB_PORT'),
+            'database' => env('RAILWAY_DB_DATABASE'),
+            'username' => env('RAILWAY_DB_USERNAME'),
+            'password' => env('RAILWAY_DB_PASSWORD'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

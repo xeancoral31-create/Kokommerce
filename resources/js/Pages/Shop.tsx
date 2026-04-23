@@ -59,13 +59,21 @@ import Footer from "../Components/Footer";
 
 interface ShopProps {
   products: Product[];
+  categories: any[];
 }
 
-export default function Shop({ products: initialProducts }: ShopProps) {
+export default function Shop({ products: initialProducts, categories: dbCategories = [] }: ShopProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts || MOCK_PRODUCTS);
-  const coreCategories = ["Kakanin", "Bread", "Cookies", "Cakes"];
+  
+  // Extract category names from database categories
+  const dbCategoryNames = dbCategories.map(c => c.name);
+  // Get categories inferred from products that might not be in DB yet (fallback)
   const dynamicCategories = initialProducts ? [...new Set(initialProducts.map(p => p.category?.name || p.category))] : [];
-  const categories = [...new Set([...coreCategories, ...dynamicCategories])].filter(Boolean);
+  
+  const categories = [...new Set([
+    ...dbCategoryNames,
+    ...dynamicCategories
+  ])].filter(Boolean);
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");

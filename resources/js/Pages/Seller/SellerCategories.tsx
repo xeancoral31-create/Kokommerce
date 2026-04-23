@@ -19,12 +19,15 @@ export default function SellerCategories({ categories, archived_categories, tota
     name: '',
     description: '',
     image: '',
-    status: 'Active'
+    image_file: null as File | null,
+    status: 'Active',
+    _method: 'POST' as 'POST' | 'PUT'
   });
 
   const openAddModal = () => {
     setEditingCategory(null);
     reset();
+    setData('_method', 'POST');
     setIsModalOpen(true);
   };
 
@@ -34,21 +37,29 @@ export default function SellerCategories({ categories, archived_categories, tota
       name: category.name,
       description: category.description || '',
       image: category.image || '',
-      status: category.status || 'Active'
+      image_file: null,
+      status: category.status || 'Active',
+      _method: 'PUT'
     });
     setIsModalOpen(true);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const options = {
+      forceFormData: true,
+      preserveScroll: true,
+      onSuccess: () => {
+        setIsModalOpen(false);
+        reset();
+      }
+    };
+
     if (editingCategory) {
-      put(route('seller.categories.update', editingCategory.id), {
-        onSuccess: () => setIsModalOpen(false)
-      });
+      post(route('seller.categories.update', editingCategory.id), options);
     } else {
-      post(route('seller.categories.store'), {
-        onSuccess: () => setIsModalOpen(false)
-      });
+      post(route('seller.categories.store'), options);
     }
   };
 
@@ -148,7 +159,7 @@ export default function SellerCategories({ categories, archived_categories, tota
                     onClick={() => handleDelete(categories[0])}
                     className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-red-400 hover:bg-red-50 transition-all active:scale-95"
                   >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
                   </button>
                </div>
             </div>
@@ -258,14 +269,25 @@ export default function SellerCategories({ categories, archived_categories, tota
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Cover Image URL</label>
-                  <input 
-                    type="text" 
-                    value={data.image}
-                    onChange={e => setData('image', e.target.value)}
-                    className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#f5a623]/20" 
-                    placeholder="https://..."
-                  />
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Collection Image</label>
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 bg-gray-50 rounded-2xl p-1 flex items-center">
+                        <label className="flex-1 cursor-pointer">
+                            <input 
+                                type="file" 
+                                className="hidden" 
+                                onChange={e => {
+                                    const file = e.target.files?.[0];
+                                    if (file) setData('image_file', file);
+                                }}
+                            />
+                            <div className="px-6 py-3 text-xs font-bold text-gray-500 truncate">
+                                {data.image_file ? data.image_file.name : (data.image ? 'Existing Image' : 'Select a high-quality visual...')}
+                            </div>
+                        </label>
+                    </div>
+                  </div>
+                  {errors.image_file && <p className="text-red-500 text-[10px] font-bold ml-1">{errors.image_file}</p>}
                 </div>
 
                 <div className="grid grid-cols-2 gap-8">
@@ -349,7 +371,7 @@ const SmallCategoryCard = ({ category, onEdit, onDelete, isArchived, onRestore }
                 onClick={onDelete}
                 className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-[#f5a623] hover:text-white transition-all border border-gray-50 active:scale-95"
                 >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
                 </button>
             </>
          ) : (

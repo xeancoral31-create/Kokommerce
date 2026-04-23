@@ -30,68 +30,91 @@ interface Product {
 interface HomeProps {
     favorites: Product[];
     new_arrivals: Product[];
+    categories: any[];
 }
 
-export default function Home({ favorites, new_arrivals }: HomeProps) {
+export default function Home({ favorites, new_arrivals, categories = [] }: HomeProps) {
     const [currentVideo, setCurrentVideo] = React.useState(0);
-    
+
     // Ensure we have fallbacks for UI structure
     const displayNewArrivals = new_arrivals?.length > 0 ? new_arrivals : [];
     const displayFavorites = favorites?.length > 0 ? favorites : [];
 
+    const firstCategory = categories[0];
+
     return (
-        <div className="min-h-screen flex flex-col pt-20">
+        <div className="min-h-screen flex flex-col">
             <Navbar />
 
             <main className="flex-grow">
-                {/* Hero Section with High-Definition Video Background */}
-                <section className="hero-section container-custom">
-                    <div className="hero-banner video-mode">
-                        <div className="hero-video-wrapper">
-                            <iframe 
-                                src={`https://www.youtube.com/embed/_om7--IxCIY?autoplay=1&mute=1&controls=0&loop=1&playlist=_om7--IxCIY&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&origin=${window.location.origin}`}
-                                className="hero-iframe-bg"
-                                allow="autoplay; encrypted-media"
-                                frameBorder="0"
-                            ></iframe>
-                        </div>
-                        <div className="hero-overlay">
-                            <div className="hero-content">
-                                <span className="badge">Freshly Baked Daily</span>
-                                <h1>The Hearth of <span>Tradition.</span></h1>
-                                <p>Handcrafted sourdough, heirloom pastries, and local delicacies delivered from our oven to your doorstep.</p>
-                                <div className="hero-btns">
-                                    <Link href="/shop" className="btn-koko btn-primary">Explore Menu</Link>
-                                    <Link href="/about" className="btn-koko btn-outline">Our Story</Link>
+                {/* Hero Section - Reverted to Professional Video/Static Background */}
+                <section className="hero-section">
+                    <div className="container-custom">
+                        <div className="hero-banner relative overflow-hidden h-[500px] rounded-[2.5rem] lg:rounded-[3rem] shadow-2xl border border-gray-100">
+                            <div className="hero-video-wrapper">
+                                <iframe
+                                    src={`https://www.youtube-nocookie.com/embed/_om7--IxCIY?autoplay=1&mute=1&controls=0&loop=1&playlist=_om7--IxCIY&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&enablejsapi=1&playsinline=1&origin=${window.location.origin}`}
+                                    className="hero-iframe-bg"
+                                    allow="autoplay; encrypted-media"
+                                    frameBorder="0"
+                                ></iframe>
+                            </div>
+                            <div className="hero-overlay absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent flex items-center px-8 md:px-16 lg:px-20">
+                                <div className="hero-content">
+                                    <span className="badge">Freshly Baked Daily</span>
+                                    <h1 className="text-white drop-shadow-lg text-4xl lg:text-5xl font-black">The Hearth of <span className="text-[#eca840]">Tradition.</span></h1>
+                                    <p className="text-white/80 drop-shadow-md text-sm lg:text-base max-w-lg">Handcrafted sourdough, heirloom pastries, and local delicacies delivered from our oven to your doorstep.</p>
+                                    <div className="hero-btns mt-8">
+                                        <Link href="/shop" className="btn-koko btn-primary bg-[#eca840] hover:bg-[#d69635] px-10 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl">Explore Menu</Link>
+                                        <Link href="/about" className="btn-koko btn-outline ml-4 backdrop-blur-md px-10 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest border-2 border-white/30 hover:border-white transition-all">Our Story</Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Browse by Category - Global Detection */}
-                <section className="container-custom py-24">
-                    <div className="flex flex-wrap justify-center gap-8">
-                        {['Kakanin', 'Bread', 'Cookies', 'Cakes'].map((cat) => (
-                            <Link 
-                                key={cat}
-                                href={`/shop?category=${cat}`} 
-                                className="group flex-1 min-w-[200px] bg-white rounded-[2.5rem] p-8 border border-gray-100 transition-all hover:shadow-2xl hover:border-[#eca840] hover:-translate-y-2 text-center"
-                            >
-                                <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-6 group-hover:bg-[#eca840]/10 transition-all">
-                                    <span className="text-2xl group-hover:scale-110 transition-transform">
-                                        {cat === 'Kakanin' && '🍡'}
-                                        {cat === 'Bread' && '🥖'}
-                                        {cat === 'Cookies' && '🍪'}
-                                        {cat === 'Cakes' && '🍰'}
-                                    </span>
-                                </div>
-                                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-gray-900 group-hover:text-[#eca840] transition-colors">{cat}</h3>
-                                <p className="text-[10px] text-gray-400 font-bold mt-2 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all">Explore Collections</p>
-                            </Link>
-                        ))}
+                {/* Browse by Category - Professional Grid Aligned with Hero */}
+                <section className="py-20 lg:py-24">
+                    <div className="container-custom">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {categories.map((cat: any) => (
+                                <Link
+                                    key={cat.id}
+                                    href={`/shop?category=${cat.name}`}
+                                    className="group relative h-[400px] bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 transition-all duration-500 hover:shadow-2xl hover:-translate-y-3"
+                                >
+                                    {/* Background Image from Seller Portal */}
+                                    {cat.image ? (
+                                        <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110">
+                                            <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                                        </div>
+                                    ) : (
+                                        <div className="absolute inset-0 bg-gray-50 flex items-center justify-center">
+                                            <span className="text-4xl opacity-20">✨</span>
+                                        </div>
+                                    )}
+
+                                    <div className="relative h-full p-10 flex flex-col justify-end text-center">
+                                        <div className="w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-[#eca840] group-hover:border-[#eca840] transition-all shadow-xl">
+                                            <span className="text-xl text-white">
+                                                {cat.name.toLowerCase() === 'kakanin' && '🍡'}
+                                                {cat.name.toLowerCase() === 'bread' && '🥖'}
+                                                {cat.name.toLowerCase() === 'cookies' && '🍪'}
+                                                {cat.name.toLowerCase() === 'cakes' && '🍰'}
+                                                {!['kakanin', 'bread', 'cookies', 'cakes'].includes(cat.name.toLowerCase()) && '✨'}
+                                            </span>
+                                        </div>
+                                        <h3 className="text-lg font-black uppercase tracking-[0.3em] text-white transition-colors group-hover:text-[#eca840]">{cat.name}</h3>
+                                        <p className="text-[9px] text-white/50 font-black mt-3 uppercase tracking-[0.4em] opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">Discover Collection</p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </section>
+
 
                 {/* New Arrivals - Professional 3-Item Layout */}
                 <section className="container-custom py-24">
@@ -105,10 +128,10 @@ export default function Home({ favorites, new_arrivals }: HomeProps) {
                             <p className="text-gray-400 mt-4 max-w-lg font-medium">Be the first to experience our newest artisanal creations, masterfully crafted by our head baker.</p>
                         </div>
                         <Link href="/shop" className="view-all group">
-                           <span className="text-[11px] font-black uppercase tracking-widest">Discover All</span>
-                           <div className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center group-hover:bg-[#eca840] group-hover:text-white transition-all">
-                             <ArrowRight />
-                           </div>
+                            <span className="text-[11px] font-black uppercase tracking-widest">Discover All</span>
+                            <div className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center group-hover:bg-[#eca840] group-hover:text-white transition-all">
+                                <ArrowRight />
+                            </div>
                         </Link>
                     </div>
 
@@ -191,28 +214,28 @@ export default function Home({ favorites, new_arrivals }: HomeProps) {
                                     </div>
                                     <div className="p-8">
                                         <div className="flex justify-between items-start mb-4">
-                                          <h3 className="text-lg font-black text-gray-900 group-hover:text-[#eca840] transition-colors tracking-tight leading-tight line-clamp-2">{product.name}</h3>
-                                          <div className="flex items-center mt-1">
-                                            <span className="text-[10px] font-black text-[#eca840]">★ {product.rating}</span>
-                                          </div>
+                                            <h3 className="text-lg font-black text-gray-900 group-hover:text-[#eca840] transition-colors tracking-tight leading-tight line-clamp-2">{product.name}</h3>
+                                            <div className="flex items-center mt-1">
+                                                <span className="text-[10px] font-black text-[#eca840]">★ {product.rating}</span>
+                                            </div>
                                         </div>
                                         <p className="text-xs text-gray-400 font-medium line-clamp-1 mb-6">Masterfully baked with artisanal precision.</p>
                                         <div className="flex items-center justify-between border-t border-gray-50 pt-6">
                                             <p className="text-xl font-black text-gray-900 tracking-tighter">₱{parseFloat(String(product.price)).toLocaleString()}</p>
                                             <Link href="/shop" className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-[#eca840] hover:bg-[#eca840] hover:text-white transition-all">
-                                              <ArrowRight />
+                                                <ArrowRight />
                                             </Link>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        
+
                         <div className="mt-20 text-center">
-                           <Link href="/shop" className="inline-flex items-center gap-4 bg-[#2d2a26] text-white px-12 py-6 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] shadow-2xl hover:bg-black transition-all">
-                             Enter the Full Gallery 
-                             <ArrowRight />
-                           </Link>
+                            <Link href="/shop" className="inline-flex items-center gap-4 bg-[#2d2a26] text-white px-12 py-6 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] shadow-2xl hover:bg-black transition-all">
+                                Enter the Full Gallery
+                                <ArrowRight />
+                            </Link>
                         </div>
                     </div>
                 </section>

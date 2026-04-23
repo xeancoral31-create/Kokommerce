@@ -28,7 +28,9 @@ class SellerUserController extends Controller
                 'role' => $isSeller ? 'Seller' : 'Buyer',
                 'status' => $isActive ? 'Active' : 'Inactive',
                 'joined' => $user->created_at->format('M d, Y'),
-                'orders' => $isSeller ? '--' : \App\Models\Order::where('buyer_email', $user->email)->count()
+                'orders' => $isSeller ? '--' : \App\Models\Order::whereHas('buyer', function($q) use ($user) {
+                    $q->where('email', $user->email);
+                })->count()
             ];
         });
 
@@ -40,5 +42,42 @@ class SellerUserController extends Controller
                 'permissions_audit' => 'Clean'
             ]
         ]);
+    }
+
+    public function update(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        $user->update($validated);
+
+        return redirect()->back()->with('success', 'User profile updated successfully.');
+    }
+
+    public function togglePermissions(User $user)
+    {
+        $whitelist = \App\Models\SellerWhitelist::where('email', $user->email)->first();
+
+        if ($whitelist) {
+            $whitelist->delete();
+            $message = "Public permissions restored for {$user->name}.";
+        } else {
+            \App\Models\SellerWhitelist::create(['email' => $user->email]);
+            $message = "Staff Partner status granted to {$user->name}.";
+        }
+
+        return redirect()->back()->with('success', $message);
+    }
+
+    public function destroy(User $user)
+    {
+        if ($user->id === auth()->id()) {
+            return redirect()->back()->with('error', 'Cannot remove your own masterful account.');
+        }
+
+        $user->delete();
+        return redirect()->back()->with('success', 'User removed from artisanal community.');
     }
 }

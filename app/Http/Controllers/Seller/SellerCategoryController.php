@@ -39,8 +39,14 @@ class SellerCategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
+            'image_file' => 'nullable|image|max:2048',
             'image' => 'nullable|string'
         ]);
+
+        if ($request->hasFile('image_file')) {
+            $path = $request->file('image_file')->store('categories', 'public');
+            $validated['image'] = '/storage/' . $path;
+        }
 
         Category::create([
             'name' => $validated['name'],
@@ -59,10 +65,21 @@ class SellerCategoryController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'status' => 'required|string',
+            'image_file' => 'nullable|image|max:2048',
             'image' => 'nullable|string'
         ]);
 
-        $category->update($validated);
+        if ($request->hasFile('image_file')) {
+            $path = $request->file('image_file')->store('categories', 'public');
+            $validated['image'] = '/storage/' . $path;
+        }
+
+        $category->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'status' => $validated['status'],
+            'image' => $validated['image'] ?? $category->image
+        ]);
 
         return redirect()->back();
     }

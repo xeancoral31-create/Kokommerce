@@ -1,4 +1,5 @@
 import { Link, usePage } from "@inertiajs/inertia-react";
+import { Inertia } from "@inertiajs/inertia";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/clerk-react";
 import React, { useEffect } from "react";
 import axios from "axios";
@@ -16,12 +17,23 @@ const ShoppingBagIcon = () => (
     </svg>
 );
 
+import { useCart } from "../Context/CartContext";
+
 export default function Navbar() {
     const { url } = usePage();
     const { isLoaded, isSignedIn, user } = useUser();
+    const { cartCount } = useCart();
     const isBuyer = url.startsWith('/buyer');
 
     const [isViewingAsSeller, setIsViewingAsSeller] = React.useState(false);
+    const [searchTerm, setSearchTerm] = React.useState("");
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('search')) {
+            setSearchTerm(params.get('search') || "");
+        }
+    }, [url]);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -36,6 +48,16 @@ export default function Navbar() {
     const handleReturnToDashboard = () => {
         sessionStorage.removeItem('view_as_seller');
         window.location.href = '/seller/dashboard';
+    };
+
+    const handleSearchSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const targetUrl = isBuyer ? "/buyer/shop" : "/shop";
+        if (searchTerm.trim()) {
+            Inertia.get(targetUrl, { search: searchTerm.trim() }, { preserveState: true });
+        } else {
+            Inertia.get(targetUrl);
+        }
     };
 
     // Artisanal Auth Bridge & Whitelist Sync
@@ -78,15 +100,15 @@ export default function Navbar() {
                 <Link href={isBuyer ? "/buyer/home" : "/"} className="flex items-center gap-4 group transition-transform hover:scale-105">
                     <Logo size={40} />
                     <div className="flex flex-col">
-                      <span className="font-black text-xl text-gray-900 leading-none tracking-tighter">KOKOMMERCE</span>
-                      <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.4em] mt-1">Artisanal Bakery</span>
+                        <span className="font-black text-xl text-gray-900 leading-none tracking-tighter">KOKOMMERCE</span>
+                        <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.4em] mt-1">Artisanal Bakery</span>
                     </div>
                 </Link>
 
                 <nav className="hidden lg:flex items-center gap-10">
                     {navLinks.map((link) => (
-                        <Link 
-                            key={link.name} 
+                        <Link
+                            key={link.name}
                             href={link.href}
                             className={`text-[11px] font-black uppercase tracking-[0.2em] transition-all hover:text-[#eca840] ${url === link.href ? 'text-[#eca840]' : 'text-gray-500'}`}
                         >
@@ -96,18 +118,28 @@ export default function Navbar() {
                 </nav>
 
                 <div className="flex items-center gap-8">
-                    <div className="hidden md:flex items-center gap-3 bg-gray-50 px-5 py-2.5 rounded-full border border-gray-100 group focus-within:bg-white focus-within:shadow-md transition-all">
-                        <input type="text" placeholder="Search treats..." className="bg-transparent border-none focus:ring-0 text-[11px] font-bold text-gray-700 placeholder:text-gray-300 w-40" />
-                        <div className="text-gray-300 group-focus-within:text-[#eca840] transition-colors">
+                    <form onSubmit={handleSearchSubmit} className="hidden md:flex items-center gap-3 bg-[#fdfaf5] px-6 py-2.5 rounded-[1.5rem] border-2 border-[#fff8e6] group focus-within:bg-white focus-within:border-[#eca840]/30 focus-within:shadow-[0_8px_30px_rgba(236,168,64,0.08)] transition-all duration-500">
+                        <input 
+                            type="text" 
+                            placeholder="Search" 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="bg-transparent border-none focus:ring-0 text-xs font-black text-[#2d2a26] placeholder:text-gray-300 w-48 tracking-widest uppercase outline-none transition-all" 
+                        />
+                        <button type="submit" className="text-gray-300 group-focus-within:text-[#eca840] transition-colors focus:outline-none hover:scale-110 active:scale-95 duration-300">
                             <SearchIcon />
-                        </div>
-                    </div>
+                        </button>
+                    </form>
 
                     <div className="flex items-center gap-6 border-l border-gray-100 pl-8">
                         {isBuyer ? (
                             <Link href="/buyer/cart" className="relative text-gray-400 hover:text-gray-900 transition-colors">
                                 <ShoppingBagIcon />
-                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm">2</span>
+                                {cartCount > 0 && (
+                                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                                        {cartCount}
+                                    </span>
+                                )}
                             </Link>
                         ) : (
                             <div className="relative text-gray-400 cursor-help">
@@ -119,7 +151,7 @@ export default function Navbar() {
                         <div className="flex items-center gap-4">
                             {/* Returning Seller Dashboard Signal - Aligned with Profile */}
                             {isViewingAsSeller && (
-                                <button 
+                                <button
                                     onClick={handleReturnToDashboard}
                                     className="bg-[#eca840]/10 text-[#eca840] border border-[#eca840]/30 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#eca840] hover:text-white transition-all shadow-lg shadow-[#eca840]/10"
                                 >

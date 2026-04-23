@@ -4,9 +4,46 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
 
 class OrderController extends Controller
 {
+    /**
+     * Create a Stripe Payment Intent.
+     */
+    public function createPaymentIntent(Request $request)
+    {
+        try {
+            $secretKey = env('STRIPE_SECRET');
+            $secretString = is_string($secretKey) ? $secretKey : '';
+            
+            $stripe = new \Stripe\StripeClient($secretString);
+            
+            $inputTotal = $request->get('total');
+            $numericTotal = is_numeric($inputTotal) ? (float) $inputTotal : 0.0;
+            $amountInCents = (int) ($numericTotal * 100);
+            
+            // By casting to mixed, we force the IDE to skip type inferring the massive 
+            // array shapes from the Stripe SDK, bypassing the "internal limitation" error.
+            /** @var mixed $paymentIntentsApi */
+            $paymentIntentsApi = $stripe->paymentIntents;
+            $paymentIntent = $paymentIntentsApi->create([
+                'amount' => $amountInCents,
+                'currency' => 'php',
+                'automatic_payment_methods' => [
+                    'enabled' => true,
+                ],
+            ]);
+
+            return response()->json([
+                'clientSecret' => $paymentIntent->client_secret,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +73,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'buyer_id' => 'required|exists:buyers,id',
+            'buyer_id' => 'required', // Expects clerk_id or generic identifier from frontend
             'subtotal' => 'required|numeric',
             'delivery_fee' => 'required|numeric',
             'total_amount' => 'required|numeric',
@@ -44,6 +81,18 @@ class OrderController extends Controller
             'delivery_address' => 'required|string',
             'items_data' => 'required|array',
         ]);
+
+        // Find or create the Buyer based on clerk_id
+        $buyer = \App\Models\Buyer::firstOrCreate(
+            ['clerk_id' => $validated['buyer_id']],
+            [
+                'name' => auth()->user() ? auth()->user()->name : 'Artisanal Guest',
+                'email' => auth()->user() ? auth()->user()->email : 'guest@kokommerce.com',
+                'phone' => 'N/A'
+            ]
+        );
+        
+        $validated['buyer_id'] = $buyer->id; // Replace clerk_id with actual integer ID
 
         $validated['order_reference'] = '#KKO-' . strtoupper(bin2hex(random_bytes(3)));
         $validated['status'] = 'Pending';
@@ -55,6 +104,21 @@ class OrderController extends Controller
             'title' => 'New Order Received',
             'message' => "Cha-ching! You have a new order {$validated['order_reference']} for ₱" . number_format($validated['total_amount'], 2),
             'is_read' => false
+        ]);
+
+        \App\Models\ActivityLog::create([
+            'user_id' => $buyer->id,
+            'username' => $buyer->name,
+            'action' => 'Order Placement',
+            'category' => 'Sales',
+            'status' => 'success',
+            'metadata' => [
+                'order_reference' => $validated['order_reference'],
+                'total_amount' => $validated['total_amount'],
+                'details' => "Order {$validated['order_reference']} placed for ₱" . number_format($validated['total_amount'], 2) . ".",
+                'email' => $buyer->email,
+                'role' => 'Buyer'
+            ]
         ]);
 
         return redirect()->route('buyer.history')->with('success', 'Order placed successfully!');

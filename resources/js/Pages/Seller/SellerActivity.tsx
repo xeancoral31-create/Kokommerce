@@ -9,6 +9,7 @@ interface ActivityProps {
     inventory_syncs: number;
     order_updates: number;
     action_growth?: string;
+    hourly_activity?: number[];
   };
 }
 
@@ -30,7 +31,7 @@ export default function SellerActivity({ logs, stats }: ActivityProps) {
       log.action,
       log.category,
       log.status,
-      log.created_at || log.time
+      log.time + ' ' + (log.timestamp || '')
     ]);
 
     const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
@@ -38,7 +39,7 @@ export default function SellerActivity({ logs, stats }: ActivityProps) {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", `kokommerce_activity_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute("download", `kokommerce_audit_trail_${new Date().toISOString().split('T')[0]}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -77,31 +78,34 @@ export default function SellerActivity({ logs, stats }: ActivityProps) {
         </div>
       </div>
 
-      {/* Stats Summary Panel */}
+      {/* Stats Summary Panel - Fully Connected */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
          <ActivityStatCard 
             label="Total Actions" 
             value={stats.total_actions.toLocaleString()} 
-            change={stats.action_growth || "0%"} 
+            change={stats.action_growth || "+0%"} 
             icon="actions" 
             color="#f5a623" 
-            progress={Math.min(100, (stats.total_actions / 1000) * 100)}
+            progress={Math.min(100, (stats.total_actions / 50) * 100)}
+            status="ACTIVE"
           />
          <ActivityStatCard 
             label="Inventory Syncs" 
             value={stats.inventory_syncs.toString()} 
-            change={stats.inventory_syncs > 0 ? "Active" : "Stable"} 
+            change={stats.inventory_syncs > 0 ? "Detected" : "Stable"} 
             icon="sync" 
             color="#3b82f6" 
-            progress={Math.min(100, (stats.inventory_syncs / 500) * 100)}
+            progress={Math.min(100, (stats.inventory_syncs / 20) * 100)}
+            status={stats.inventory_syncs > 0 ? "SYNCED" : "IDLE"}
           />
          <ActivityStatCard 
             label="Order Updates" 
             value={stats.order_updates.toString()} 
-            change={stats.order_updates > 0 ? "Frequent" : "Live"} 
+            change={stats.order_updates > 0 ? "Real-time" : "Live"} 
             icon="orders" 
             color="#8b5cf6" 
-            progress={Math.min(100, (stats.order_updates / 300) * 100)}
+            progress={Math.min(100, (stats.order_updates / 30) * 100)}
+            status={stats.order_updates > 0 ? "LIVE" : "WAITING"}
           />
       </div>
 
@@ -143,8 +147,8 @@ export default function SellerActivity({ logs, stats }: ActivityProps) {
   );
 }
 
-const ActivityStatCard = ({ label, value, change, icon, color, progress }: any) => (
-  <div className="bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-sm group">
+const ActivityStatCard = ({ label, value, change, icon, color, progress, status }: any) => (
+  <div className="bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-sm group hover:shadow-xl transition-all">
      <div className="flex justify-between items-start mb-8">
         <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: `${color}10`, color }}>
            {icon === 'actions' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>}
@@ -152,17 +156,21 @@ const ActivityStatCard = ({ label, value, change, icon, color, progress }: any) 
            {icon === 'orders' && <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>}
         </div>
         <div className="flex flex-col items-end">
-          <span className={`text-[10px] font-black uppercase tracking-widest ${change.includes('%') && !change.includes('-') ? 'text-green-500' : 'text-gray-400'}`}>{change}</span>
-          <span className="text-[8px] font-bold text-gray-300 uppercase tracking-tighter">THIS WEEK</span>
+          <span className={`text-[10px] font-black uppercase tracking-widest ${change?.includes('+') ? 'text-green-500' : 'text-gray-400'}`}>{status || 'STABLE'}</span>
+          <span className="text-[8px] font-bold text-gray-300 uppercase tracking-tighter">CURRENT STATUS</span>
         </div>
      </div>
      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">{label}</p>
      <div className="flex items-end gap-3">
         <h2 className="text-4xl font-black text-gray-900">{value}</h2>
-        <div className="h-1 flex-1 bg-gray-50 rounded-full mb-3 overflow-hidden">
+        <div className="h-1.5 flex-1 bg-gray-50 rounded-full mb-3 overflow-hidden">
            <div className="h-full bg-current opacity-60 rounded-full transition-all duration-1000" style={{ width: `${progress || 0}%`, color }}></div>
         </div>
      </div>
+     <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-4 flex items-center gap-2">
+        <span className={change?.includes('+') ? 'text-green-500' : ''}>{change}</span>
+        <span>vs last period</span>
+     </p>
   </div>
 );
 

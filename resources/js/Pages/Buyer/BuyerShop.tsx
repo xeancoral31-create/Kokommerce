@@ -1,23 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import BuyerLayout from '../../Components/BuyerLayout';
 import { Inertia } from '@inertiajs/inertia';
+import { useCart } from '../../Context/CartContext';
+import { usePage } from '@inertiajs/inertia-react';
 
 const ShoppingBagIcon = () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>;
 
-export default function BuyerShop({ products: dbProducts }: { products: any[] }) {
+export default function BuyerShop({ products: dbProducts, categories: dbCategories = [] }: { products: any[], categories?: any[] }) {
+    const { setItems } = useCart();
+    const { url } = usePage();
+    
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [notification, setNotification] = useState<string | null>(null);
     const [isFiltering, setIsFiltering] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [buyNowProduct, setBuyNowProduct] = useState<any | null>(null);
     const [buyNowQuantity, setBuyNowQuantity] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
     const itemsPerPage = 6;
 
-    const products = dbProducts || [];
-    const coreCategories = ['All', 'Kakanin', 'Bread', 'Cookies', 'Cakes'];
-    const dynamicCategories = [...new Set(products.map(p => p.category?.name || p.category))];
-    const categories = [...new Set([...coreCategories, ...dynamicCategories])].filter(Boolean);
+    useEffect(() => {
+        const params = new URLSearchParams(url.split('?')[1] || '');
+        setSearchQuery(params.get('search') || '');
+    }, [url]);
 
+    // Helper to determine product category, especially for seeded items with null categories
+    const getProductCategory = (p: any) => {
+        if (p.category?.name) return String(p.category.name);
+        if (typeof p.category === 'string' && p.category) return p.category;
+        
+        // Inference fallback based on name
+        const name = p.name ? p.name.toLowerCase() : '';
+        if (name.includes('sourdough') || name.includes('bread') || name.includes('loaf') || name.includes('croissant') || name.includes('toast')) return 'Bread';
+        if (name.includes('cookie') || name.includes('macadamia')) return 'Cookies';
+        if (name.includes('cake') || name.includes('tiramisu') || name.includes('cheesecake') || name.includes('tart')) return 'Cakes';
+        if (name.includes('kakanin') || name.includes('puto') || name.includes('bibingka') || name.includes('suman') || name.includes('biko') || name.includes('sapin')) return 'Kakanin';
+        
+        return 'Other';
+    };
+
+    const products = dbProducts || [];
+    const coreCategories = ['All'];
+    // Get category names from DB categories
+    const dbCategoryNames = dbCategories.map(c => c.name);
+    // Get categories inferred from products that might not be in DB yet (fallback)
+    const dynamicCategories = [...new Set(products.map(p => getProductCategory(p)))].filter(Boolean);
+    
+    const categories = [...new Set([
+        ...coreCategories, 
+        ...dbCategoryNames,
+        ...dynamicCategories
+    ])].filter(cat => cat !== 'Other');
 
     const handleCategoryChange = (cat: string) => {
         setIsFiltering(true);
@@ -28,8 +61,24 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
         }, 300);
     };
 
-    const handleAddToBasket = (productName: string) => {
-        setNotification(`${productName} added to your basket.`);
+    const handleAddToBasket = (product: any) => {
+        const newItem = {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            qty: 1,
+            img: product.image || product.img
+        };
+
+        setItems(prevItems => {
+            const existing = prevItems.find(i => i.id === newItem.id);
+            if (existing) {
+                return prevItems.map(i => i.id === newItem.id ? { ...i, qty: i.qty + 1 } : i);
+            }
+            return [...prevItems, newItem];
+        });
+
+        setNotification(`${product.name} added to your basket.`);
         setTimeout(() => setNotification(null), 3000);
     };
 
@@ -45,22 +94,30 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
         const item = {
             id: buyNowProduct.id,
             name: buyNowProduct.name,
-            price: buyNowProduct.price,
+            price: parseFloat(String(buyNowProduct.price)), // Ensure price is numeric
             qty: buyNowQuantity,
             img: buyNowProduct.image || buyNowProduct.img
         };
 
-        // Redirect to delivery details with this item
-        // Note: In a real app, this might be stored in session/cart, 
-        // but here we'll pass it as props for demonstration as requested
-        Inertia.get('/buyer/delivery', { 
-            items: [item] 
-        } as any);
+        // Immediately set global cart state so checkout reads it directly
+        setItems([item]);
+
+        // Proceed to delivery details cleanly
+        Inertia.get('/buyer/delivery');
     };
 
-    const filteredProducts = selectedCategory === 'All' 
-        ? products 
-        : products.filter(p => (p.category?.name || p.category) === selectedCategory);
+    const filteredProducts = products.filter(p => {
+        // Evaluate category
+        const cat = getProductCategory(p);
+        const matchesCategory = selectedCategory === 'All' || (cat && cat.toLowerCase() === selectedCategory.toLowerCase());
+        
+        // Evaluate search
+        const matchesSearch = !searchQuery || 
+                             p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                             (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()));
+        
+        return matchesCategory && matchesSearch;
+    });
 
     // Pagination Logic
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
@@ -136,8 +193,8 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
             )}
 
             <div className="bg-white border-b border-gray-100 py-6 -mx-8 -mt-8 mb-8 sticky top-[100px] z-40 backdrop-blur-md bg-white/90">
-                <div className="container px-8 flex items-center justify-between">
-                    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+                <div className="container px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide flex-1 w-full">
                         {categories.map(cat => (
                             <button 
                                 key={cat} 
@@ -147,6 +204,19 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
                                 {cat}
                             </button>
                         ))}
+                    </div>
+                    
+                    <div className="relative w-full md:w-80 group">
+                        <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#eca840] transition-colors">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Find your favorite treats..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-[#fdfaf5] border-2 border-[#fff8e6] text-[#2d2a26] text-xs font-black rounded-full pl-12 pr-6 py-3.5 focus:outline-none focus:border-[#eca840]/30 focus:shadow-[0_4px_20px_rgba(236,168,64,0.08)] transition-all placeholder-gray-300 tracking-widest uppercase"
+                        />
                     </div>
                 </div>
             </div>
@@ -191,7 +261,7 @@ export default function BuyerShop({ products: dbProducts }: { products: any[] })
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <button 
-                                        onClick={() => handleAddToBasket(product.name)}
+                                        onClick={() => handleAddToBasket(product)}
                                         className="bg-gray-100 text-[#2d2a26] font-black py-4 px-4 rounded-2xl text-[10px] flex items-center justify-center gap-2 hover:bg-gray-200 transition-all uppercase tracking-widest border border-gray-200"
                                     >
                                         <ShoppingBagIcon />

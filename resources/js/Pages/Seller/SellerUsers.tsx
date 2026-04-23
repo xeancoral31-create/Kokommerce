@@ -1,6 +1,8 @@
 import React from 'react';
 import SellerLayout from '../../Components/SellerLayout';
-import { Head } from '@inertiajs/inertia-react';
+import { Head, useForm } from '@inertiajs/inertia-react';
+
+declare function route(name: string, params?: any): string;
 
 interface UsersProps {
   users: any[];
@@ -15,6 +17,13 @@ export default function SellerUsers({ users, stats }: UsersProps) {
   const [activeMenu, setActiveMenu] = React.useState<number | null>(null);
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
   const [selectedRole, setSelectedRole] = React.useState('All Users');
+  const [editingUser, setEditingUser] = React.useState<any>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
+
+  const { data, setData, put, post, delete: destroy, processing, errors, reset } = useForm({
+    name: '',
+    email: ''
+  });
 
   const filteredUsers = React.useMemo(() => {
     if (selectedRole === 'All Users') return users;
@@ -37,9 +46,37 @@ export default function SellerUsers({ users, stats }: UsersProps) {
     document.body.removeChild(link);
   };
 
-  const handleUserAction = (userId: number, action: string) => {
-    alert(`Action "${action}" triggered for user ID: ${userId}. In a production environment, this would perform a secure backend operation.`);
+  const handleUserAction = (user: any, action: string) => {
     setActiveMenu(null);
+    
+    if (action === 'Edit') {
+      setEditingUser(user);
+      setData({
+        name: user.name,
+        email: user.email
+      });
+      setIsEditModalOpen(true);
+    } else if (action === 'Permissions') {
+      if (confirm(`Toggle Staff Partner status for ${user.name}?`)) {
+        post(route('seller.users.permissions', user.id));
+      }
+    } else if (action === 'Delete') {
+      if (confirm(`Are you sure you want to remove ${user.name} from the artisanal community?`)) {
+        destroy(route('seller.users.destroy', user.id));
+      }
+    }
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    
+    put(route('seller.users.update', editingUser.id), {
+      onSuccess: () => {
+        setIsEditModalOpen(false);
+        setEditingUser(null);
+      }
+    });
   };
 
   return (
@@ -120,24 +157,76 @@ export default function SellerUsers({ users, stats }: UsersProps) {
                </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-                {filteredUsers.map((user: any) => (
-                  <UserRow 
-                    key={user.id}
-                    id={user.id}
-                    name={user.name} 
-                    image={user.image}
-                    role={user.role} 
-                    status={user.status} 
-                    joined={user.joined} 
-                    orders={user.orders} 
-                    isMenuOpen={activeMenu === user.id}
-                    onMenuToggle={() => setActiveMenu(activeMenu === user.id ? null : user.id)}
-                    onAction={(action: string) => handleUserAction(user.id, action)}
-                  />
-               ))}
+                 {filteredUsers.map((user: any) => (
+                   <UserRow 
+                     key={user.id}
+                     id={user.id}
+                     name={user.name} 
+                     image={user.image}
+                     role={user.role} 
+                     status={user.status} 
+                     joined={user.joined} 
+                     orders={user.orders} 
+                     isMenuOpen={activeMenu === user.id}
+                     onMenuToggle={() => setActiveMenu(activeMenu === user.id ? null : user.id)}
+                     onAction={(action: string) => handleUserAction(user, action)}
+                   />
+                ))}
             </tbody>
          </table>
       </div>
+ 
+      {/* Edit User Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsEditModalOpen(false)}></div>
+          <div className="relative w-full max-w-lg bg-white rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+             <div className="p-12">
+                <div className="flex justify-between items-start mb-10">
+                   <div>
+                      <h2 className="text-3xl font-black text-gray-900 tracking-tight">Refine Profile</h2>
+                      <p className="text-sm text-gray-400 font-medium mt-1">Update registration details for this member.</p>
+                   </div>
+                   <button onClick={() => setIsEditModalOpen(false)} className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all">
+                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                   </button>
+                </div>
+
+                <form onSubmit={handleEditSubmit} className="space-y-8">
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
+                      <input 
+                        type="text" 
+                        value={data.name} 
+                        onChange={e => setData('name', e.target.value)} 
+                        className={`w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#eca840]/20 ${errors.name ? 'ring-2 ring-red-500/20' : ''}`}
+                      />
+                      {errors.name && <p className="text-[9px] text-red-500 font-black uppercase tracking-widest ml-1">{errors.name}</p>}
+                   </div>
+
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
+                      <input 
+                        type="email" 
+                        value={data.email} 
+                        onChange={e => setData('email', e.target.value)} 
+                        className={`w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#eca840]/20 ${errors.email ? 'ring-2 ring-red-500/20' : ''}`}
+                      />
+                      {errors.email && <p className="text-[9px] text-red-500 font-black uppercase tracking-widest ml-1">{errors.email}</p>}
+                   </div>
+
+                   <button 
+                      type="submit" 
+                      disabled={processing}
+                      className="w-full py-5 bg-[#eca840] text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-[#eca840]/20 hover:bg-[#d69635] transition-all disabled:opacity-50"
+                   >
+                      {processing ? 'Preserving Changes...' : 'Save Profile Changes'}
+                   </button>
+                </form>
+             </div>
+          </div>
+        </div>
+      )}
 
     </SellerLayout>
   );
