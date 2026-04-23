@@ -1,9 +1,25 @@
 import React from 'react';
 import SellerLayout from '../../Components/SellerLayout';
 import { Head } from '@inertiajs/inertia-react';
+import { Inertia } from '@inertiajs/inertia';
+
+declare function route(name: string, params?: any): string;
 
 interface ActivityProps {
-  logs: any[];
+  logs: {
+    data: any[];
+    links: any[];
+    current_page: number;
+    last_page: number;
+    total: number;
+    from: number;
+    to: number;
+    prev_page_url: string | null;
+    next_page_url: string | null;
+  };
+  filters: {
+    search?: string;
+  };
   stats: {
     total_actions: number;
     inventory_syncs: number;
@@ -13,20 +29,32 @@ interface ActivityProps {
   };
 }
 
-export default function SellerActivity({ logs, stats }: ActivityProps) {
-  const [filterText, setFilterText] = React.useState('');
+export default function SellerActivity({ logs, stats, filters }: ActivityProps) {
+  const [filterText, setFilterText] = React.useState(filters.search || '');
   
-  const filteredLogs = React.useMemo(() => {
-    return logs.filter(log => 
-      log.username?.toLowerCase().includes(filterText.toLowerCase()) ||
-      log.action?.toLowerCase().includes(filterText.toLowerCase()) ||
-      log.category?.toLowerCase().includes(filterText.toLowerCase())
-    );
-  }, [logs, filterText]);
+  // Throttle search to avoid too many requests
+  React.useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+        if (filterText !== (filters.search || '')) {
+            Inertia.get(route('seller.activity'), { search: filterText }, {
+                preserveState: true,
+                replace: true
+            });
+        }
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [filterText]);
+
+  const handlePagination = (url: string | null) => {
+    if (url) {
+        Inertia.get(url, {}, { preserveState: true });
+    }
+  };
 
   const handleExportCSV = () => {
     const headers = ['User', 'Action', 'Category', 'Status', 'Time'];
-    const rows = filteredLogs.map(log => [
+    const rows = logs.data.map(log => [
       log.username,
       log.action,
       log.category,
@@ -122,7 +150,7 @@ export default function SellerActivity({ logs, stats }: ActivityProps) {
                </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-               {filteredLogs.length > 0 ? filteredLogs.map((log, i) => (
+               {logs.data.length > 0 ? logs.data.map((log, i) => (
                  <LogEntry key={i} log={log} />
                )) : (
                  <tr>
@@ -134,10 +162,24 @@ export default function SellerActivity({ logs, stats }: ActivityProps) {
             </tbody>
          </table>
          <div className="px-10 py-6 border-t border-gray-50 flex justify-between items-center bg-gray-50/30">
-            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Showing {filteredLogs.length} of {stats.total_actions} activities</span>
+            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+               Showing {logs.from || 0}-{logs.to || 0} of {logs.total} activities
+            </span>
             <div className="flex gap-4">
-               <button className="px-6 py-2 rounded-xl border border-gray-100 bg-white text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-all">Previous</button>
-               <button className="px-6 py-2 rounded-xl border border-gray-100 bg-white text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-all">Next</button>
+               <button 
+                  onClick={() => handlePagination(logs.prev_page_url)}
+                  disabled={!logs.prev_page_url}
+                  className={`px-6 py-2 rounded-xl border border-gray-100 bg-white text-[10px] font-black uppercase tracking-widest transition-all ${!logs.prev_page_url ? 'text-gray-200 cursor-not-allowed' : 'text-gray-400 hover:text-gray-900 shadow-sm hover:shadow-md active:scale-95'}`}
+               >
+                  Previous
+               </button>
+               <button 
+                  onClick={() => handlePagination(logs.next_page_url)}
+                  disabled={!logs.next_page_url}
+                  className={`px-6 py-2 rounded-xl border border-gray-100 bg-white text-[10px] font-black uppercase tracking-widest transition-all ${!logs.next_page_url ? 'text-gray-200 cursor-not-allowed' : 'text-gray-400 hover:text-gray-900 shadow-sm hover:shadow-md active:scale-95'}`}
+               >
+                  Next
+               </button>
             </div>
          </div>
       </div>

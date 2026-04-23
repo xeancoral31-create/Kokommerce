@@ -98,7 +98,7 @@ Route::prefix('seller')->group(function () {
     Route::post('/categories/{id}/restore', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'restore'])->name('seller.categories.restore');
     Route::delete('/categories/{id}/force', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'forceDelete'])->name('seller.categories.forceDelete');
     
-    Route::post('/offers', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'store'])->name('seller.offers.store');
+    Route::post('/offers', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'store'])->name('seller.promotions.store');
     Route::put('/offers/{promotion}', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'update'])->name('seller.promotions.update');
     Route::delete('/offers/{promotion}', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'destroy'])->name('seller.promotions.destroy');
     Route::post('/offers/{id}/restore', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'restore'])->name('seller.promotions.restore');

@@ -19,6 +19,7 @@ class SellerProductController extends Controller
             'categories' => Category::all(),
             'stats' => [
                 'total_items' => Product::count(),
+                'in_stock_count' => Product::where('status', 'in_stock')->count(),
                 'low_stock' => Product::where('status', '!=', 'pre_order')
                     ->where(function($query) {
                         $query->where('status', 'sold_out')
@@ -99,7 +100,7 @@ class SellerProductController extends Controller
             'username' => 'Seller',
             'action' => 'Product Update',
             'category' => 'Inventory',
-            'status' => 'info',
+            'status' => 'success',
             'metadata' => [
                 'details' => "Details updated for '{$product->name}'.",
                 'product_id' => $product->id
@@ -155,7 +156,7 @@ class SellerProductController extends Controller
             'username' => 'Seller',
             'action' => 'Permanent Deletion',
             'category' => 'Inventory',
-            'status' => 'danger',
+            'status' => 'error',
             'metadata' => [
                 'details' => "Product '{$product->name}' permanently removed from system.",
                 'product_id' => $id

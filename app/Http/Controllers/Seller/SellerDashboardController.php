@@ -34,46 +34,57 @@ class SellerDashboardController extends Controller
             ->take(3)
             ->get();
 
-        // Calculate dynamic recent sales/activity trend for the last 7 days
-        $recentSales = [];
+        // --- Trend Data Generation ---
+        
+        // 1. Hourly (Today)
+        $hourlyTrend = array_fill(0, 24, 0);
+        Order::whereDate('created_at', now())->get()->each(function($order) use (&$hourlyTrend) {
+            $hourlyTrend[$order->created_at->hour]++;
+        });
+
+        // 2. Daily (Last 7 Days)
+        $dailyTrend = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
-            $dayName = $date->format('D');
-            
-            // We use order count for the "Trend" height to better show "Buyer Activity" 
-            // especially valuable when orders are still pending/preparing
-            $orderCount = Order::whereDate('created_at', $date->toDateString())->count();
-            $dailyRevenue = Order::whereDate('created_at', $date->toDateString())->sum('total_amount');
-            
-            $recentSales[] = [
-                'day' => $dayName,
-                'revenue' => (float)$dailyRevenue,
-                'orders' => $orderCount,
-                'value' => (float)$orderCount // Using order count for visual trend
+            $dailyTrend[] = [
+                'label' => $date->format('D'),
+                'orders' => Order::whereDate('created_at', $date->toDateString())->count(),
+                'revenue' => (float)Order::whereDate('created_at', $date->toDateString())->sum('total_amount'),
             ];
         }
 
-        $maxOrders = collect($recentSales)->max('orders');
-        if ($maxOrders > 0) {
-            foreach ($recentSales as &$sale) {
-                // Scale based on orders to show buyer engagement trend
-                $sale['value'] = ($sale['orders'] / $maxOrders) * 100;
-                // Minimum height for visibility if there's at least one order
-                if ($sale['orders'] > 0 && $sale['value'] < 15) $sale['value'] = 15;
-            }
-        } else {
-            // Keep a subtle baseline if absolutely no data exists
-            $recentSales = array_map(function($sale) {
-                $sale['value'] = 5; // Minimal baseline
-                return $sale;
-            }, $recentSales);
+        // 3. Weekly (Last 4 Weeks)
+        $weeklyTrend = [];
+        for ($i = 3; $i >= 0; $i--) {
+            $start = now()->subWeeks($i)->startOfWeek();
+            $end = now()->subWeeks($i)->endOfWeek();
+            $weeklyTrend[] = [
+                'label' => 'Week ' . (4 - $i),
+                'orders' => Order::whereBetween('created_at', [$start, $end])->count(),
+                'revenue' => (float)Order::whereBetween('created_at', [$start, $end])->sum('total_amount'),
+            ];
         }
 
-        // Hourly activity for "Today" view
-        $hourlyActivity = array_fill(0, 24, 0);
-        Order::whereDate('created_at', now())->get()->each(function($order) use (&$hourlyActivity) {
-            $hourlyActivity[$order->created_at->hour]++;
-        });
+        // 4. Monthly (Last 6 Months)
+        $monthlyTrend = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $monthlyTrend[] = [
+                'label' => $date->format('M'),
+                'orders' => Order::whereYear('created_at', $date->year)->whereMonth('created_at', $date->month)->count(),
+                'revenue' => (float)Order::whereYear('created_at', $date->year)->whereMonth('created_at', $date->month)->sum('total_amount'),
+            ];
+        }
+
+        // Normalize values for chart visualization (0-100 scale)
+        $normalize = function($data) {
+            $max = collect($data)->max('orders');
+            return array_map(function($item) use ($max) {
+                $item['value'] = $max > 0 ? ($item['orders'] / $max) * 100 : 5;
+                if ($item['orders'] > 0 && $item['value'] < 15) $item['value'] = 15;
+                return $item;
+            }, $data);
+        };
 
         return Inertia::render('Seller/SellerDashboard', [
             'stats' => [
@@ -85,13 +96,22 @@ class SellerDashboardController extends Controller
                 'today_signups' => $todaySignups,
                 'pre_order_count' => $preOrderCount
             ],
-            'recent_sales' => $recentSales,
-            'hourly_activity' => $hourlyActivity,
+            'trend_data' => [
+                'hourly' => array_map(fn($count, $hr) => [
+                    'label' => $hr % 6 === 0 ? ($hr === 0 ? '12AM' : ($hr === 12 ? '12PM' : ($hr > 12 ? $hr-12 : $hr) . ($hr >= 12 ? 'PM' : 'AM'))) : '',
+                    'fullLabel' => ($hr === 0 ? '12 AM' : ($hr === 12 ? '12 PM' : ($hr > 12 ? $hr-12 : $hr) . ($hr >= 12 ? ' PM' : ' AM'))),
+                    'orders' => $count,
+                    'value' => $count > 0 ? min($count * 20, 100) : 5
+                ], $hourlyTrend, array_keys($hourlyTrend)),
+                'daily' => $normalize($dailyTrend),
+                'weekly' => $normalize($weeklyTrend),
+                'monthly' => $normalize($monthlyTrend),
+            ],
             'top_products' => Product::withCount(['orderItems as total_sold' => function($q) {
                 $q->select(\DB::raw('SUM(quantity)'));
             }])->orderByDesc('total_sold')->take(3)->get(),
             'urgent_orders' => $urgentOrders,
-            'activity_logs' => \App\Models\ActivityLog::latest()->take(8)->get()
+            'activity_logs' => \App\Models\ActivityLog::latest()->take(50)->get()
         ]);
     }
 }

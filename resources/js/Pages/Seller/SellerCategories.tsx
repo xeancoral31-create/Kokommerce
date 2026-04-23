@@ -85,7 +85,7 @@ export default function SellerCategories({ categories, archived_categories, tota
 
       <div className="flex justify-between items-end mb-12">
         <div>
-          <span className="text-[10px] font-bold text-[#f5a623] uppercase tracking-[0.2em] mb-3 block">Catalog Management</span>
+          <span className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.3em] mb-3 block">Catalog Management</span>
           <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight mb-4">Organize your Bakery Catalog</h1>
           <p className="text-gray-500 font-medium max-w-xl">
              Manage your artisanal collection by grouping items into distinct sensory experiences for your customers.
@@ -93,7 +93,7 @@ export default function SellerCategories({ categories, archived_categories, tota
         </div>
         <button 
           onClick={openAddModal}
-          className="flex items-center gap-3 px-10 py-5 bg-[#f5a623] text-white rounded-2xl text-sm font-bold hover:shadow-xl hover:shadow-[#f5a623]/30 transition-all uppercase tracking-wider active:scale-95"
+          className="flex items-center gap-3 px-8 py-4.5 bg-[#eca840] text-white rounded-2xl text-[11px] font-[1000] hover:shadow-2xl hover:shadow-[#eca840]/30 transition-all uppercase tracking-[0.2em] active:scale-95 shadow-lg shadow-[#eca840]/20"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
           Create New Category
@@ -105,10 +105,10 @@ export default function SellerCategories({ categories, archived_categories, tota
             <button 
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-4 text-sm font-bold transition-all relative ${activeTab === tab ? 'text-[#f5a623]' : 'text-gray-400 hover:text-gray-600'}`}
+                className={`pb-4 text-xs font-black uppercase tracking-widest transition-all relative ${activeTab === tab ? 'text-[#eca840]' : 'text-gray-400 hover:text-gray-600'}`}
             >
                 {tab}
-                {activeTab === tab && <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#f5a623] rounded-full"></div>}
+                {activeTab === tab && <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#eca840] rounded-full"></div>}
             </button>
         ))}
       </div>
@@ -122,8 +122,8 @@ export default function SellerCategories({ categories, archived_categories, tota
                  alt={categories[0].name} 
                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
                />
-               <div className="absolute top-8 right-8 flex gap-3">
-                  <span className="bg-white/90 backdrop-blur-md text-[#f5a623] text-[10px] font-black px-4 py-2 rounded-xl border border-white/20 shadow-xl uppercase tracking-widest">Featured Collection</span>
+                <div className="absolute top-8 right-8 flex gap-3">
+                  <span className="bg-white/90 backdrop-blur-md text-[#eca840] text-[10px] font-black px-4 py-2 rounded-xl border border-white/20 shadow-xl uppercase tracking-widest">Featured Collection</span>
                </div>
                
                <div className="absolute bottom-8 left-8">
@@ -142,8 +142,8 @@ export default function SellerCategories({ categories, archived_categories, tota
                               <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-gray-100"></div>
                           ))}
                       </div>
-                      <p className="text-[#f5a623] font-black uppercase tracking-widest text-[10px] flex items-center">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#f5a623] mr-2"></span>
+                      <p className="text-[#eca840] font-black uppercase tracking-widest text-[10px] flex items-center">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#eca840] mr-2"></span>
                           {categories[0].products_count} Artistic Creations
                       </p>
                   </div>
@@ -169,13 +169,13 @@ export default function SellerCategories({ categories, archived_categories, tota
         {/* New Category Card */}
         <div 
           onClick={openAddModal}
-          className="bg-white/50 border-2 border-dashed border-gray-100 rounded-[3rem] p-12 flex flex-col items-center justify-center text-center group cursor-pointer hover:border-[#f5a623] transition-all active:scale-[0.98]"
+          className="bg-white/50 border-2 border-dashed border-gray-100 rounded-[3rem] p-12 flex flex-col items-center justify-center text-center group cursor-pointer hover:border-[#eca840] transition-all active:scale-[0.98]"
         >
-           <div className="w-16 h-16 rounded-full bg-[#f5a623]/10 flex items-center justify-center text-[#f5a623] mb-8 group-hover:scale-110 transition-all">
+           <div className="w-16 h-16 rounded-full bg-[#eca840]/10 flex items-center justify-center text-[#eca840] mb-8 group-hover:scale-110 transition-all">
               <svg className="w-8 h-8 font-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
            </div>
-           <h3 className="text-xl font-bold text-gray-900 mb-2">New Collection</h3>
-           <p className="text-xs text-gray-400 font-medium leading-relaxed max-w-[160px]">Expand your sensory menu with a fresh artisanal range.</p>
+           <h3 className="text-xl font-[1000] text-gray-900 mb-2 uppercase tracking-tighter">New Collection</h3>
+           <p className="text-[10px] text-gray-400 font-bold leading-relaxed max-w-[160px] uppercase tracking-widest">Expand sensory menu</p>
         </div>
 
         {activeTab === 'Active Collections' && categories.slice(1).map((category: any) => (
@@ -324,7 +324,7 @@ export default function SellerCategories({ categories, archived_categories, tota
                 <button 
                   type="submit" 
                   disabled={processing}
-                  className="w-full py-5 bg-[#f5a623] text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-[#f5a623]/20 hover:bg-[#d69635] transition-all disabled:opacity-50 active:scale-95"
+                  className="w-full py-5 bg-[#eca840] text-white rounded-2xl font-[1000] text-[11px] uppercase tracking-[0.25em] shadow-xl shadow-[#eca840]/20 hover:bg-[#d69635] hover:scale-[1.01] transition-all disabled:opacity-50 active:scale-95"
                 >
                   {processing ? 'Crafting...' : (editingCategory ? 'Save Collection' : 'Launch Collection')}
                 </button>
@@ -348,14 +348,14 @@ const SmallCategoryCard = ({ category, onEdit, onDelete, isArchived, onRestore }
       />
       <div className="absolute top-4 left-4">
           <div className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-lg border border-white/20 shadow-sm flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#f5a623]"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-[#eca840]"></div>
               <span className="text-[9px] font-black text-gray-800 uppercase tracking-widest">{category.products_count} Items</span>
           </div>
       </div>
       <span className={`absolute top-4 right-4 text-[8px] font-black px-2.5 py-1 rounded-md shadow-sm border ${category.status === 'Active' ? 'bg-green-500 border-green-400 text-white' : 'bg-gray-400 border-gray-300 text-white'}`}>{category.status.toUpperCase()}</span>
     </div>
     <div className="p-8">
-      <h3 className="text-2xl font-extrabold text-gray-900 mb-2 truncate group-hover:text-[#f5a623] transition-colors tracking-tight">{category.name}</h3>
+      <h3 className="text-2xl font-extrabold text-gray-900 mb-2 truncate group-hover:text-[#eca840] transition-colors tracking-tight">{category.name}</h3>
       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-8 leading-relaxed line-clamp-1">{category.description || "Masterfully curated artisanal range."}</p>
       
       <div className="flex gap-4">
@@ -369,7 +369,7 @@ const SmallCategoryCard = ({ category, onEdit, onDelete, isArchived, onRestore }
                 </button>
                 <button 
                 onClick={onDelete}
-                className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-[#f5a623] hover:text-white transition-all border border-gray-50 active:scale-95"
+                className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-[#eca840] hover:text-white transition-all border border-gray-50 active:scale-95"
                 >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
                 </button>

@@ -12,16 +12,24 @@ use Inertia\Inertia;
 
 class SellerActivityController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // Sync activity logs from real system users and orders
         $this->syncActivityFromSystem();
 
-        // Pull latest logs
-        $logs = ActivityLog::latest()->take(100)->get();
-        $totalActions = $logs->count();
-        $inventorySyncs = $logs->where('category', 'Inventory')->count();
-        $orderUpdates = $logs->where('category', 'Sales')->count();
+        $search = $request->input('search');
+
+        // Pull latest logs with pagination
+        $paginatedLogs = ActivityLog::latest()
+            ->when($search, function($query, $search) {
+                $query->where('username', 'LIKE', "%{$search}%")
+                      ->orWhere('action', 'LIKE', "%{$search}%")
+                      ->orWhere('category', 'LIKE', "%{$search}%");
+            })
+            ->paginate(10)
+            ->appends($request->query());
+
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $paginatedLogs */
 
         // Dynamic hourly activity for the chart (last 24 hours)
         $hourlyActivity = array_fill(0, 24, 0);
@@ -37,8 +45,8 @@ class SellerActivityController extends Controller
             ? round(($newActionsThisWeek / $totalBeforeThisWeek) * 100)
             : ($newActionsThisWeek > 0 ? $newActionsThisWeek : 0);
 
-        return Inertia::render('Seller/SellerActivity', [
-            'logs' => $logs->take(50)->map(function ($log) {
+        $paginatedLogs->setCollection(
+            $paginatedLogs->getCollection()->map(function ($log) {
                 return [
                     'user_id'   => $log->user_id,
                     'username'  => $log->username ?: 'System',
@@ -51,7 +59,14 @@ class SellerActivityController extends Controller
                     'email'     => $log->metadata['email'] ?? '',
                     'role'      => $log->metadata['role'] ?? 'Buyer',
                 ];
-            }),
+            })
+        );
+
+        return Inertia::render('Seller/SellerActivity', [
+            'logs' => $paginatedLogs,
+            'filters' => [
+                'search' => $search,
+            ],
             'stats' => [
                 'total_actions'   => ActivityLog::count(),
                 'inventory_syncs' => ActivityLog::where('category', 'Inventory')->count(),
@@ -73,8 +88,11 @@ class SellerActivityController extends Controller
             ->pluck('user_id')
             ->toArray();
 
-        $existingOrderIds = ActivityLog::whereNotNull('metadata->order_id')
-            ->pluck('metadata->order_id')
+        $existingOrderIds = ActivityLog::whereNotNull('metadata')
+            ->get()
+            ->map(fn($log) => $log->metadata['order_id'] ?? null)
+            ->filter()
+            ->unique()
             ->toArray();
 
         $sellerEmails = SellerWhitelist::pluck('email')->toArray();

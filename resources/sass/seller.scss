@@ -12,14 +12,14 @@ $seller-text-muted: #6b7280;
 $seller-border: #f3f4f6;
 
 .seller-sidebar {
-    width: 320px;
+    width: 280px;
     background: rgba(white, 0.95);
     backdrop-filter: blur(20px);
     height: 100vh;
     border-right: 1px solid rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
-    padding: 2.5rem 1.5rem;
+    padding: 2rem 1.25rem;
     position: fixed;
     left: 0;
     top: 0;
@@ -98,7 +98,7 @@ $seller-border: #f3f4f6;
 }
 
 .seller-main {
-    margin-left: 320px;
+    margin-left: 280px;
     background: #fafafa;
     min-height: 100vh;
     

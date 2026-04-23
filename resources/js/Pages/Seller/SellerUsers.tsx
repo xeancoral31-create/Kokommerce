@@ -1,6 +1,7 @@
 import React from 'react';
 import SellerLayout from '../../Components/SellerLayout';
-import { Head, useForm } from '@inertiajs/inertia-react';
+import { Head, useForm, usePage } from '@inertiajs/inertia-react';
+import { useUser } from '@clerk/clerk-react';
 
 declare function route(name: string, params?: any): string;
 
@@ -20,6 +21,13 @@ export default function SellerUsers({ users, stats }: UsersProps) {
   const [editingUser, setEditingUser] = React.useState<any>(null);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
 
+  const { user: clerkUser, isLoaded } = useUser();
+  const { props } = usePage();
+  const authUser = props.auth_user as any;
+
+  // Real-time connected profile detection
+  const currentProfileImage = (isLoaded && clerkUser?.imageUrl) || authUser?.image;
+
   const { data, setData, put, post, delete: destroy, processing, errors, reset } = useForm({
     name: '',
     email: ''
@@ -27,8 +35,8 @@ export default function SellerUsers({ users, stats }: UsersProps) {
 
   const filteredUsers = React.useMemo(() => {
     if (selectedRole === 'All Users') return users;
-    if (selectedRole === 'Staff Partner') return users.filter(u => u.role === 'Seller');
-    if (selectedRole === 'Customer') return users.filter(u => u.role === 'Buyer');
+    if (selectedRole === 'Seller/Admin') return users.filter(u => u.role === 'Seller');
+    if (selectedRole === 'Client') return users.filter(u => u.role === 'Buyer');
     return users;
   }, [users, selectedRole]);
 
@@ -57,7 +65,7 @@ export default function SellerUsers({ users, stats }: UsersProps) {
       });
       setIsEditModalOpen(true);
     } else if (action === 'Permissions') {
-      if (confirm(`Toggle Staff Partner status for ${user.name}?`)) {
+      if (confirm(`Toggle Seller/Admin status for ${user.name}?`)) {
         post(route('seller.users.permissions', user.id));
       }
     } else if (action === 'Delete') {
@@ -83,11 +91,11 @@ export default function SellerUsers({ users, stats }: UsersProps) {
     <SellerLayout>
       <Head title="User Management" />
 
-      <div className="flex justify-between items-end mb-12">
+      <div className="flex justify-between items-end mb-8">
         <div>
-          <h1 className="text-6xl font-black text-gray-900 tracking-tighter mb-4">Expand Your Team</h1>
-          <div className="flex items-center gap-4">
-             <span className="bg-orange-50 text-[#eca840] text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-2">
+          <h1 className="text-4xl font-black text-gray-900 tracking-tighter mb-2">User Management</h1>
+          <div className="flex items-center gap-3">
+             <span className="bg-orange-50 text-[#eca840] text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1.5">
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
                 +12.5% community growth
              </span>
@@ -97,23 +105,23 @@ export default function SellerUsers({ users, stats }: UsersProps) {
       </div>
 
       {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
          <UserStatCard label="Total Members" value={stats.total_members.toLocaleString()} />
          <UserStatCard label="Active Now" value={stats.active_now.toString()} />
-         <div className="lg:col-span-2 bg-[#f5a623] rounded-[3rem] p-10 text-white flex flex-col justify-center">
-            <p className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em] mb-3">Permissions Audit</p>
-            <h2 className="text-6xl font-black text-white">{stats.permissions_audit}</h2>
+         <div className="lg:col-span-2 bg-[#f5a623] rounded-[2rem] p-8 text-white flex flex-col justify-center shadow-lg shadow-orange-200/20">
+            <p className="text-[9px] font-black text-white/70 uppercase tracking-[0.2em] mb-2">Permissions Audit</p>
+            <h2 className="text-4xl font-black text-white">{stats.permissions_audit}</h2>
          </div>
       </div>
 
       {/* Users Table */}
-      <div className="bg-white rounded-[3rem] border border-gray-100 shadow-sm overflow-hidden mb-16">
-         <div className="px-12 py-10 border-b border-gray-50 flex justify-between items-center bg-gray-50/20">
-            <h3 className="text-2xl font-black text-gray-900">Staff & Customers</h3>
-            <div className="flex gap-4 relative">
+      <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden mb-12">
+         <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/10">
+            <h3 className="text-xl font-black text-gray-900">Sellers & Clients</h3>
+            <div className="flex gap-3 relative">
                <button 
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
-                  className={`p-3 rounded-xl transition-all ${isFilterOpen ? 'bg-[#eca840] text-white' : 'text-gray-400 hover:bg-white hover:shadow-md'}`}
+                  className={`p-2.5 rounded-xl transition-all ${isFilterOpen ? 'bg-[#eca840] text-white' : 'text-gray-400 hover:bg-white hover:shadow-md border border-transparent hover:border-gray-100'}`}
                >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
                </button>
@@ -128,7 +136,7 @@ export default function SellerUsers({ users, stats }: UsersProps) {
                   <div className="absolute right-0 top-14 w-48 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 p-4 animate-in fade-in zoom-in-95 duration-200">
                      <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-3">Filter By Role</p>
                      <div className="space-y-1">
-                        {['All Users', 'Staff Partner', 'Customer'].map(filter => (
+                        {['All Users', 'Seller/Admin', 'Client'].map(filter => (
                            <button 
                               key={filter} 
                               onClick={() => {
@@ -147,13 +155,13 @@ export default function SellerUsers({ users, stats }: UsersProps) {
          </div>
          <table className="w-full text-left">
             <thead>
-               <tr className="border-b border-gray-50">
-                  <th className="px-12 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">User</th>
-                  <th className="px-12 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Role</th>
-                  <th className="px-12 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Status</th>
-                  <th className="px-12 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Joined</th>
-                  <th className="px-12 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Orders</th>
-                  <th className="px-12 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] text-right">Actions</th>
+               <tr className="border-b border-gray-100">
+                  <th className="px-8 py-4 text-[9px] font-black text-gray-400 uppercase tracking-[0.2em]">User</th>
+                  <th className="px-8 py-4 text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] text-center">Role</th>
+                  <th className="px-8 py-4 text-[9px] font-black text-gray-400 uppercase tracking-[0.2em]">Status</th>
+                  <th className="px-8 py-4 text-[9px] font-black text-gray-400 uppercase tracking-[0.2em]">Joined</th>
+                  <th className="px-8 py-4 text-[9px] font-black text-gray-400 uppercase tracking-[0.2em]">Orders</th>
+                  <th className="px-8 py-4 text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] text-right">Actions</th>
                </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -162,7 +170,7 @@ export default function SellerUsers({ users, stats }: UsersProps) {
                      key={user.id}
                      id={user.id}
                      name={user.name} 
-                     image={user.image}
+                     image={user.id === authUser?.id ? currentProfileImage : user.image}
                      role={user.role} 
                      status={user.status} 
                      joined={user.joined} 
@@ -180,15 +188,15 @@ export default function SellerUsers({ users, stats }: UsersProps) {
       {isEditModalOpen && (
         <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsEditModalOpen(false)}></div>
-          <div className="relative w-full max-w-lg bg-white rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
-             <div className="p-12">
-                <div className="flex justify-between items-start mb-10">
+          <div className="relative w-full max-w-lg bg-white rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+             <div className="p-8">
+                <div className="flex justify-between items-start mb-8">
                    <div>
-                      <h2 className="text-3xl font-black text-gray-900 tracking-tight">Refine Profile</h2>
-                      <p className="text-sm text-gray-400 font-medium mt-1">Update registration details for this member.</p>
+                      <h2 className="text-2xl font-black text-gray-900 tracking-tight">Refine Profile</h2>
+                      <p className="text-xs text-gray-400 font-medium mt-1">Update registration details for this member.</p>
                    </div>
-                   <button onClick={() => setIsEditModalOpen(false)} className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all">
-                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                   <button onClick={() => setIsEditModalOpen(false)} className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                    </button>
                 </div>
 
@@ -233,38 +241,42 @@ export default function SellerUsers({ users, stats }: UsersProps) {
 }
 
 const UserStatCard = ({ label, value }: any) => (
-  <div className="bg-white rounded-[3rem] p-10 border border-gray-100 shadow-sm flex flex-col justify-center">
-     <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">{label}</p>
-     <h2 className="text-6xl font-black text-gray-900">{value}</h2>
+  <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm flex flex-col justify-center">
+     <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">{label}</p>
+     <h2 className="text-4xl font-black text-gray-900">{value}</h2>
   </div>
 );
 
 const UserRow = ({ id, name, image, role, status, joined, orders, isMenuOpen, onMenuToggle, onAction }: any) => (
-  <tr className="group hover:bg-gray-50/50 transition-all">
-     <td className="px-12 py-8">
-         <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full ring-4 ring-white shadow-sm transition-transform group-hover:scale-110 bg-[#2d2a26] flex items-center justify-center flex-shrink-0">
-               <span className="text-white text-lg font-black uppercase leading-none">
-                  {name?.split(' ')[0]?.[0] || '?'}
-               </span>
+  <tr className="group hover:bg-gray-50/30 transition-all border-b border-gray-50/50 last:border-0">
+     <td className="px-8 py-5">
+         <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-full border-2 border-white shadow-sm transition-transform group-hover:scale-105 overflow-hidden flex items-center justify-center flex-shrink-0 ${!image ? 'bg-[#2d2a26]' : ''}`}>
+               {image ? (
+                  <img src={image} alt={name} className="w-full h-full object-cover" />
+               ) : (
+                  <span className="text-white text-sm font-black uppercase leading-none">
+                     {name?.split(' ')[0]?.[0] || '?'}
+                  </span>
+               )}
             </div>
-            <span className="text-lg font-bold text-gray-900">{name}</span>
+            <span className="text-sm font-bold text-gray-900">{name}</span>
          </div>
      </td>
-      <td className="px-12 py-8">
-        <span className={`text-[10px] font-black px-4 py-1.5 rounded-lg border uppercase tracking-widest ${role === 'Seller' ? 'bg-orange-50 border-orange-100 text-orange-500' : 'bg-white border-gray-200 text-gray-400'}`}>
-           {role === 'Seller' ? 'Staff Partner' : 'Customer'}
+      <td className="px-8 py-5 text-center">
+        <span className={`text-[9px] font-black px-3 py-1.5 rounded-lg border uppercase tracking-widest leading-none inline-block min-w-[100px] ${role === 'Seller' ? 'bg-orange-50 border-orange-100 text-orange-500' : 'bg-white border-gray-200 text-gray-400'}`}>
+           {role === 'Seller' ? 'Seller/Admin' : 'Client'}
         </span>
       </td>
-     <td className="px-12 py-8">
-        <div className="flex items-center gap-3">
-           <div className={`w-2 h-2 rounded-full ${status === 'Active' ? 'bg-green-500 shadow-lg shadow-green-500/50' : 'bg-gray-300'}`}></div>
-           <span className={`text-xs font-bold ${status === 'Active' ? 'text-green-500' : 'text-gray-400'}`}>{status}</span>
+     <td className="px-8 py-5">
+        <div className="flex items-center gap-2">
+           <div className={`w-1.5 h-1.5 rounded-full ${status === 'Active' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'bg-gray-300'}`}></div>
+           <span className={`text-[11px] font-bold ${status === 'Active' ? 'text-green-500' : 'text-gray-400'}`}>{status}</span>
         </div>
      </td>
-     <td className="px-12 py-8 text-sm font-bold text-gray-500">{joined}</td>
-     <td className="px-12 py-8 text-lg font-black text-gray-900">{orders}</td>
-     <td className="px-12 py-8 text-right relative">
+     <td className="px-8 py-5 text-xs font-bold text-gray-400">{joined}</td>
+     <td className="px-8 py-5 text-sm font-black text-gray-900">{orders}</td>
+     <td className="px-8 py-5 text-right relative">
         <button 
           onClick={onMenuToggle}
           className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMenuOpen ? 'bg-[#2d2a26] text-white shadow-lg rotate-90' : 'text-gray-300 hover:bg-white hover:text-gray-900 hover:shadow-md'}`}
