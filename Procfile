@@ -1,1 +1,1 @@
-web: vendor/bin/frankenphp php-server --document-root public/ --listen :$PORT
+web: php artisan serve --host=0.0.0.0 --port=$PORT
