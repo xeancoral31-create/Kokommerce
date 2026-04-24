@@ -81,21 +81,21 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
     <SellerLayout>
       <Head title="Order Management" />
 
-      <div className="flex justify-between items-end mb-12">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-12">
         <div>
-          <h1 className="text-4xl font-black text-[#2d2a26] tracking-tight mb-3">Administrative Hub</h1>
+          <h1 className="text-3xl lg:text-4xl font-black text-[#2d2a26] tracking-tight mb-3">Administrative Hub</h1>
           <div className="flex items-center gap-3">
              <span className="w-10 h-[2px] bg-[#eca840]"></span>
              <p className="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Registry of Order Trajectories</p>
           </div>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4 w-full lg:w-auto">
           <button 
             onClick={() => window.print()}
-            className="flex items-center gap-2.5 px-6 py-4 bg-white border border-gray-100 rounded-2xl text-[10px] font-black text-gray-500 uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm group"
+            className="flex-1 lg:flex-none flex items-center justify-center gap-2.5 px-6 py-4 bg-white border border-gray-100 rounded-2xl text-[10px] font-black text-gray-500 uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm group"
           >
             <svg className="w-4 h-4 group-hover:text-[#eca840] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-            Batch Print
+            Print
           </button>
           <button 
             onClick={() => {
@@ -115,17 +115,17 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
               link.click();
               document.body.removeChild(link);
             }}
-            className="flex items-center gap-2.5 px-8 py-4 bg-[#2d2a26] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#eca840] hover:shadow-xl hover:shadow-[#eca840]/20 transition-all border border-[#2d2a26] hover:border-[#eca840]"
+            className="flex-1 lg:flex-none flex items-center justify-center gap-2.5 px-8 py-4 bg-[#2d2a26] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#eca840] hover:shadow-xl hover:shadow-[#eca840]/20 transition-all border border-[#2d2a26] hover:border-[#eca840]"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-            Export CSV
+            Export
           </button>
         </div>
       </div>
 
       {/* Artisanal Order Search Engine Hub */}
-      <div className="bg-white rounded-[2.5rem] p-4 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 flex flex-col xl:flex-row items-stretch xl:items-center gap-4 animate-in fade-in slide-in-from-top-6 duration-700">
-        <div className="flex-1 flex items-center gap-4 pl-4 py-2">
+      <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-3 lg:p-4 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 flex flex-col xl:flex-row items-stretch xl:items-center gap-4 animate-in fade-in slide-in-from-top-6 duration-700">
+        <div className="flex-1 flex flex-col md:flex-row items-stretch md:items-center gap-4 lg:pl-4 py-2">
             <div className="relative min-w-[180px]">
                 <div className="relative group">
                     <select 
@@ -326,24 +326,24 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
               </table>
           </div>
           
-          <div className="p-10 border-t border-gray-50 flex justify-between items-center bg-[#fcfaf7] animate-in fade-in duration-700">
-             <div className="flex flex-col">
+          <div className="p-6 lg:p-10 border-t border-gray-50 flex flex-col lg:flex-row justify-between items-center gap-8 bg-[#fcfaf7] animate-in fade-in duration-700">
+             <div className="flex flex-col text-center lg:text-left">
                 <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1">Administrative Footprint</span>
-                <span className="text-xs font-black text-gray-900 uppercase tracking-widest">Showing {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, filteredOrders.length)} of {filteredOrders.length} System Records</span>
+                <span className="text-xs font-black text-gray-900 uppercase tracking-widest">Showing {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, filteredOrders.length)} of {filteredOrders.length} Records</span>
              </div>
-             <div className="flex gap-4">
+             <div className="flex gap-4 w-full lg:w-auto">
                 <button 
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                    className={`flex items-center gap-2 px-6 py-3 border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm active:scale-95 ${currentPage === 1 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-100 text-gray-400 hover:text-gray-900 hover:border-gray-200'}`}
+                    className={`flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 py-3 border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm active:scale-95 ${currentPage === 1 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-100 text-gray-400 hover:text-gray-900 hover:border-gray-200'}`}
                 >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" /></svg>
-                    Previous
+                    Prev
                 </button>
                 <button 
                     disabled={currentPage === totalPages || totalPages === 0}
                     onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                    className={`flex items-center gap-2 px-6 py-3 border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm active:scale-95 ${currentPage === totalPages || totalPages === 0 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-100 text-gray-400 hover:text-gray-900 hover:border-gray-200'}`}
+                    className={`flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 py-3 border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm active:scale-95 ${currentPage === totalPages || totalPages === 0 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-100 text-gray-400 hover:text-gray-900 hover:border-gray-200'}`}
                 >
                     Next
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" /></svg>

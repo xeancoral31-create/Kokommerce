@@ -8729,16 +8729,22 @@ function Navbar() {
     isSignedIn = _useUser.isSignedIn,
     user = _useUser.user;
   var _useCart = (0,_Context_CartContext__WEBPACK_IMPORTED_MODULE_7__.useCart)(),
-    cartCount = _useCart.cartCount;
-  var isBuyer = url.startsWith('/buyer');
+    cartCount = _useCart.cartCount,
+    cartItems = _useCart.cartItems,
+    removeFromCart = _useCart.removeFromCart;
   var _React$useState = react__WEBPACK_IMPORTED_MODULE_4__.useState(false),
     _React$useState2 = _slicedToArray(_React$useState, 2),
-    isViewingAsSeller = _React$useState2[0],
-    setIsViewingAsSeller = _React$useState2[1];
-  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_4__.useState(""),
+    showSideCart = _React$useState2[0],
+    setShowSideCart = _React$useState2[1];
+  var isBuyer = url.startsWith('/buyer');
+  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_4__.useState(false),
     _React$useState4 = _slicedToArray(_React$useState3, 2),
-    searchTerm = _React$useState4[0],
-    setSearchTerm = _React$useState4[1];
+    isViewingAsSeller = _React$useState4[0],
+    setIsViewingAsSeller = _React$useState4[1];
+  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_4__.useState(""),
+    _React$useState6 = _slicedToArray(_React$useState5, 2),
+    searchTerm = _React$useState6[0],
+    setSearchTerm = _React$useState6[1];
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(function () {
     var params = new URLSearchParams(window.location.search);
     if (params.has('search')) {
@@ -8822,9 +8828,9 @@ function Navbar() {
     name: "Offer",
     href: "/offer"
   }];
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("header", {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("header", {
     className: "fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 h-24",
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "container-custom h-full flex justify-between items-center w-full",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Link, {
         href: isBuyer ? "/buyer/home" : "/",
@@ -8870,18 +8876,14 @@ function Navbar() {
           })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
           className: "flex items-center gap-6 border-l border-gray-100 pl-8",
-          children: [isBuyer ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Link, {
-            href: "/buyer/cart",
-            className: "relative text-gray-400 hover:text-gray-900 transition-colors",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
+            onClick: function onClick() {
+              return setShowSideCart(true);
+            },
+            className: "relative text-gray-400 hover:text-[#eca840] transition-colors focus:outline-none group",
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ShoppingBagIcon, {}), cartCount > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-              className: "absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm",
+              className: "absolute -top-2 -right-2 bg-[#eca840] text-white text-[8px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-white shadow-sm transition-transform group-hover:scale-110",
               children: cartCount
-            })]
-          }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "relative text-gray-400 cursor-help",
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ShoppingBagIcon, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-              className: "absolute -top-2 -right-2 bg-gray-200 text-gray-500 text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white",
-              children: "0"
             })]
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
             className: "flex items-center gap-4",
@@ -8917,7 +8919,173 @@ function Navbar() {
           })]
         })]
       })]
-    })
+    }), showSideCart && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-10",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "absolute inset-0 bg-[#2d2a26]/40 backdrop-blur-xl animate-in fade-in duration-500",
+        onClick: function onClick() {
+          return setShowSideCart(false);
+        }
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "relative w-full max-w-2xl bg-white rounded-[3rem] shadow-[0_40px_100px_rgba(0,0,0,0.1)] flex flex-col max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-500",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: "flex justify-between items-center px-10 py-8 border-b border-gray-50",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
+              className: "text-2xl font-black text-gray-900 tracking-tighter",
+              children: "Your Artisanal Basket"
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+              className: "text-[10px] font-bold text-[#eca840] uppercase tracking-[0.3em] mt-1.5 flex items-center gap-2",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "w-1.5 h-1.5 bg-[#eca840] rounded-full animate-pulse"
+              }), cartCount, " Hand-crafted Selection", cartCount !== 1 ? 's' : '']
+            })]
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+            onClick: function onClick() {
+              return setShowSideCart(false);
+            },
+            className: "w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-all hover:bg-gray-50 group",
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+              className: "w-5 h-5 group-hover:rotate-90 transition-transform duration-300",
+              fill: "none",
+              viewBox: "0 0 24 24",
+              stroke: "currentColor",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: 2,
+                d: "M6 18L18 6M6 6l12 12"
+              })
+            })
+          })]
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "flex-1 overflow-y-auto px-10 py-8 custom-scrollbar",
+          children: cartItems.length === 0 ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "h-64 flex flex-col items-center justify-center text-center",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              className: "w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-200 mb-6",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ShoppingBagIcon, {})
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h3", {
+              className: "text-lg font-black text-gray-300 uppercase tracking-widest leading-none",
+              children: "Your vault is empty"
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+              onClick: function onClick() {
+                return setShowSideCart(false);
+              },
+              className: "mt-6 text-[#eca840] font-black text-[10px] uppercase tracking-widest border-b-2 border-[#eca840]/20 pb-1 hover:border-[#eca840] transition-all",
+              children: "Explore the Gallery"
+            })]
+          }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            className: "space-y-8",
+            children: cartItems.map(function (item) {
+              return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "flex flex-col sm:flex-row gap-6 p-4 rounded-[2rem] hover:bg-gray-50 transition-colors group border border-transparent hover:border-gray-100",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                  className: "w-24 h-24 rounded-3xl bg-gray-100 overflow-hidden flex-shrink-0 relative",
+                  children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+                    src: item.img,
+                    alt: item.name,
+                    className: "w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  })
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "flex-1 flex flex-col justify-center",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                    className: "flex justify-between items-start mb-1",
+                    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h3", {
+                      className: "text-sm font-black text-gray-900 group-hover:text-[#eca840] transition-colors tracking-tight uppercase leading-none",
+                      children: item.name
+                    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                      onClick: function onClick() {
+                        return removeFromCart(item.id);
+                      },
+                      className: "text-gray-200 hover:text-red-500 transition-colors p-1",
+                      title: "Remove from basket",
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                        className: "w-5 h-5",
+                        fill: "none",
+                        viewBox: "0 0 24 24",
+                        stroke: "currentColor",
+                        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                          strokeLinecap: "round",
+                          strokeLinejoin: "round",
+                          strokeWidth: 2,
+                          d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        })
+                      })
+                    })]
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                    className: "text-[11px] text-gray-400 mb-4 line-clamp-1 font-medium italic",
+                    children: "Hand-crafted Excellence"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                    className: "flex justify-between items-center",
+                    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                      className: "flex items-center gap-3 bg-white px-3 py-1 rounded-full border border-gray-100",
+                      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                        className: "text-[10px] font-black text-gray-400",
+                        children: "QTY"
+                      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                        className: "text-xs font-black text-gray-900",
+                        children: item.qty
+                      })]
+                    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                      className: "text-base font-black text-gray-900",
+                      children: ["\u20B1", (item.price * item.qty).toLocaleString()]
+                    })]
+                  })]
+                })]
+              }, item.id);
+            })
+          })
+        }), cartItems.length > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: "px-10 py-10 bg-gray-50/50 border-t border-gray-50 flex flex-col gap-6",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "flex justify-between items-end",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: "flex flex-col",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                className: "text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-1",
+                children: "Estimated Total"
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                className: "text-[10px] text-gray-300 font-bold italic",
+                children: "Taxes and delivery calculated at checkout"
+              })]
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+              className: "text-4xl font-black text-gray-900 tracking-tighter",
+              children: ["\u20B1", cartItems.reduce(function (acc, item) {
+                return acc + item.price * item.qty;
+              }, 0).toLocaleString()]
+            })]
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "flex flex-col sm:flex-row gap-4",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+              className: "flex-1 bg-gray-200 text-gray-400 py-5 rounded-[1.5rem] text-[11px] font-black uppercase tracking-[0.2em] cursor-not-allowed border border-gray-300 transition-all shadow-sm",
+              disabled: true,
+              children: "Payment Suspended"
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+              onClick: function onClick() {
+                return setShowSideCart(false);
+              },
+              className: "sm:w-max bg-white border border-gray-200 text-gray-900 px-8 py-5 rounded-[1.5rem] text-[11px] font-black uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all shadow-sm",
+              children: "Continue Selection"
+            })]
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "flex items-center justify-center gap-2 text-[9px] text-gray-300 font-bold tracking-widest uppercase",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+              className: "w-3 h-3",
+              fill: "none",
+              viewBox: "0 0 24 24",
+              stroke: "currentColor",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: 3,
+                d: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              })
+            }), "SECURE ARTISANAL TRANSACTIONS"]
+          })]
+        })]
+      })]
+    })]
   });
 }
 
@@ -9117,6 +9285,10 @@ var SellerLayout = function SellerLayout(_ref) {
     _React$useState4 = _slicedToArray(_React$useState3, 2),
     showNotifications = _React$useState4[0],
     setShowNotifications = _React$useState4[1];
+  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_1__.useState(false),
+    _React$useState6 = _slicedToArray(_React$useState5, 2),
+    sidebarOpen = _React$useState6[0],
+    setSidebarOpen = _React$useState6[1];
   // Identity priority logic: Clerk first → Laravel auth_user → store defaults
   var clerkImage = isLoaded && user !== null && user !== void 0 && user.imageUrl ? user.imageUrl : null;
   var profileImage = clerkImage || (authUser === null || authUser === void 0 ? void 0 : authUser.image) || store.image || 'https://via.placeholder.com/100?text=Logo';
@@ -9191,8 +9363,13 @@ var SellerLayout = function SellerLayout(_ref) {
   }];
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "seller-module min-h-screen bg-[#fcfaf7]",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("aside", {
-      className: "seller-sidebar",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "sidebar-overlay ".concat(sidebarOpen ? 'active' : ''),
+      onClick: function onClick() {
+        return setSidebarOpen(false);
+      }
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("aside", {
+      className: "seller-sidebar ".concat(sidebarOpen ? 'open' : ''),
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "sidebar-branding mb-8 flex items-center gap-3 px-3 py-1",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -9211,6 +9388,23 @@ var SellerLayout = function SellerLayout(_ref) {
               className: "w-3 h-[1px] bg-[#eca840]/30"
             }), "ARTISANAL UNIT"]
           })]
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+          onClick: function onClick() {
+            return setSidebarOpen(false);
+          },
+          className: "lg:hidden p-2 text-gray-400 hover:text-[#eca840]",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+            className: "w-6 h-6",
+            fill: "none",
+            viewBox: "0 0 24 24",
+            stroke: "currentColor",
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              strokeWidth: 2.5,
+              d: "M6 18L18 6M6 6l12 12"
+            })
+          })
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "mb-8 px-2",
@@ -9250,6 +9444,9 @@ var SellerLayout = function SellerLayout(_ref) {
         children: navItems.map(function (item) {
           return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_2__.Link, {
             href: item.href,
+            onClick: function onClick() {
+              return setSidebarOpen(false);
+            },
             className: "nav-item group flex items-center gap-3.5 px-4 py-3 rounded-xl text-[13px] font-bold transition-all duration-300 ".concat(url.startsWith(item.href) ? 'bg-[#2d2a26] text-white shadow-lg shadow-gray-900/10' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-900'),
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
               className: "w-4.5 h-4.5 transition-colors ".concat(url.startsWith(item.href) ? 'text-[#eca840]' : 'text-gray-300 group-hover:text-gray-900'),
@@ -9259,161 +9456,178 @@ var SellerLayout = function SellerLayout(_ref) {
         })
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("main", {
-      className: "seller-main flex-1 p-8 lg:p-12 overflow-y-auto",
+      className: "seller-main flex-1 overflow-y-auto",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("header", {
-        className: "seller-header flex justify-between items-center mb-10 bg-white/95 backdrop-blur-2xl px-10 py-4.5 rounded-[2rem] border border-gray-100 shadow-[0_15px_40px_-15px_rgba(0,0,0,0.05)] sticky top-6 z-[100] mx-6 transition-all duration-500",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "header-search flex-1 max-w-[420px] flex items-center gap-4 bg-gray-50/50 backdrop-blur-md px-6 py-3 rounded-xl border border-gray-100 focus-within:bg-white focus-within:shadow-lg focus-within:border-[#eca840]/20 transition-all duration-500 group",
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-            className: "w-4 h-4 text-gray-300 group-focus-within:text-[#eca840] transition-colors",
-            fill: "none",
-            viewBox: "0 0 24 24",
-            stroke: "currentColor",
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-              strokeLinecap: "round",
-              strokeLinejoin: "round",
-              strokeWidth: 2.5,
-              d: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        className: "seller-header flex items-center gap-4 lg:gap-8 mb-6 lg:mb-10 bg-white/95 backdrop-blur-2xl px-6 lg:px-10 py-3 lg:py-4.5 rounded-[1.5rem] lg:rounded-[2rem] border border-gray-100 shadow-[0_15px_40px_-15px_rgba(0,0,0,0.05)] sticky top-2 lg:top-6 z-[100] mx-4 lg:mx-6 transition-all duration-500",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "flex items-center lg:hidden",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+            onClick: function onClick() {
+              return setSidebarOpen(true);
+            },
+            className: "p-2 text-gray-400 hover:text-[#eca840] transition-colors",
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+              className: "w-6 h-6",
+              fill: "none",
+              viewBox: "0 0 24 24",
+              stroke: "currentColor",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: 2,
+                d: "M4 6h16M4 12h16M4 18h16"
+              })
             })
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
-            type: "text",
-            placeholder: "Search administrative records...",
-            className: "bg-transparent border-none focus:ring-0 text-[11px] font-bold text-gray-700 placeholder:text-gray-300 w-full uppercase tracking-[0.2em]"
-          })]
+          })
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "flex-1 hidden sm:flex items-center",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "header-search flex-1 flex items-center gap-4 bg-gray-50/50 backdrop-blur-md px-6 py-3 rounded-xl border border-gray-100 focus-within:bg-white focus-within:shadow-lg focus-within:border-[#eca840]/20 transition-all duration-500 group",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+              className: "w-4 h-4 text-gray-300 group-focus-within:text-[#eca840] transition-colors",
+              fill: "none",
+              viewBox: "0 0 24 24",
+              stroke: "currentColor",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: 2.5,
+                d: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              })
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+              type: "text",
+              placeholder: "Search across your artisanal inventory...",
+              className: "bg-transparent border-none focus:ring-0 text-[11px] font-bold text-gray-700 placeholder:text-gray-300 w-full uppercase tracking-[0.2em]"
+            })]
+          })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "flex items-center gap-8",
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-            className: "flex items-center gap-4 border-r border-gray-100 pr-8",
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "relative",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
-                id: "notification-bell",
-                onClick: function onClick() {
-                  return setShowNotifications(!showNotifications);
-                },
-                className: "relative w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#eca840] hover:bg-white border border-transparent hover:border-gray-100 transition-all shadow-sm",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-                  className: "w-5 h-5",
-                  fill: "none",
-                  viewBox: "0 0 24 24",
-                  stroke: "currentColor",
-                  children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                    strokeWidth: 2,
-                    d: "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  })
-                }), notifications.low_stock.length + (((_notifications$recent = notifications.recent) === null || _notifications$recent === void 0 ? void 0 : _notifications$recent.length) || 0) > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                  className: "absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-black flex items-center justify-center rounded-full border-2 border-white shadow-md",
-                  children: notifications.low_stock.length + (((_notifications$recent2 = notifications.recent) === null || _notifications$recent2 === void 0 ? void 0 : _notifications$recent2.length) || 0)
-                })]
-              }), showNotifications && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "absolute right-0 mt-6 w-80 bg-white rounded-[2rem] shadow-2xl border border-gray-100 z-[999] p-6 animate-in fade-in slide-in-from-top-4",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                  className: "flex justify-between items-center mb-4",
-                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h4", {
-                    className: "text-[10px] font-black text-gray-900 uppercase tracking-widest",
-                    children: "Inventory Alerts"
-                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
-                    className: "text-[9px] font-bold text-[#eca840] px-2 py-0.5 bg-orange-50 rounded-full",
-                    children: [notifications.low_stock.length, " Active"]
-                  })]
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  className: "space-y-3 max-h-[400px] overflow-y-auto pr-1",
-                  children: notifications.low_stock.length === 0 && (!notifications.recent || notifications.recent.length === 0) ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                    className: "text-center py-8",
-                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                      className: "text-[10px] text-gray-300 font-black uppercase",
-                      children: "Pantry is full"
-                    })
-                  }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-                    children: [(_notifications$recent3 = notifications.recent) === null || _notifications$recent3 === void 0 ? void 0 : _notifications$recent3.map(function (notif) {
-                      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                        className: "p-4 bg-orange-50/50 rounded-2xl hover:bg-white border border-transparent hover:border-[#eca840]/20 transition-all cursor-pointer",
-                        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                          className: "flex items-center gap-2 mb-1",
-                          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                            className: "w-1.5 h-1.5 rounded-full bg-[#eca840]"
-                          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h5", {
-                            className: "text-[10px] font-black text-gray-900 uppercase tracking-widest",
-                            children: notif.title
-                          })]
-                        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                          className: "text-[11px] text-gray-600 font-medium leading-relaxed",
-                          children: notif.message
-                        })]
-                      }, "recent-".concat(notif.id));
-                    }), notifications.low_stock.map(function (item) {
-                      return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                        className: "p-4 bg-red-50/30 rounded-2xl hover:bg-white border border-transparent hover:border-red-100 transition-all cursor-pointer",
-                        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                          className: "flex items-center gap-2 mb-1",
-                          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                            className: "w-1.5 h-1.5 rounded-full bg-red-500"
-                          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h5", {
-                            className: "text-[10px] font-black text-red-500 uppercase tracking-widest",
-                            children: "Low Stock Alert"
-                          })]
-                        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h5", {
-                          className: "text-xs font-black text-gray-800",
-                          children: item.name
-                        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
-                          className: "text-[10px] text-red-400 font-bold mt-1",
-                          children: ["Stock Left: ", item.stock]
-                        })]
-                      }, "low-".concat(item.id));
-                    })]
-                  })
-                })]
+          className: "flex items-center gap-3 lg:gap-4 ml-auto",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "relative",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
+              id: "notification-bell",
+              onClick: function onClick() {
+                return setShowNotifications(!showNotifications);
+              },
+              className: "relative w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#eca840] hover:bg-white border border-transparent hover:border-gray-100 transition-all shadow-sm",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                className: "w-5 h-5",
+                fill: "none",
+                viewBox: "0 0 24 24",
+                stroke: "currentColor",
+                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: 2,
+                  d: "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                })
+              }), notifications.low_stock.length + (((_notifications$recent = notifications.recent) === null || _notifications$recent === void 0 ? void 0 : _notifications$recent.length) || 0) > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                className: "absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-black flex items-center justify-center rounded-full border-2 border-white shadow-md",
+                children: notifications.low_stock.length + (((_notifications$recent2 = notifications.recent) === null || _notifications$recent2 === void 0 ? void 0 : _notifications$recent2.length) || 0)
               })]
-            })
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-            className: "flex items-center gap-4 pl-4",
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "relative bg-[#2d2a26] border border-[#2d2a26] rounded-xl px-5 py-2.5 flex items-center gap-4 hover:opacity-95 transition-all cursor-pointer group shadow-md shadow-gray-200/50",
+            }), showNotifications && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: "absolute right-0 mt-6 w-80 bg-white rounded-[2rem] shadow-2xl border border-gray-100 z-[999] p-6 animate-in fade-in slide-in-from-top-4",
               children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "text-left",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h5", {
-                  className: "text-[10px] font-black text-white leading-none mb-1.5 uppercase tracking-wide",
-                  children: profileName.split(' ')[0]
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  className: "flex items-center gap-1.5",
-                  children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                    className: "text-[7px] font-black text-[#eca840] uppercase tracking-[0.2em]",
-                    children: isOnline ? 'CONNECTED' : 'OFFLINE'
-                  })
-                })]
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "relative",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  className: "w-9 h-9 rounded-full p-[1.5px] transition-all duration-500 ".concat(isOnline ? 'bg-[#eca840]' : 'bg-gray-400'),
-                  children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                    className: "w-full h-full rounded-full overflow-hidden border-2 border-[#2d2a26] bg-gray-100 flex items-center justify-center",
-                    children: profileImage ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
-                      src: profileImage,
-                      alt: "User",
-                      className: "w-full h-full object-cover"
-                    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                      className: "text-xs font-black text-gray-400",
-                      children: profileName.charAt(0)
-                    })
-                  })
-                }), isOnline && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  className: "absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-[#2d2a26]"
+                className: "flex justify-between items-center mb-4",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h4", {
+                  className: "text-[10px] font-black text-gray-900 uppercase tracking-widest",
+                  children: "Inventory Alerts"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                  className: "text-[9px] font-bold text-[#eca840] px-2 py-0.5 bg-orange-50 rounded-full",
+                  children: [notifications.low_stock.length, " Active"]
                 })]
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                className: "absolute inset-0 opacity-0 z-10 cursor-pointer [&_button]:w-full [&_button]:h-full [&_button]:rounded-full",
-                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_clerk_clerk_react__WEBPACK_IMPORTED_MODULE_3__.UserButton, {
-                  afterSignOutUrl: "/",
-                  appearance: {
-                    elements: {
-                      userButtonTrigger: "w-full h-full",
-                      rootBox: "w-full h-full"
-                    }
-                  }
+                className: "space-y-3 max-h-[400px] overflow-y-auto pr-1",
+                children: notifications.low_stock.length === 0 && (!notifications.recent || notifications.recent.length === 0) ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                  className: "text-center py-8",
+                  children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                    className: "text-[10px] text-gray-300 font-black uppercase",
+                    children: "Pantry is full"
+                  })
+                }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+                  children: [(_notifications$recent3 = notifications.recent) === null || _notifications$recent3 === void 0 ? void 0 : _notifications$recent3.map(function (notif) {
+                    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                      className: "p-4 bg-orange-50/50 rounded-2xl hover:bg-white border border-transparent hover:border-[#eca840]/20 transition-all cursor-pointer",
+                      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                        className: "flex items-center gap-2 mb-1",
+                        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                          className: "w-1.5 h-1.5 rounded-full bg-[#eca840]"
+                        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h5", {
+                          className: "text-[10px] font-black text-gray-900 uppercase tracking-widest",
+                          children: notif.title
+                        })]
+                      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                        className: "text-[11px] text-gray-600 font-medium leading-relaxed",
+                        children: notif.message
+                      })]
+                    }, "recent-".concat(notif.id));
+                  }), notifications.low_stock.map(function (item) {
+                    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                      className: "p-4 bg-red-50/30 rounded-2xl hover:bg-white border border-transparent hover:border-red-100 transition-all cursor-pointer",
+                      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                        className: "flex items-center gap-2 mb-1",
+                        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                          className: "w-1.5 h-1.5 rounded-full bg-red-500"
+                        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h5", {
+                          className: "text-[10px] font-black text-red-500 uppercase tracking-widest",
+                          children: "Low Stock Alert"
+                        })]
+                      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h5", {
+                        className: "text-xs font-black text-gray-800",
+                        children: item.name
+                      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+                        className: "text-[10px] text-red-400 font-bold mt-1",
+                        children: ["Stock Left: ", item.stock]
+                      })]
+                    }, "low-".concat(item.id));
+                  })]
                 })
               })]
-            })
+            })]
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "relative bg-[#2d2a26] border border-[#2d2a26] rounded-xl px-3 lg:px-5 py-2 lg:py-2.5 flex items-center gap-3 lg:gap-4 hover:opacity-95 transition-all cursor-pointer group shadow-md shadow-gray-200/50",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: "text-left hidden lg:block",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h5", {
+                className: "text-[10px] font-black text-white leading-none mb-1.5 uppercase tracking-wide",
+                children: profileName.split(' ')[0]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "flex items-center gap-1.5",
+                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                  className: "text-[7px] font-black text-[#eca840] uppercase tracking-[0.2em]",
+                  children: isOnline ? 'CONNECTED' : 'OFFLINE'
+                })
+              })]
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: "relative",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "w-8 h-8 lg:w-9 lg:h-9 rounded-full p-[1.5px] transition-all duration-500 ".concat(isOnline ? 'bg-[#eca840]' : 'bg-gray-400'),
+                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                  className: "w-full h-full rounded-full overflow-hidden border-2 border-[#2d2a26] bg-gray-100 flex items-center justify-center",
+                  children: profileImage ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+                    src: profileImage,
+                    alt: "User",
+                    className: "w-full h-full object-cover"
+                  }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                    className: "text-xs font-black text-gray-400",
+                    children: profileName.charAt(0)
+                  })
+                })
+              }), isOnline && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "absolute -bottom-0.5 -right-0.5 w-2 h-2 lg:w-2.5 lg:h-2.5 bg-green-500 rounded-full border-2 border-[#2d2a26]"
+              })]
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              className: "absolute inset-0 opacity-0 z-10 cursor-pointer [&_button]:w-full [&_button]:h-full [&_button]:rounded-full",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_clerk_clerk_react__WEBPACK_IMPORTED_MODULE_3__.UserButton, {
+                afterSignOutUrl: "/",
+                appearance: {
+                  elements: {
+                    userButtonTrigger: "w-full h-full",
+                    rootBox: "w-full h-full"
+                  }
+                }
+              })
+            })]
           })]
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("section", {
@@ -9483,6 +9697,20 @@ var CartProvider = function CartProvider(_ref) {
     _useState4 = _slicedToArray(_useState3, 2),
     deliveryDetails = _useState4[0],
     setDeliveryDetails = _useState4[1];
+  // Persistent Artisanal Cart Logic
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
+    var saved = localStorage.getItem('artisanal_cart');
+    if (saved) {
+      try {
+        setCartItems(JSON.parse(saved));
+      } catch (e) {
+        console.error("Cart retrieval failed:", e);
+      }
+    }
+  }, []);
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
+    localStorage.setItem('artisanal_cart', JSON.stringify(cartItems));
+  }, [cartItems]);
   var addToCart = function addToCart(item) {
     setCartItems(function (prev) {
       var existing = prev.find(function (i) {
@@ -9495,7 +9723,9 @@ var CartProvider = function CartProvider(_ref) {
           }) : i;
         });
       }
-      return [].concat(_toConsumableArray(prev), [item]);
+      return [].concat(_toConsumableArray(prev), [_objectSpread(_objectSpread({}, item), {}, {
+        qty: item.qty || 1
+      })]);
     });
   };
   var removeFromCart = function removeFromCart(id) {
@@ -9515,7 +9745,8 @@ var CartProvider = function CartProvider(_ref) {
     });
   };
   var clearCart = function clearCart() {
-    return setCartItems([]);
+    setCartItems([]);
+    localStorage.removeItem('artisanal_cart');
   };
   var updateDeliveryDetails = function updateDeliveryDetails(details) {
     setDeliveryDetails(function (prev) {
@@ -11435,88 +11666,279 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ BuyerOffer)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var _Components_BuyerLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Components/BuyerLayout */ "./resources/js/Components/BuyerLayout.tsx");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _Components_BuyerLayout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Components/BuyerLayout */ "./resources/js/Components/BuyerLayout.tsx");
+/* harmony import */ var _Context_CartContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Context/CartContext */ "./resources/js/Context/CartContext.tsx");
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
+
+
+var Star = function Star() {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+    className: "w-3 h-3 fill-current",
+    viewBox: "0 0 20 20",
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+      d: "M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+    })
+  });
+};
 function BuyerOffer(_ref) {
+  var _currentOffer$product;
   var promotions = _ref.promotions;
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Components_BuyerLayout__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("header", {
-      className: "mb-8 md:mb-12 text-center text-gray-900 px-4 md:px-0",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        className: "inline-block bg-[#fff8e6] text-[#f2994a] px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase mb-4 shadow-sm",
-        children: "EXCLUSIVE PRIVILEGES"
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h1", {
-        className: "text-4xl md:text-5xl font-black mb-4 tracking-tighter",
-        children: ["Curated ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-          className: "text-[#f5a623]",
-          children: "Bounties."
+  var _useCart = (0,_Context_CartContext__WEBPACK_IMPORTED_MODULE_3__.useCart)(),
+    addToCart = _useCart.addToCart;
+  var _React$useState = react__WEBPACK_IMPORTED_MODULE_1__.useState(0),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    currentIndex = _React$useState2[0],
+    setCurrentIndex = _React$useState2[1];
+  var calculateFinalPrice = function calculateFinalPrice(offer) {
+    if (!offer.product) return 0;
+    if (offer.type === 'percentage') {
+      return offer.product.price * (1 - offer.discount_value / 100);
+    }
+    return Math.max(0, offer.product.price - offer.discount_value);
+  };
+  var nextOffer = function nextOffer() {
+    setCurrentIndex(function (prev) {
+      return (prev + 1) % promotions.length;
+    });
+  };
+  var prevOffer = function prevOffer() {
+    setCurrentIndex(function (prev) {
+      return (prev - 1 + promotions.length) % promotions.length;
+    });
+  };
+  var currentOffer = promotions[currentIndex];
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_BuyerLayout__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "max-w-6xl mx-auto px-6 py-12 md:py-20",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("header", {
+        className: "mb-16 md:mb-24 text-center",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: "inline-block bg-[#fffcf5] text-[#eca840] px-6 py-2 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6 shadow-sm border border-[#fff8e6]",
+          children: "CURATED BOUNTIES"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h1", {
+          className: "text-5xl md:text-7xl font-black text-gray-900 mb-8 tracking-tighter leading-none",
+          children: ["Seasonal ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+            className: "text-[#eca840]",
+            children: "Treasures."
+          })]
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+          className: "text-gray-400 font-medium max-w-xl mx-auto text-base md:text-lg leading-relaxed",
+          children: "Exclusively gathered for our discerning patrons. Experience the peak of artisanal craft through these limited invitations."
         })]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-        className: "text-gray-400 font-medium max-w-lg mx-auto text-sm md:text-base",
-        children: "Savor the essence of our artisanal heritage through these limited-time collections."
-      })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "space-y-12",
-      children: promotions.map(function (offer, index) {
-        var _offer$product;
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "bg-white rounded-[2rem] md:rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-gray-100 ".concat(index % 2 !== 0 ? 'md:flex-row-reverse' : ''),
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-            className: "w-full md:w-1/2 h-64 md:h-[450px]",
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
-              src: offer.image || ((_offer$product = offer.product) === null || _offer$product === void 0 ? void 0 : _offer$product.image) || "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=800",
-              alt: offer.title,
-              className: "w-full h-full object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-1000"
+      }), promotions.length > 0 ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "relative group/carousel",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: "absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between px-4 md:-mx-16 z-20 pointer-events-none opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-500",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+            onClick: prevOffer,
+            className: "w-16 h-16 rounded-full bg-white/80 backdrop-blur-md border border-gray-100 flex items-center justify-center text-gray-900 shadow-xl hover:bg-[#eca840] hover:text-white transition-all pointer-events-auto active:scale-90",
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+              className: "w-6 h-6",
+              fill: "none",
+              viewBox: "0 0 24 24",
+              stroke: "currentColor",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: 3,
+                d: "M15 19l-7-7 7-7"
+              })
             })
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "w-full md:w-1/2 p-8 sm:p-12 md:p-16 flex flex-col justify-center",
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
-              className: "text-[#f5a623] font-black tracking-[0.2em] text-[10px] uppercase mb-4 flex items-center gap-3",
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+            onClick: nextOffer,
+            className: "w-16 h-16 rounded-full bg-white/80 backdrop-blur-md border border-gray-100 flex items-center justify-center text-gray-900 shadow-xl hover:bg-[#eca840] hover:text-white transition-all pointer-events-auto active:scale-90",
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+              className: "w-6 h-6",
+              fill: "none",
+              viewBox: "0 0 24 24",
+              stroke: "currentColor",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: 3,
+                d: "M9 5l7 7-7 7"
+              })
+            })
+          })]
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "animate-in fade-in zoom-in-95 duration-700",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "flex flex-col md:flex-row items-center gap-12 md:gap-20",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: "w-full md:w-1/2 relative group",
               children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                className: "w-8 h-px bg-[#f5a623]"
-              }), offer.type === 'percentage' ? "".concat(offer.discount_value, "% OFF") : "\u20B1".concat(offer.discount_value, " OFF")]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
-              className: "text-3xl md:text-4xl font-black text-gray-900 mb-4 md:mb-6 leading-tight",
-              children: offer.title
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-              className: "text-gray-500 text-base md:text-lg mb-8 md:mb-10 leading-relaxed font-medium",
-              children: offer.description
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-8 md:mb-12",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "flex flex-col",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                  className: "text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1",
-                  children: "PROMO CODE"
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                  className: "text-xl font-black text-gray-900 bg-gray-50 px-4 py-2 rounded-xl border border-dashed border-gray-200",
-                  children: offer.code
-                })]
-              }), offer.product && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "flex flex-col",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                  className: "text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1",
-                  children: "UNIT PRICE"
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
-                  className: "text-xl font-black text-gray-400 line-through",
-                  children: ["\u20B1", offer.product.price]
+                className: "absolute -inset-4 bg-[#eca840]/5 rounded-[3rem] blur-2xl group-hover:bg-[#eca840]/10 transition-all duration-700"
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-gray-100 aspect-[4/5] md:aspect-square",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+                  src: currentOffer.image || ((_currentOffer$product = currentOffer.product) === null || _currentOffer$product === void 0 ? void 0 : _currentOffer$product.image) || "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=800",
+                  alt: currentOffer.title,
+                  className: "w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                  className: "absolute top-8 left-8",
+                  children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                    className: "bg-white/90 backdrop-blur-md text-gray-900 text-[10px] font-black px-6 py-2.5 rounded-2xl shadow-xl flex items-center gap-2",
+                    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                      className: "w-1.5 h-1.5 bg-[#eca840] rounded-full animate-ping"
+                    }), "AUTHENTIC CRAFT"]
+                  })
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "absolute bottom-8 right-8 h-12 px-6 bg-black/40 backdrop-blur-md rounded-2xl flex items-center gap-3 border border-white/10",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                    className: "text-[10px] font-black text-white tracking-[0.2em] uppercase",
+                    children: "Invitation"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                    className: "text-sm font-black text-white",
+                    children: [(currentIndex + 1).toString().padStart(2, '0'), " ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                      className: "text-[#eca840] invisible md:visible",
+                      children: "/"
+                    }), " ", promotions.length.toString().padStart(2, '0')]
+                  })]
                 })]
               })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-              className: "bg-[#f5a623] hover:bg-black text-white font-black px-8 md:px-12 py-4 md:py-5 rounded-2xl text-[10px] uppercase tracking-[0.2em] w-full sm:w-max shadow-xl shadow-[#f5a623]/20 transition-all active:scale-95 text-center mt-auto sm:mt-0",
-              children: "Claim This Bounty"
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: "w-full md:w-1/2 flex flex-col items-start text-left",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "flex items-center gap-4 text-[#eca840] text-[11px] font-black uppercase tracking-widest mb-6",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                  className: "w-12 h-px bg-[#eca840]"
+                }), currentOffer.type === 'percentage' ? "".concat(currentOffer.discount_value, "% DISCOUNT") : "\u20B1".concat(currentOffer.discount_value, " OFF")]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
+                className: "text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight leading-tight",
+                children: currentOffer.title
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                className: "text-gray-500 text-lg mb-10 leading-relaxed font-medium",
+                children: currentOffer.description
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "grid grid-cols-1 sm:grid-cols-2 gap-8 w-full mb-12",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                    className: "text-[10px] font-black text-gray-300 uppercase tracking-widest mb-2",
+                    children: "ACCESS CODE"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                    className: "text-xl font-black text-gray-900 tracking-[0.2em] font-mono",
+                    children: currentOffer.code
+                  })]
+                }), currentOffer.product && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "bg-[#fffdfa] p-6 rounded-3xl border border-[#fff4e0] shadow-sm flex flex-col relative overflow-hidden",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                    className: "absolute top-0 right-0 p-2 opacity-10",
+                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(Star, {})
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                    className: "text-[10px] font-black text-[#eca840]/60 uppercase tracking-widest mb-2",
+                    children: "OFFER VALUE"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                    className: "flex items-baseline gap-3",
+                    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                      className: "text-2xl font-black text-gray-900 animate-pulse",
+                      children: ["\u20B1", calculateFinalPrice(currentOffer).toLocaleString()]
+                    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                      className: "text-sm font-bold text-gray-300 line-through",
+                      children: ["\u20B1", currentOffer.product.price.toLocaleString()]
+                    })]
+                  })]
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "flex flex-col sm:flex-row items-center gap-6 w-full",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                  onClick: function onClick() {
+                    return currentOffer.product && addToCart({
+                      id: currentOffer.product.id,
+                      name: currentOffer.product.name,
+                      price: calculateFinalPrice(currentOffer),
+                      qty: 1,
+                      img: currentOffer.product.image,
+                      desc: currentOffer.description
+                    });
+                  },
+                  className: "w-full sm:flex-1 group relative bg-[#2d2a26] hover:bg-[#eca840] text-white font-black px-12 py-5 rounded-[2rem] text-[11px] uppercase tracking-[0.3em] shadow-2xl transition-all duration-500 hover:-translate-y-1 active:scale-95",
+                  children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                    className: "relative z-10 flex items-center justify-center gap-3",
+                    children: ["Claim This Bounty", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                      className: "w-4 h-4 transform group-hover:translate-x-1 transition-transform",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      stroke: "currentColor",
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 3,
+                        d: "M17 8l4 4m0 0l-4 4m4-4H3"
+                      })
+                    })]
+                  })
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "flex md:hidden items-center gap-4",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                    onClick: prevOffer,
+                    className: "w-14 h-14 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:bg-gray-50 transition-all",
+                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                      className: "w-5 h-5",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      stroke: "currentColor",
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 3,
+                        d: "M15 19l-7-7 7-7"
+                      })
+                    })
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                    onClick: nextOffer,
+                    className: "w-14 h-14 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:bg-gray-50 transition-all",
+                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                      className: "w-5 h-5",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      stroke: "currentColor",
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 3,
+                        d: "M9 5l7 7-7 7"
+                      })
+                    })
+                  })]
+                })]
+              })]
             })]
-          })]
-        }, offer.id);
-      })
-    }), promotions.length === 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "text-center py-16 md:py-20 bg-gray-50 rounded-[2rem] md:rounded-[4rem] border-2 border-dashed border-gray-100 px-4",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-        className: "text-gray-400 font-bold text-base md:text-lg italic",
-        children: "The vault is currently empty. Check back for fresh seasonal treasures."
-      })
-    })]
+          })
+        }, currentOffer.id)]
+      }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "text-center py-32 bg-gray-50 rounded-[4rem] border-2 border-dashed border-gray-100 flex flex-col items-center",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-sm mb-8 text-gray-300",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+            className: "w-10 h-10",
+            fill: "none",
+            viewBox: "0 0 24 24",
+            stroke: "currentColor",
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              strokeWidth: 2,
+              d: "M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+            })
+          })
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+          className: "text-gray-400 font-black text-xl italic tracking-tight",
+          children: "The vault is currently sealed. Fresh treasures are being curated."
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+          className: "mt-8 text-[#eca840] font-black text-xs uppercase tracking-widest border-b-2 border-[#eca840]/20 pb-1 hover:border-[#eca840] transition-all",
+          children: "Return to Gallery"
+        })]
+      })]
+    })
   });
 }
 
@@ -15320,20 +15742,20 @@ function SellerDashboard(_ref) {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.Head, {
       title: "Seller Dashboard"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "flex justify-between items-end mb-10",
+      className: "flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-10",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
-          className: "text-4xl font-extrabold text-gray-900 tracking-tight mb-2",
+          className: "text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight mb-2",
           children: "Artisanal Growth"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
           className: "text-gray-500 font-medium",
           children: "Cultivating excellence in every batch today."
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "flex gap-4",
+        className: "flex flex-wrap gap-4 w-full lg:w-auto",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
           onClick: handleExport,
-          className: "flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-2xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all active:scale-95",
+          className: "flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-2xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all active:scale-95",
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
             className: "w-4 h-4",
             fill: "none",
@@ -15345,10 +15767,10 @@ function SellerDashboard(_ref) {
               strokeWidth: 2,
               d: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
             })
-          }), "Export Report"]
+          }), "Export"]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
           href: "/seller/products",
-          className: "flex items-center gap-2 px-6 py-3 bg-[#eca840] text-white rounded-2xl text-sm font-bold hover:shadow-lg hover:shadow-[#eca840]/30 transition-all active:scale-95",
+          className: "flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-[#eca840] text-white rounded-2xl text-sm font-bold hover:shadow-lg hover:shadow-[#eca840]/30 transition-all active:scale-95",
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
             className: "w-4 h-4",
             fill: "none",
@@ -15391,9 +15813,9 @@ function SellerDashboard(_ref) {
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: "grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "lg:col-span-3 bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-sm overflow-hidden flex flex-col",
+        className: "lg:col-span-3 bg-white rounded-[2rem] lg:rounded-[2.5rem] p-6 lg:p-10 border border-gray-100 shadow-sm overflow-hidden flex flex-col",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "flex justify-between items-center mb-10",
+          className: "flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10",
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h3", {
               className: "text-2xl font-black text-gray-900 tracking-tight mb-1",
@@ -15406,7 +15828,7 @@ function SellerDashboard(_ref) {
             className: "flex items-center gap-2 px-4 py-2 bg-green-50 text-green-600 text-[10px] font-black rounded-xl animate-pulse uppercase tracking-widest border border-green-100",
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
               className: "w-2 h-2 bg-green-500 rounded-full"
-            }), "Live Tracking Enabled"]
+            }), "Live Tracking"]
           })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
           className: "grid grid-cols-1 md:grid-cols-2 gap-12 flex-1",
@@ -15481,9 +15903,9 @@ function SellerDashboard(_ref) {
         })
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "bg-white rounded-[3rem] p-12 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 overflow-hidden",
+      className: "bg-white rounded-[2rem] lg:rounded-[3rem] p-6 lg:p-12 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 overflow-hidden",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12",
+        className: "flex flex-col xl:flex-row justify-between items-start xl:items-center gap-8 mb-12",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h3", {
             className: "text-2xl font-black text-gray-900 tracking-tight mb-2",
@@ -15493,60 +15915,63 @@ function SellerDashboard(_ref) {
             children: timeRange === 'Today' ? 'Intraday Market Velocity' : timeRange === 'Daily' ? 'Weekly Operational Pulse' : timeRange === 'Weekly' ? 'Monthly Growth Visualization' : 'Annual Strategic Trend'
           })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "flex items-center gap-2 bg-gray-50 p-1.5 rounded-2xl border border-gray-100",
+          className: "flex flex-wrap items-center gap-2 bg-gray-50 p-1.5 rounded-2xl border border-gray-100 w-full lg:w-auto",
           children: ['Today', 'Daily', 'Weekly', 'Monthly'].map(function (range) {
             return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
               onClick: function onClick() {
                 return setTimeRange(range);
               },
-              className: "px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ".concat(timeRange === range ? 'bg-white text-gray-900 shadow-sm border border-gray-100' : 'text-gray-400 hover:text-gray-600'),
+              className: "flex-1 lg:flex-none px-4 lg:px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ".concat(timeRange === range ? 'bg-white text-gray-900 shadow-sm border border-gray-100' : 'text-gray-400 hover:text-gray-600'),
               children: range
             }, range);
           })
         })]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "relative pt-12",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "absolute inset-0 pt-12 flex flex-col justify-between pointer-events-none opacity-[0.03]",
-          children: _toConsumableArray(Array(5)).map(function (_, i) {
-            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-              className: "w-full h-px bg-gray-900"
-            }, i);
-          })
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "flex items-end justify-around h-80 gap-4 md:gap-8 px-10 relative z-10",
-          children: displayData.map(function (item, idx) {
-            var isCurrent = timeRange === 'Today' ? new Date().getHours() === idx : timeRange === 'Daily' && new Date().toLocaleDateString('en-US', {
-              weekday: 'short'
-            }) === item.label;
-            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "flex-1 flex flex-col items-center group relative h-full justify-end",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "absolute -top-12 px-4 py-2 bg-gray-900 text-white text-[10px] font-black rounded-xl opacity-0 group-hover:opacity-100 transition-all transform group-hover:-translate-y-2 whitespace-nowrap z-20 shadow-2xl scale-95 group-hover:scale-100",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                  className: "text-[#eca840] mr-2",
-                  children: item.orders || 0
-                }), "ORDERS \u2014 ", (item.fullLabel || item.label).toUpperCase()]
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                style: {
-                  height: "".concat(Math.max(Math.min(item.value, 100), 5), "%")
-                },
-                className: "w-full rounded-2xl transition-all duration-1000 ease-out cursor-pointer relative overflow-hidden ".concat(isCurrent ? 'bg-gradient-to-t from-[#eca840] to-[#f4c47d] shadow-[0_15px_30px_-10px_rgba(236,168,64,0.4)]' : 'bg-gray-100 hover:bg-gray-200'),
-                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  className: "absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                })
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "mt-8 flex flex-col items-center gap-1",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                  className: "text-[10px] font-black uppercase tracking-widest transition-all ".concat(isCurrent ? 'text-gray-900 scale-110' : 'text-gray-400'),
-                  children: item.label
-                }), isCurrent && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  className: "w-1 h-1 rounded-full bg-[#eca840]"
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "relative pt-12 overflow-x-auto pb-4 custom-scrollbar",
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: "min-w-[600px]",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            className: "absolute inset-0 pt-12 flex flex-col justify-between pointer-events-none opacity-[0.03]",
+            children: _toConsumableArray(Array(5)).map(function (_, i) {
+              return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "w-full h-px bg-gray-900"
+              }, i);
+            })
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            className: "flex items-end justify-around h-80 gap-4 md:gap-8 px-10 relative z-10",
+            children: displayData.map(function (item, idx) {
+              var isCurrent = timeRange === 'Today' ? new Date().getHours() === idx : timeRange === 'Daily' && new Date().toLocaleDateString('en-US', {
+                weekday: 'short'
+              }) === item.label;
+              return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "flex-1 flex flex-col items-center group relative h-full justify-end",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "absolute -top-12 px-4 py-2 bg-gray-900 text-white text-[10px] font-black rounded-xl opacity-0 group-hover:opacity-100 transition-all transform group-hover:-translate-y-2 whitespace-nowrap z-20 shadow-2xl scale-95 group-hover:scale-100",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                    className: "text-[#eca840] mr-2",
+                    children: item.orders || 0
+                  }), "ORDERS \u2014 ", (item.fullLabel || item.label).toUpperCase()]
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                  style: {
+                    height: "".concat(Math.max(Math.min(item.value, 100), 5), "%")
+                  },
+                  className: "w-full rounded-2xl transition-all duration-1000 ease-out cursor-pointer relative overflow-hidden ".concat(isCurrent ? 'bg-gradient-to-t from-[#eca840] to-[#f4c47d] shadow-[0_15px_30px_-10px_rgba(236,168,64,0.4)]' : 'bg-gray-100 hover:bg-gray-200'),
+                  children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                    className: "absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                  })
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "mt-8 flex flex-col items-center gap-1",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                    className: "text-[10px] font-black uppercase tracking-widest transition-all ".concat(isCurrent ? 'text-gray-900 scale-110' : 'text-gray-400'),
+                    children: item.label
+                  }), isCurrent && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                    className: "w-1 h-1 rounded-full bg-[#eca840]"
+                  })]
                 })]
-              })]
-            }, idx);
-          })
-        })]
+              }, idx);
+            })
+          })]
+        })
       })]
     })]
   });
@@ -16746,106 +17171,94 @@ var PromoStatCard = function PromoStatCard(_ref2) {
   });
 };
 var CampaignCard = function CampaignCard(_ref3) {
-  var _promo$product;
+  var _promo$product, _promo$product2;
   var promo = _ref3.promo,
     onEdit = _ref3.onEdit,
     onDelete = _ref3.onDelete,
     isArchived = _ref3.isArchived,
     onRestore = _ref3.onRestore;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "group bg-white rounded-[3rem] overflow-hidden border border-gray-100/50 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.03)] transition-all hover:shadow-2xl hover:translate-y-[-5px] duration-500 flex flex-col min-h-[420px]",
+    className: "group bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-[0_4px_25px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.08)] hover:-translate-y-1 duration-500 flex flex-col h-full bg-gradient-to-b from-white to-gray-50/20",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "relative aspect-[16/10] overflow-hidden",
+      className: "relative aspect-[16/11] overflow-hidden bg-gray-100",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
-        src: promo.image || "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=600",
+        src: promo.image || ((_promo$product = promo.product) === null || _promo$product === void 0 ? void 0 : _promo$product.image) || "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=600",
         alt: promo.title,
-        className: "w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+        className: "w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"
+        className: "absolute inset-0 bg-gradient-to-t from-gray-900/40 via-transparent to-transparent opacity-60"
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "absolute top-6 left-6",
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+          className: "px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-[0.2em] shadow-xl backdrop-blur-md flex items-center gap-2 ".concat(isArchived ? 'bg-gray-900/80 text-gray-300' : 'bg-white/90 text-gray-900'),
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            className: "w-1.5 h-1.5 rounded-full ".concat(isArchived ? 'bg-gray-500' : 'bg-[#eca840] animate-pulse')
+          }), isArchived ? 'Archived Campaign' : 'Live Promotion']
+        })
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "absolute bottom-6 right-6",
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+            className: "text-[10px] font-mono text-white font-black tracking-widest",
+            children: promo.code
+          })
+        })
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "p-8 flex-1 flex flex-col items-stretch text-center",
+      className: "p-8 flex-1 flex flex-col",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "mb-6 min-h-[60px] flex flex-col justify-center",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h3", {
-          className: "text-[18px] font-black text-gray-900 mb-1 tracking-tight line-clamp-1",
-          children: promo.title
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-          className: "text-[9px] font-black text-gray-300 uppercase tracking-[0.2em]",
-          children: ((_promo$product = promo.product) === null || _promo$product === void 0 ? void 0 : _promo$product.name) || 'STORE-WIDE OFFER'
-        })]
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "bg-gray-50/80 border border-gray-100 rounded-[2rem] p-8 mb-6 group-hover:bg-white transition-all shadow-inner relative overflow-hidden",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#eca840]/20 to-transparent"
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-          className: "text-[8px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4",
-          children: "Reward Architecture"
+        className: "mb-6 flex justify-between items-start",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: "max-w-[70%]",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h3", {
+            className: "text-xl font-black text-gray-900 tracking-tighter leading-tight mb-1 group-hover:text-[#eca840] transition-colors line-clamp-1",
+            children: promo.title
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+            className: "text-[9px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+              className: "w-3 h-3 text-[#eca840]",
+              fill: "none",
+              viewBox: "0 0 24 24",
+              stroke: "currentColor",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: 3,
+                d: "M5 13l4 4L19 7"
+              })
+            }), ((_promo$product2 = promo.product) === null || _promo$product2 === void 0 ? void 0 : _promo$product2.name) || 'GLOBAL CATALOG OFFER']
+          })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "flex justify-center items-center gap-3",
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-            className: "text-4xl font-[1000] text-gray-900 leading-none tabular-nums",
-            children: promo.discount_value
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "flex flex-col items-start leading-none",
+          className: "text-right",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "flex items-baseline gap-1",
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-              className: "text-base font-black text-[#eca840]",
-              children: promo.type === 'percentage' ? '%' : '₱'
+              className: "text-2xl font-black text-gray-900 tabular-nums",
+              children: promo.discount_value
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-              className: "text-[8px] font-black text-gray-400 mt-0.5",
-              children: "OFF"
+              className: "text-sm font-black text-[#eca840]",
+              children: promo.type === 'percentage' ? '%' : '₱'
             })]
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+            className: "text-[8px] font-black text-gray-300 uppercase tracking-widest leading-none mt-1",
+            children: "Benefit"
           })]
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "mb-8 px-2 min-h-[32px]",
+        className: "mb-8 p-5 bg-gray-50 rounded-2xl border border-gray-100 flex-1",
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
-          className: "text-[10px] font-medium text-gray-400 italic leading-tight line-clamp-2",
-          children: ["\"", promo.description || 'Discover a new layer of artisanal excellence with this curation.', "\""]
+          className: "text-[10px] text-gray-500 leading-relaxed font-medium italic line-clamp-2",
+          children: ["\"", promo.description || 'This campaign represents a unique artisanal invitation for our valued global patrons.', "\""]
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "flex gap-2 mt-auto items-center",
+        className: "flex gap-3 pt-6 border-t border-gray-100",
         children: !isArchived ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
             onClick: onEdit,
-            className: "flex-[3] h-14 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-500 hover:text-[#eca840] hover:border-[#eca840]/30 transition-all gap-3 group/btn",
+            className: "flex-1 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-widest text-gray-600 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all shadow-sm active:scale-95",
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-              className: "w-5 h-5 text-gray-300 group-hover/btn:text-[#eca840] transition-colors",
-              fill: "none",
-              viewBox: "0 0 24 24",
-              stroke: "currentColor",
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                strokeWidth: 2,
-                d: "M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-              })
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-              className: "text-[10px] font-black uppercase tracking-widest",
-              children: "Refine"
-            })]
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-            onClick: onDelete,
-            className: "flex-1 h-14 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-300 hover:text-red-500 hover:border-red-100 transition-all",
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-              className: "w-5 h-5",
-              fill: "none",
-              viewBox: "0 0 24 24",
-              stroke: "currentColor",
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                strokeWidth: 1.8,
-                d: "M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-              })
-            })
-          })]
-        }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
-            onClick: onRestore,
-            className: "flex-[3] h-14 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-green-500 hover:text-green-600 hover:border-green-100 transition-all gap-3 group/btn",
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-              className: "w-5 h-5 text-gray-300 group-hover/btn:text-green-500 transition-colors",
+              className: "w-3.5 h-3.5",
               fill: "none",
               viewBox: "0 0 24 24",
               stroke: "currentColor",
@@ -16853,24 +17266,55 @@ var CampaignCard = function CampaignCard(_ref3) {
                 strokeLinecap: "round",
                 strokeLinejoin: "round",
                 strokeWidth: 2.5,
-                d: "M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                d: "M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
               })
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-              className: "text-[10px] font-black uppercase tracking-widest",
-              children: "Restore"
-            })]
+            }), "Refine"]
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
             onClick: onDelete,
-            className: "flex-1 h-14 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-red-300 hover:text-red-500 hover:border-red-100 transition-all",
+            className: "w-12 h-12 bg-gray-50 text-gray-300 hover:bg-red-50 hover:text-red-500 rounded-xl flex items-center justify-center transition-all border border-gray-100/50",
+            title: "Archive Campaign",
             children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-              className: "w-5 h-5",
+              className: "w-4 h-4",
               fill: "none",
               viewBox: "0 0 24 24",
               stroke: "currentColor",
               children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
                 strokeLinecap: "round",
                 strokeLinejoin: "round",
-                strokeWidth: 1.8,
+                strokeWidth: 2,
+                d: "M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+              })
+            })
+          })]
+        }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
+            onClick: onRestore,
+            className: "flex-1 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-widest text-green-600 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all shadow-sm active:scale-95",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+              className: "w-4 h-4",
+              fill: "none",
+              viewBox: "0 0 24 24",
+              stroke: "currentColor",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: 3,
+                d: "M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              })
+            }), "Restore"]
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+            onClick: onDelete,
+            className: "w-12 h-12 bg-gray-50 text-gray-300 hover:bg-red-50 hover:text-red-500 rounded-xl flex items-center justify-center transition-all border border-gray-100/50",
+            title: "Permanent Delete",
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+              className: "w-4 h-4",
+              fill: "none",
+              viewBox: "0 0 24 24",
+              stroke: "currentColor",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: 2,
                 d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
               })
             })
@@ -16991,10 +17435,10 @@ function SellerOrders(_ref) {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.Head, {
       title: "Order Management"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "flex justify-between items-end mb-12",
+      className: "flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-12",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
-          className: "text-4xl font-black text-[#2d2a26] tracking-tight mb-3",
+          className: "text-3xl lg:text-4xl font-black text-[#2d2a26] tracking-tight mb-3",
           children: "Administrative Hub"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
           className: "flex items-center gap-3",
@@ -17006,12 +17450,12 @@ function SellerOrders(_ref) {
           })]
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "flex gap-4",
+        className: "flex flex-wrap gap-4 w-full lg:w-auto",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
           onClick: function onClick() {
             return window.print();
           },
-          className: "flex items-center gap-2.5 px-6 py-4 bg-white border border-gray-100 rounded-2xl text-[10px] font-black text-gray-500 uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm group",
+          className: "flex-1 lg:flex-none flex items-center justify-center gap-2.5 px-6 py-4 bg-white border border-gray-100 rounded-2xl text-[10px] font-black text-gray-500 uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm group",
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
             className: "w-4 h-4 group-hover:text-[#eca840] transition-colors",
             fill: "none",
@@ -17023,7 +17467,7 @@ function SellerOrders(_ref) {
               strokeWidth: 2.5,
               d: "M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
             })
-          }), "Batch Print"]
+          }), "Print"]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
           onClick: function onClick() {
             var headers = ["Order ID", "Customer", "Date", "Total", "Status"];
@@ -17046,7 +17490,7 @@ function SellerOrders(_ref) {
             link.click();
             document.body.removeChild(link);
           },
-          className: "flex items-center gap-2.5 px-8 py-4 bg-[#2d2a26] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#eca840] hover:shadow-xl hover:shadow-[#eca840]/20 transition-all border border-[#2d2a26] hover:border-[#eca840]",
+          className: "flex-1 lg:flex-none flex items-center justify-center gap-2.5 px-8 py-4 bg-[#2d2a26] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#eca840] hover:shadow-xl hover:shadow-[#eca840]/20 transition-all border border-[#2d2a26] hover:border-[#eca840]",
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
             className: "w-4 h-4",
             fill: "none",
@@ -17058,13 +17502,13 @@ function SellerOrders(_ref) {
               strokeWidth: 2.5,
               d: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
             })
-          }), "Export CSV"]
+          }), "Export"]
         })]
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "bg-white rounded-[2.5rem] p-4 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 flex flex-col xl:flex-row items-stretch xl:items-center gap-4 animate-in fade-in slide-in-from-top-6 duration-700",
+      className: "bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-3 lg:p-4 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 flex flex-col xl:flex-row items-stretch xl:items-center gap-4 animate-in fade-in slide-in-from-top-6 duration-700",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "flex-1 flex items-center gap-4 pl-4 py-2",
+        className: "flex-1 flex flex-col md:flex-row items-stretch md:items-center gap-4 lg:pl-4 py-2",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "relative min-w-[180px]",
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -17400,18 +17844,18 @@ function SellerOrders(_ref) {
             })]
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "p-10 border-t border-gray-50 flex justify-between items-center bg-[#fcfaf7] animate-in fade-in duration-700",
+          className: "p-6 lg:p-10 border-t border-gray-50 flex flex-col lg:flex-row justify-between items-center gap-8 bg-[#fcfaf7] animate-in fade-in duration-700",
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "flex flex-col",
+            className: "flex flex-col text-center lg:text-left",
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
               className: "text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1",
               children: "Administrative Footprint"
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
               className: "text-xs font-black text-gray-900 uppercase tracking-widest",
-              children: ["Showing ", (currentPage - 1) * itemsPerPage + 1, " - ", Math.min(currentPage * itemsPerPage, filteredOrders.length), " of ", filteredOrders.length, " System Records"]
+              children: ["Showing ", (currentPage - 1) * itemsPerPage + 1, " - ", Math.min(currentPage * itemsPerPage, filteredOrders.length), " of ", filteredOrders.length, " Records"]
             })]
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "flex gap-4",
+            className: "flex gap-4 w-full lg:w-auto",
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
               disabled: currentPage === 1,
               onClick: function onClick() {
@@ -17419,7 +17863,7 @@ function SellerOrders(_ref) {
                   return Math.max(1, prev - 1);
                 });
               },
-              className: "flex items-center gap-2 px-6 py-3 border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm active:scale-95 ".concat(currentPage === 1 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-100 text-gray-400 hover:text-gray-900 hover:border-gray-200'),
+              className: "flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 py-3 border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm active:scale-95 ".concat(currentPage === 1 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-100 text-gray-400 hover:text-gray-900 hover:border-gray-200'),
               children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
                 className: "w-4 h-4",
                 fill: "none",
@@ -17431,7 +17875,7 @@ function SellerOrders(_ref) {
                   strokeWidth: 3,
                   d: "M15 19l-7-7 7-7"
                 })
-              }), "Previous"]
+              }), "Prev"]
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
               disabled: currentPage === totalPages || totalPages === 0,
               onClick: function onClick() {
@@ -17439,7 +17883,7 @@ function SellerOrders(_ref) {
                   return Math.min(totalPages, prev + 1);
                 });
               },
-              className: "flex items-center gap-2 px-6 py-3 border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm active:scale-95 ".concat(currentPage === totalPages || totalPages === 0 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-100 text-gray-400 hover:text-gray-900 hover:border-gray-200'),
+              className: "flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 py-3 border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm active:scale-95 ".concat(currentPage === totalPages || totalPages === 0 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-100 text-gray-400 hover:text-gray-900 hover:border-gray-200'),
               children: ["Next", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
                 className: "w-4 h-4",
                 fill: "none",
@@ -17808,10 +18252,11 @@ function SellerProducts(_ref) {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.Head, {
       title: "Product Management"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "flex justify-between items-end mb-12",
+      className: "flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-12",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "max-w-2xl",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
-          className: "text-4xl font-extrabold text-gray-900 tracking-tight mb-2",
+          className: "text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight mb-2",
           children: "Product Management"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
           className: "text-gray-500 font-medium",
@@ -17819,7 +18264,7 @@ function SellerProducts(_ref) {
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
         onClick: openAddModal,
-        className: "flex items-center gap-2 px-8 py-4 bg-[#eca840] text-white rounded-2xl text-sm font-bold hover:shadow-lg hover:shadow-[#eca840]/30 transition-all",
+        className: "w-full lg:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-[#eca840] text-white rounded-2xl text-sm font-bold hover:shadow-lg hover:shadow-[#eca840]/30 transition-all active:scale-95",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
           className: "w-5 h-5",
           fill: "none",
@@ -17916,9 +18361,9 @@ function SellerProducts(_ref) {
         })
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "bg-white rounded-[2.5rem] p-4 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 flex flex-col xl:flex-row items-stretch xl:items-center gap-4 animate-in fade-in slide-in-from-top-6 duration-700",
+      className: "bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-3 lg:p-4 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 flex flex-col xl:flex-row items-stretch xl:items-center gap-4 animate-in fade-in slide-in-from-top-6 duration-700",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "flex-1 flex items-center gap-4 pl-4 py-2",
+        className: "flex-1 flex flex-col md:flex-row items-stretch md:items-center gap-4 lg:pl-4 py-2",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
           className: "flex items-center gap-3",
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -18278,18 +18723,18 @@ function SellerProducts(_ref) {
         })]
       })]
     }), sortedProducts.length > itemsPerPage && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "mt-12 p-10 bg-white rounded-[3.5rem] border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-8 shadow-sm",
+      className: "mt-12 p-6 lg:p-10 bg-white rounded-[2rem] lg:rounded-[3.5rem] border border-gray-100 flex flex-col lg:flex-row justify-between items-center gap-8 shadow-sm",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "flex flex-col",
+        className: "flex flex-col text-center lg:text-left",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
           className: "text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1 ml-1",
           children: "Archive Discovery Hub"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
           className: "text-xs font-black text-gray-900 uppercase tracking-widest",
-          children: ["Showing ", (currentPage - 1) * itemsPerPage + 1, " - ", Math.min(currentPage * itemsPerPage, sortedProducts.length), " of ", sortedProducts.length, " Artisanal Units"]
+          children: ["Showing ", (currentPage - 1) * itemsPerPage + 1, " - ", Math.min(currentPage * itemsPerPage, sortedProducts.length), " of ", sortedProducts.length, " Units"]
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "flex gap-4",
+        className: "flex gap-4 w-full lg:w-auto",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
           disabled: currentPage === 1,
           onClick: function onClick() {
@@ -18297,7 +18742,7 @@ function SellerProducts(_ref) {
               return Math.max(1, prev - 1);
             });
           },
-          className: "flex items-center gap-3 px-8 py-4 border rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ".concat(currentPage === 1 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-200 text-gray-400 hover:text-[#eca840] hover:border-orange-100 shadow-sm'),
+          className: "flex-1 lg:flex-none flex items-center justify-center gap-3 px-6 lg:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ".concat(currentPage === 1 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-200 text-gray-400 hover:text-[#eca840] hover:border-orange-100 shadow-sm'),
           children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
             className: "w-4 h-4",
             fill: "none",
@@ -18309,7 +18754,7 @@ function SellerProducts(_ref) {
               strokeWidth: 3,
               d: "M15 19l-7-7 7-7"
             })
-          }), "Previous"]
+          }), "Prev"]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
           disabled: currentPage === totalPages,
           onClick: function onClick() {
@@ -18317,7 +18762,7 @@ function SellerProducts(_ref) {
               return Math.min(totalPages, prev + 1);
             });
           },
-          className: "flex items-center gap-3 px-8 py-4 border rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ".concat(currentPage === totalPages ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-200 text-gray-400 hover:text-[#eca840] hover:border-orange-100 shadow-sm'),
+          className: "flex-1 lg:flex-none flex items-center justify-center gap-3 px-6 lg:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ".concat(currentPage === totalPages ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-200 text-gray-400 hover:text-[#eca840] hover:border-orange-100 shadow-sm'),
           children: ["Next", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
             className: "w-4 h-4",
             fill: "none",
@@ -20238,6 +20683,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _Components_Navbar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Components/Navbar */ "./resources/js/Components/Navbar.tsx");
 /* harmony import */ var _Components_Footer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Components/Footer */ "./resources/js/Components/Footer.tsx");
+/* harmony import */ var _Context_CartContext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Context/CartContext */ "./resources/js/Context/CartContext.tsx");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
@@ -20438,6 +20884,7 @@ var MOCK_PRODUCTS = [{
 }];
 
 
+
 function Shop(_ref8) {
   var initialProducts = _ref8.products,
     _ref8$categories = _ref8.categories,
@@ -20446,6 +20893,8 @@ function Shop(_ref8) {
     _useState2 = _slicedToArray(_useState, 2),
     products = _useState2[0],
     setProducts = _useState2[1];
+  var _useCart = (0,_Context_CartContext__WEBPACK_IMPORTED_MODULE_4__.useCart)(),
+    addToCart = _useCart.addToCart;
   // Extract category names from database categories
   var dbCategoryNames = dbCategories.map(function (c) {
     return c.name;
@@ -20536,18 +20985,24 @@ function Shop(_ref8) {
       message: message,
       type: type
     });
-    // Update the visual badge in header (Image 1)
-    var badge = document.getElementById('cart-badge');
-    if (badge) badge.innerText = '1';
     setTimeout(function () {
       setToast({
         show: false,
         message: "",
         type: 'success'
       });
-      // Artisanal Redirect Flow (Image 1 logic)
-      window.location.href = '/login';
-    }, 1500);
+    }, 2500);
+  };
+  var handleAddToCart = function handleAddToCart(product) {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      qty: 1,
+      img: product.image,
+      desc: product.description
+    });
+    showToast("".concat(product.name, " added to basket!"));
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: "flex flex-col min-h-screen bg-[#faf9f6] pt-20",
@@ -20748,7 +21203,7 @@ function Shop(_ref8) {
                 return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ShopProductCard, {
                   product: product,
                   onAddToCart: function onAddToCart() {
-                    return showToast("".concat(product.name, " added to basket!"));
+                    return handleAddToCart(product);
                   }
                 }, product.id);
               })

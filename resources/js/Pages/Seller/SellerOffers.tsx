@@ -479,55 +479,91 @@ const PromoStatCard = ({ label, value, change, icon }: any) => (
 );
 
 const CampaignCard = ({ promo, onEdit, onDelete, isArchived, onRestore }: any) => (
-  <div className="group bg-white rounded-[3rem] overflow-hidden border border-gray-100/50 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.03)] transition-all hover:shadow-2xl hover:translate-y-[-5px] duration-500 flex flex-col min-h-[420px]">
-    <div className="relative aspect-[16/10] overflow-hidden">
-      <img src={promo.image || "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=600"} alt={promo.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-    </div>
-
-    <div className="p-8 flex-1 flex flex-col items-stretch text-center">
-      <div className="mb-6 min-h-[60px] flex flex-col justify-center">
-        <h3 className="text-[18px] font-black text-gray-900 mb-1 tracking-tight line-clamp-1">{promo.title}</h3>
-        <p className="text-[9px] font-black text-gray-300 uppercase tracking-[0.2em]">{promo.product?.name || 'STORE-WIDE OFFER'}</p>
+  <div className="group bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-[0_4px_25px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.08)] hover:-translate-y-1 duration-500 flex flex-col h-full bg-gradient-to-b from-white to-gray-50/20">
+    {/* Visual Header */}
+    <div className="relative aspect-[16/11] overflow-hidden bg-gray-100">
+      <img 
+        src={promo.image || promo.product?.image || "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=600"} 
+        alt={promo.title} 
+        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-transparent to-transparent opacity-60"></div>
+      
+      {/* Status Badge */}
+      <div className="absolute top-6 left-6">
+        <span className={`px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-[0.2em] shadow-xl backdrop-blur-md flex items-center gap-2 ${isArchived ? 'bg-gray-900/80 text-gray-300' : 'bg-white/90 text-gray-900'}`}>
+          <div className={`w-1.5 h-1.5 rounded-full ${isArchived ? 'bg-gray-500' : 'bg-[#eca840] animate-pulse'}`}></div>
+          {isArchived ? 'Archived Campaign' : 'Live Promotion'}
+        </span>
       </div>
 
-      <div className="bg-gray-50/80 border border-gray-100 rounded-[2rem] p-8 mb-6 group-hover:bg-white transition-all shadow-inner relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#eca840]/20 to-transparent"></div>
-        <p className="text-[8px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Reward Architecture</p>
-        <div className="flex justify-center items-center gap-3">
-          <span className="text-4xl font-[1000] text-gray-900 leading-none tabular-nums">{promo.discount_value}</span>
-          <div className="flex flex-col items-start leading-none">
-            <span className="text-base font-black text-[#eca840]">{promo.type === 'percentage' ? '%' : '₱'}</span>
-            <span className="text-[8px] font-black text-gray-400 mt-0.5">OFF</span>
+      {/* Code Badge */}
+      <div className="absolute bottom-6 right-6">
+        <div className="bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl">
+          <span className="text-[10px] font-mono text-white font-black tracking-widest">{promo.code}</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Content Architecture */}
+    <div className="p-8 flex-1 flex flex-col">
+      <div className="mb-6 flex justify-between items-start">
+        <div className="max-w-[70%]">
+          <h3 className="text-xl font-black text-gray-900 tracking-tighter leading-tight mb-1 group-hover:text-[#eca840] transition-colors line-clamp-1">{promo.title}</h3>
+          <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+            <svg className="w-3 h-3 text-[#eca840]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+            {promo.product?.name || 'GLOBAL CATALOG OFFER'}
+          </p>
+        </div>
+        <div className="text-right">
+          <div className="flex items-baseline gap-1">
+            <span className="text-2xl font-black text-gray-900 tabular-nums">{promo.discount_value}</span>
+            <span className="text-sm font-black text-[#eca840]">{promo.type === 'percentage' ? '%' : '₱'}</span>
           </div>
+          <p className="text-[8px] font-black text-gray-300 uppercase tracking-widest leading-none mt-1">Benefit</p>
         </div>
       </div>
 
-      <div className="mb-8 px-2 min-h-[32px]">
-        <p className="text-[10px] font-medium text-gray-400 italic leading-tight line-clamp-2">
-          "{promo.description || 'Discover a new layer of artisanal excellence with this curation.'}"
+      <div className="mb-8 p-5 bg-gray-50 rounded-2xl border border-gray-100 flex-1">
+        <p className="text-[10px] text-gray-500 leading-relaxed font-medium italic line-clamp-2">
+          "{promo.description || 'This campaign represents a unique artisanal invitation for our valued global patrons.'}"
         </p>
       </div>
 
-      <div className="flex gap-2 mt-auto items-center">
+      {/* Admin Controls */}
+      <div className="flex gap-3 pt-6 border-t border-gray-100">
         {!isArchived ? (
           <>
-            <button onClick={onEdit} className="flex-[3] h-14 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-500 hover:text-[#eca840] hover:border-[#eca840]/30 transition-all gap-3 group/btn">
-              <svg className="w-5 h-5 text-gray-300 group-hover/btn:text-[#eca840] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-              <span className="text-[10px] font-black uppercase tracking-widest">Refine</span>
+            <button 
+              onClick={onEdit} 
+              className="flex-1 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-widest text-gray-600 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all shadow-sm active:scale-95"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+              Refine
             </button>
-            <button onClick={onDelete} className="flex-1 h-14 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-300 hover:text-red-500 hover:border-red-100 transition-all">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
+            <button 
+              onClick={onDelete} 
+              className="w-12 h-12 bg-gray-50 text-gray-300 hover:bg-red-50 hover:text-red-500 rounded-xl flex items-center justify-center transition-all border border-gray-100/50"
+              title="Archive Campaign"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
             </button>
           </>
         ) : (
           <>
-            <button onClick={onRestore} className="flex-[3] h-14 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-green-500 hover:text-green-600 hover:border-green-100 transition-all gap-3 group/btn">
-              <svg className="w-5 h-5 text-gray-300 group-hover/btn:text-green-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-              <span className="text-[10px] font-black uppercase tracking-widest">Restore</span>
+            <button 
+              onClick={onRestore} 
+              className="flex-1 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-widest text-green-600 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all shadow-sm active:scale-95"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              Restore
             </button>
-            <button onClick={onDelete} className="flex-1 h-14 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-red-300 hover:text-red-500 hover:border-red-100 transition-all">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            <button 
+              onClick={onDelete} 
+              className="w-12 h-12 bg-gray-50 text-gray-300 hover:bg-red-50 hover:text-red-500 rounded-xl flex items-center justify-center transition-all border border-gray-100/50"
+              title="Permanent Delete"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
             </button>
           </>
         )}

@@ -55,6 +55,7 @@ const MOCK_PRODUCTS: Product[] = [
 
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import { useCart } from "../Context/CartContext";
 
 
 interface ShopProps {
@@ -64,6 +65,7 @@ interface ShopProps {
 
 export default function Shop({ products: initialProducts, categories: dbCategories = [] }: ShopProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts || MOCK_PRODUCTS);
+  const { addToCart } = useCart();
   
   // Extract category names from database categories
   const dbCategoryNames = dbCategories.map(c => c.name);
@@ -132,16 +134,21 @@ export default function Shop({ products: initialProducts, categories: dbCategori
 
   const showToast = (message: string, type: 'success' | 'info' = 'success') => {
     setToast({ show: true, message, type });
-
-    // Update the visual badge in header (Image 1)
-    const badge = document.getElementById('cart-badge');
-    if (badge) badge.innerText = '1';
-
     setTimeout(() => {
       setToast({ show: false, message: "", type: 'success' });
-      // Artisanal Redirect Flow (Image 1 logic)
-      window.location.href = '/login';
-    }, 1500);
+    }, 2500);
+  };
+
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      qty: 1,
+      img: product.image,
+      desc: product.description
+    });
+    showToast(`${product.name} added to basket!`);
   };
 
 
@@ -260,7 +267,7 @@ export default function Shop({ products: initialProducts, categories: dbCategori
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {currentProducts.map(product => <ShopProductCard key={product.id} product={product} onAddToCart={() => showToast(`${product.name} added to basket!`)} />)}
+                  {currentProducts.map(product => <ShopProductCard key={product.id} product={product} onAddToCart={() => handleAddToCart(product)} />)}
                 </div>
               )}
 

@@ -227,14 +227,14 @@ export default function SellerProducts({ products, archived_products, categories
     <SellerLayout>
       <Head title="Product Management" />
 
-      <div className="flex justify-between items-end mb-12">
-        <div>
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight mb-2">Product Management</h1>
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-12">
+        <div className="max-w-2xl">
+          <h1 className="text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">Product Management</h1>
           <p className="text-gray-500 font-medium">Curate and manage your artisanal inventory.</p>
         </div>
         <button 
           onClick={openAddModal}
-          className="flex items-center gap-2 px-8 py-4 bg-[#eca840] text-white rounded-2xl text-sm font-bold hover:shadow-lg hover:shadow-[#eca840]/30 transition-all"
+          className="w-full lg:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-[#eca840] text-white rounded-2xl text-sm font-bold hover:shadow-lg hover:shadow-[#eca840]/30 transition-all active:scale-95"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
           Add New Product
@@ -276,8 +276,8 @@ export default function SellerProducts({ products, archived_products, categories
       </div>
 
       {/* Main Administrative Control Hub */}
-      <div className="bg-white rounded-[2.5rem] p-4 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 flex flex-col xl:flex-row items-stretch xl:items-center gap-4 animate-in fade-in slide-in-from-top-6 duration-700">
-        <div className="flex-1 flex items-center gap-4 pl-4 py-2">
+      <div className="bg-white rounded-[1.5rem] lg:rounded-[2.5rem] p-3 lg:p-4 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 flex flex-col xl:flex-row items-stretch xl:items-center gap-4 animate-in fade-in slide-in-from-top-6 duration-700">
+        <div className="flex-1 flex flex-col md:flex-row items-stretch md:items-center gap-4 lg:pl-4 py-2">
             <div className="flex items-center gap-3">
                 <div className="relative min-w-[160px]">
                     <div className="relative group">
@@ -487,26 +487,26 @@ export default function SellerProducts({ products, archived_products, categories
 
       {/* Professional Pagination Footer */}
       {sortedProducts.length > itemsPerPage && (
-        <div className="mt-12 p-10 bg-white rounded-[3.5rem] border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-8 shadow-sm">
-            <div className="flex flex-col">
+        <div className="mt-12 p-6 lg:p-10 bg-white rounded-[2rem] lg:rounded-[3.5rem] border border-gray-100 flex flex-col lg:flex-row justify-between items-center gap-8 shadow-sm">
+            <div className="flex flex-col text-center lg:text-left">
                 <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1 ml-1">Archive Discovery Hub</span>
                 <p className="text-xs font-black text-gray-900 uppercase tracking-widest">
-                    Showing {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, sortedProducts.length)} of {sortedProducts.length} Artisanal Units
+                    Showing {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, sortedProducts.length)} of {sortedProducts.length} Units
                 </p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 w-full lg:w-auto">
                 <button 
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                    className={`flex items-center gap-3 px-8 py-4 border rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ${currentPage === 1 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-200 text-gray-400 hover:text-[#eca840] hover:border-orange-100 shadow-sm'}`}
+                    className={`flex-1 lg:flex-none flex items-center justify-center gap-3 px-6 lg:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ${currentPage === 1 ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-200 text-gray-400 hover:text-[#eca840] hover:border-orange-100 shadow-sm'}`}
                 >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" /></svg>
-                    Previous
+                    Prev
                 </button>
                 <button 
                     disabled={currentPage === totalPages}
                     onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                    className={`flex items-center gap-3 px-8 py-4 border rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ${currentPage === totalPages ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-200 text-gray-400 hover:text-[#eca840] hover:border-orange-100 shadow-sm'}`}
+                    className={`flex-1 lg:flex-none flex items-center justify-center gap-3 px-6 lg:px-8 py-4 border rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ${currentPage === totalPages ? 'bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed' : 'bg-white border-gray-200 text-gray-400 hover:text-[#eca840] hover:border-orange-100 shadow-sm'}`}
                 >
                     Next
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" /></svg>

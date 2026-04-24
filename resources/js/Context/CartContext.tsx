@@ -48,13 +48,29 @@ export const CartProvider: React.FC<{ children: React.ReactNode, initialItems?: 
         contactNumber: '09272553458'
     });
 
+    // Persistent Artisanal Cart Logic
+    useEffect(() => {
+        const saved = localStorage.getItem('artisanal_cart');
+        if (saved) {
+            try {
+                setCartItems(JSON.parse(saved));
+            } catch (e) {
+                console.error("Cart retrieval failed:", e);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('artisanal_cart', JSON.stringify(cartItems));
+    }, [cartItems]);
+
     const addToCart = (item: CartItem) => {
         setCartItems(prev => {
             const existing = prev.find(i => i.id === item.id);
             if (existing) {
                 return prev.map(i => i.id === item.id ? { ...i, qty: i.qty + 1 } : i);
             }
-            return [...prev, item];
+            return [...prev, { ...item, qty: item.qty || 1 }];
         });
     };
 
@@ -68,7 +84,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode, initialItems?: 
         ));
     };
 
-    const clearCart = () => setCartItems([]);
+    const clearCart = () => {
+        setCartItems([]);
+        localStorage.removeItem('artisanal_cart');
+    };
 
     const updateDeliveryDetails = (details: Partial<DeliveryDetails>) => {
         setDeliveryDetails(prev => ({ ...prev, ...details }));

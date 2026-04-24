@@ -46,22 +46,22 @@ export default function SellerDashboard({ stats, trend_data, top_products, urgen
     <SellerLayout>
       <Head title="Seller Dashboard" />
 
-      <div className="flex justify-between items-end mb-10">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-10">
         <div>
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight mb-2">Artisanal Growth</h1>
+          <h1 className="text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">Artisanal Growth</h1>
           <p className="text-gray-500 font-medium">Cultivating excellence in every batch today.</p>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4 w-full lg:w-auto">
           <button
             onClick={handleExport}
-            className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-2xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all active:scale-95"
+            className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-2xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all active:scale-95"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-            Export Report
+            Export
           </button>
           <a
             href="/seller/products"
-            className="flex items-center gap-2 px-6 py-3 bg-[#eca840] text-white rounded-2xl text-sm font-bold hover:shadow-lg hover:shadow-[#eca840]/30 transition-all active:scale-95"
+            className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-[#eca840] text-white rounded-2xl text-sm font-bold hover:shadow-lg hover:shadow-[#eca840]/30 transition-all active:scale-95"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
             New Product
@@ -80,15 +80,15 @@ export default function SellerDashboard({ stats, trend_data, top_products, urgen
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
         {/* Live Store Pulse - Now more prominent */}
-        <div className="lg:col-span-3 bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-          <div className="flex justify-between items-center mb-10">
+        <div className="lg:col-span-3 bg-white rounded-[2rem] lg:rounded-[2.5rem] p-6 lg:p-10 border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
             <div>
               <h3 className="text-2xl font-black text-gray-900 tracking-tight mb-1">Live Store Pulse</h3>
               <p className="text-sm text-gray-400 font-medium">Real-time operational awareness across your artisanal empire.</p>
             </div>
             <span className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-600 text-[10px] font-black rounded-xl animate-pulse uppercase tracking-widest border border-green-100">
               <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              Live Tracking Enabled
+              Live Tracking
             </span>
           </div>
 
@@ -149,8 +149,8 @@ export default function SellerDashboard({ stats, trend_data, top_products, urgen
       </div>
 
       {/* Recent Sales Trend - Moved to Bottom with Professional UI */}
-      <div className="bg-white rounded-[3rem] p-12 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 overflow-hidden">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+      <div className="bg-white rounded-[2rem] lg:rounded-[3rem] p-6 lg:p-12 border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] mb-12 overflow-hidden">
+        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-8 mb-12">
           <div>
             <h3 className="text-2xl font-black text-gray-900 tracking-tight mb-2">
               Recent Sales Performance Trend
@@ -161,12 +161,12 @@ export default function SellerDashboard({ stats, trend_data, top_products, urgen
                timeRange === 'Weekly' ? 'Monthly Growth Visualization' : 'Annual Strategic Trend'}
             </p>
           </div>
-          <div className="flex items-center gap-2 bg-gray-50 p-1.5 rounded-2xl border border-gray-100">
+          <div className="flex flex-wrap items-center gap-2 bg-gray-50 p-1.5 rounded-2xl border border-gray-100 w-full lg:w-auto">
             {['Today', 'Daily', 'Weekly', 'Monthly'].map((range) => (
                 <button
                     key={range}
                     onClick={() => setTimeRange(range)}
-                    className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                    className={`flex-1 lg:flex-none px-4 lg:px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                         timeRange === range 
                         ? 'bg-white text-gray-900 shadow-sm border border-gray-100' 
                         : 'text-gray-400 hover:text-gray-600'
@@ -178,47 +178,49 @@ export default function SellerDashboard({ stats, trend_data, top_products, urgen
           </div>
         </div>
 
-        <div className="relative pt-12">
-          {/* Y-Axis Background Lines */}
-          <div className="absolute inset-0 pt-12 flex flex-col justify-between pointer-events-none opacity-[0.03]">
-              {[...Array(5)].map((_, i) => (
-                  <div key={i} className="w-full h-px bg-gray-900"></div>
-              ))}
-          </div>
+        <div className="relative pt-12 overflow-x-auto pb-4 custom-scrollbar">
+          <div className="min-w-[600px]">
+            {/* Y-Axis Background Lines */}
+            <div className="absolute inset-0 pt-12 flex flex-col justify-between pointer-events-none opacity-[0.03]">
+                {[...Array(5)].map((_, i) => (
+                    <div key={i} className="w-full h-px bg-gray-900"></div>
+                ))}
+            </div>
 
-          <div className="flex items-end justify-around h-80 gap-4 md:gap-8 px-10 relative z-10">
-            {displayData.map((item: any, idx: number) => {
-              const isCurrent = timeRange === 'Today' 
-                ? new Date().getHours() === idx
-                : timeRange === 'Daily' && new Date().toLocaleDateString('en-US', { weekday: 'short' }) === item.label;
-              
-              return (
-                <div key={idx} className="flex-1 flex flex-col items-center group relative h-full justify-end">
-                  <div className="absolute -top-12 px-4 py-2 bg-gray-900 text-white text-[10px] font-black rounded-xl opacity-0 group-hover:opacity-100 transition-all transform group-hover:-translate-y-2 whitespace-nowrap z-20 shadow-2xl scale-95 group-hover:scale-100">
-                    <span className="text-[#eca840] mr-2">{item.orders || 0}</span>
-                    ORDERS — {(item.fullLabel || item.label).toUpperCase()}
+            <div className="flex items-end justify-around h-80 gap-4 md:gap-8 px-10 relative z-10">
+              {displayData.map((item: any, idx: number) => {
+                const isCurrent = timeRange === 'Today' 
+                  ? new Date().getHours() === idx
+                  : timeRange === 'Daily' && new Date().toLocaleDateString('en-US', { weekday: 'short' }) === item.label;
+                
+                return (
+                  <div key={idx} className="flex-1 flex flex-col items-center group relative h-full justify-end">
+                    <div className="absolute -top-12 px-4 py-2 bg-gray-900 text-white text-[10px] font-black rounded-xl opacity-0 group-hover:opacity-100 transition-all transform group-hover:-translate-y-2 whitespace-nowrap z-20 shadow-2xl scale-95 group-hover:scale-100">
+                      <span className="text-[#eca840] mr-2">{item.orders || 0}</span>
+                      ORDERS — {(item.fullLabel || item.label).toUpperCase()}
+                    </div>
+                    
+                    <div
+                      style={{ height: `${Math.max(Math.min(item.value, 100), 5)}%` }}
+                      className={`w-full rounded-2xl transition-all duration-1000 ease-out cursor-pointer relative overflow-hidden ${
+                        isCurrent 
+                          ? 'bg-gradient-to-t from-[#eca840] to-[#f4c47d] shadow-[0_15px_30px_-10px_rgba(236,168,64,0.4)]' 
+                          : 'bg-gray-100 hover:bg-gray-200'
+                      }`}
+                    >
+                      <div className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                    </div>
+                    
+                    <div className="mt-8 flex flex-col items-center gap-1">
+                        <span className={`text-[10px] font-black uppercase tracking-widest transition-all ${isCurrent ? 'text-gray-900 scale-110' : 'text-gray-400'}`}>
+                          {item.label}
+                        </span>
+                        {isCurrent && <div className="w-1 h-1 rounded-full bg-[#eca840]"></div>}
+                    </div>
                   </div>
-                  
-                  <div
-                    style={{ height: `${Math.max(Math.min(item.value, 100), 5)}%` }}
-                    className={`w-full rounded-2xl transition-all duration-1000 ease-out cursor-pointer relative overflow-hidden ${
-                      isCurrent 
-                        ? 'bg-gradient-to-t from-[#eca840] to-[#f4c47d] shadow-[0_15px_30px_-10px_rgba(236,168,64,0.4)]' 
-                        : 'bg-gray-100 hover:bg-gray-200'
-                    }`}
-                  >
-                    <div className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
-                  </div>
-                  
-                  <div className="mt-8 flex flex-col items-center gap-1">
-                      <span className={`text-[10px] font-black uppercase tracking-widest transition-all ${isCurrent ? 'text-gray-900 scale-110' : 'text-gray-400'}`}>
-                        {item.label}
-                      </span>
-                      {isCurrent && <div className="w-1 h-1 rounded-full bg-[#eca840]"></div>}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

@@ -35,6 +35,7 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   };
   const [store, setStore] = React.useState(initialStore);
   const [showNotifications, setShowNotifications] = React.useState(false);
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   // Identity priority logic: Clerk first → Laravel auth_user → store defaults
   const clerkImage = isLoaded && user?.imageUrl ? user.imageUrl : null;
@@ -78,7 +79,13 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   return (
     <div className="seller-module min-h-screen bg-[#fcfaf7]">
-      <aside className="seller-sidebar">
+      {/* Mobile Sidebar Overlay */}
+      <div 
+        className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`}
+        onClick={() => setSidebarOpen(false)}
+      ></div>
+
+      <aside className={`seller-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-branding mb-8 flex items-center gap-3 px-3 py-1">
           <div className="relative group cursor-pointer transition-all duration-500 hover:scale-105">
             <Logo size={36} />
@@ -92,6 +99,13 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
               ARTISANAL UNIT
             </span>
           </div>
+
+          <button 
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden p-2 text-gray-400 hover:text-[#eca840]"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
         </div>
 
         {/* Professional Profile Summary */}
@@ -120,6 +134,7 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             <Link
               key={item.label}
               href={item.href}
+              onClick={() => setSidebarOpen(false)}
               className={`nav-item group flex items-center gap-3.5 px-4 py-3 rounded-xl text-[13px] font-bold transition-all duration-300 ${url.startsWith(item.href) ? 'bg-[#2d2a26] text-white shadow-lg shadow-gray-900/10' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-900'}`}
             >
               <div className={`w-4.5 h-4.5 transition-colors ${url.startsWith(item.href) ? 'text-[#eca840]' : 'text-gray-300 group-hover:text-gray-900'}`}>
@@ -130,110 +145,118 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           ))}
         </nav>
       </aside>
-
-      <main className="seller-main flex-1 p-8 lg:p-12 overflow-y-auto">
-        <header className="seller-header flex justify-between items-center mb-10 bg-white/95 backdrop-blur-2xl px-10 py-4.5 rounded-[2rem] border border-gray-100 shadow-[0_15px_40px_-15px_rgba(0,0,0,0.05)] sticky top-6 z-[100] mx-6 transition-all duration-500">
-          <div className="header-search flex-1 max-w-[420px] flex items-center gap-4 bg-gray-50/50 backdrop-blur-md px-6 py-3 rounded-xl border border-gray-100 focus-within:bg-white focus-within:shadow-lg focus-within:border-[#eca840]/20 transition-all duration-500 group">
-            <svg className="w-4 h-4 text-gray-300 group-focus-within:text-[#eca840] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-            <input 
-                type="text" 
-                placeholder="Search administrative records..." 
-                className="bg-transparent border-none focus:ring-0 text-[11px] font-bold text-gray-700 placeholder:text-gray-300 w-full uppercase tracking-[0.2em]" 
-            />
+      <main className="seller-main flex-1 overflow-y-auto">
+        <header className="seller-header flex items-center gap-4 lg:gap-8 mb-6 lg:mb-10 bg-white/95 backdrop-blur-2xl px-6 lg:px-10 py-3 lg:py-4.5 rounded-[1.5rem] lg:rounded-[2rem] border border-gray-100 shadow-[0_15px_40px_-15px_rgba(0,0,0,0.05)] sticky top-2 lg:top-6 z-[100] mx-4 lg:mx-6 transition-all duration-500">
+          <div className="flex items-center lg:hidden">
+            <button 
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 text-gray-400 hover:text-[#eca840] transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+            </button>
           </div>
 
-          <div className="flex items-center gap-8">
-            <div className="flex items-center gap-4 border-r border-gray-100 pr-8">
-              <div className="relative">
-                <button
-                  id="notification-bell"
-                  onClick={() => setShowNotifications(!showNotifications)}
-                  className="relative w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#eca840] hover:bg-white border border-transparent hover:border-gray-100 transition-all shadow-sm"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-                  {(notifications.low_stock.length + (notifications.recent?.length || 0)) > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-black flex items-center justify-center rounded-full border-2 border-white shadow-md">
-                      {notifications.low_stock.length + (notifications.recent?.length || 0)}
-                    </span>
-                  )}
-                </button>
-
-                {showNotifications && (
-                  <div className="absolute right-0 mt-6 w-80 bg-white rounded-[2rem] shadow-2xl border border-gray-100 z-[999] p-6 animate-in fade-in slide-in-from-top-4">
-                    <div className="flex justify-between items-center mb-4">
-                      <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Inventory Alerts</h4>
-                      <span className="text-[9px] font-bold text-[#eca840] px-2 py-0.5 bg-orange-50 rounded-full">{notifications.low_stock.length} Active</span>
-                    </div>
-                      <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
-                        {(notifications.low_stock.length === 0 && (!notifications.recent || notifications.recent.length === 0)) ? (
-                          <div className="text-center py-8">
-                            <p className="text-[10px] text-gray-300 font-black uppercase">Pantry is full</p>
-                          </div>
-                        ) : (
-                          <>
-                            {notifications.recent?.map((notif: any) => (
-                              <div key={`recent-${notif.id}`} className="p-4 bg-orange-50/50 rounded-2xl hover:bg-white border border-transparent hover:border-[#eca840]/20 transition-all cursor-pointer">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-[#eca840]"></div>
-                                  <h5 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">{notif.title}</h5>
-                                </div>
-                                <p className="text-[11px] text-gray-600 font-medium leading-relaxed">{notif.message}</p>
-                              </div>
-                            ))}
-                            {notifications.low_stock.map((item: any) => (
-                              <div key={`low-${item.id}`} className="p-4 bg-red-50/30 rounded-2xl hover:bg-white border border-transparent hover:border-red-100 transition-all cursor-pointer">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
-                                  <h5 className="text-[10px] font-black text-red-500 uppercase tracking-widest">Low Stock Alert</h5>
-                                </div>
-                                <h5 className="text-xs font-black text-gray-800">{item.name}</h5>
-                                <p className="text-[10px] text-red-400 font-bold mt-1">Stock Left: {item.stock}</p>
-                              </div>
-                            ))}
-                          </>
-                        )}
-                      </div>
-                  </div>
-                )}
-              </div>
+          <div className="flex-1 hidden sm:flex items-center">
+            <div className="header-search flex-1 flex items-center gap-4 bg-gray-50/50 backdrop-blur-md px-6 py-3 rounded-xl border border-gray-100 focus-within:bg-white focus-within:shadow-lg focus-within:border-[#eca840]/20 transition-all duration-500 group">
+              <svg className="w-4 h-4 text-gray-300 group-focus-within:text-[#eca840] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              <input 
+                  type="text" 
+                  placeholder="Search across your artisanal inventory..." 
+                  className="bg-transparent border-none focus:ring-0 text-[11px] font-bold text-gray-700 placeholder:text-gray-300 w-full uppercase tracking-[0.2em]" 
+              />
             </div>
+          </div>
 
-            <div className="flex items-center gap-4 pl-4">
-              <div className="relative bg-[#2d2a26] border border-[#2d2a26] rounded-xl px-5 py-2.5 flex items-center gap-4 hover:opacity-95 transition-all cursor-pointer group shadow-md shadow-gray-200/50">
-                <div className="text-left">
-                  <h5 className="text-[10px] font-black text-white leading-none mb-1.5 uppercase tracking-wide">{profileName.split(' ')[0]}</h5>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[7px] font-black text-[#eca840] uppercase tracking-[0.2em]">{isOnline ? 'CONNECTED' : 'OFFLINE'}</span>
+          <div className="flex items-center gap-3 lg:gap-4 ml-auto">
+            {/* Notification Bell */}
+            <div className="relative">
+              <button
+                id="notification-bell"
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#eca840] hover:bg-white border border-transparent hover:border-gray-100 transition-all shadow-sm"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                {(notifications.low_stock.length + (notifications.recent?.length || 0)) > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-black flex items-center justify-center rounded-full border-2 border-white shadow-md">
+                    {notifications.low_stock.length + (notifications.recent?.length || 0)}
+                  </span>
+                )}
+              </button>
+
+              {showNotifications && (
+                <div className="absolute right-0 mt-6 w-80 bg-white rounded-[2rem] shadow-2xl border border-gray-100 z-[999] p-6 animate-in fade-in slide-in-from-top-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Inventory Alerts</h4>
+                    <span className="text-[9px] font-bold text-[#eca840] px-2 py-0.5 bg-orange-50 rounded-full">{notifications.low_stock.length} Active</span>
                   </div>
-                </div>
-                
-                <div className="relative">
-                  <div className={`w-9 h-9 rounded-full p-[1.5px] transition-all duration-500 ${isOnline ? 'bg-[#eca840]' : 'bg-gray-400'}`}>
-                    <div className="w-full h-full rounded-full overflow-hidden border-2 border-[#2d2a26] bg-gray-100 flex items-center justify-center">
-                      {profileImage ? (
-                        <img src={profileImage} alt="User" className="w-full h-full object-cover" />
+                    <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
+                      {(notifications.low_stock.length === 0 && (!notifications.recent || notifications.recent.length === 0)) ? (
+                        <div className="text-center py-8">
+                          <p className="text-[10px] text-gray-300 font-black uppercase">Pantry is full</p>
+                        </div>
                       ) : (
-                        <span className="text-xs font-black text-gray-400">{profileName.charAt(0)}</span>
+                        <>
+                          {notifications.recent?.map((notif: any) => (
+                            <div key={`recent-${notif.id}`} className="p-4 bg-orange-50/50 rounded-2xl hover:bg-white border border-transparent hover:border-[#eca840]/20 transition-all cursor-pointer">
+                              <div className="flex items-center gap-2 mb-1">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#eca840]"></div>
+                                <h5 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">{notif.title}</h5>
+                              </div>
+                              <p className="text-[11px] text-gray-600 font-medium leading-relaxed">{notif.message}</p>
+                            </div>
+                          ))}
+                          {notifications.low_stock.map((item: any) => (
+                            <div key={`low-${item.id}`} className="p-4 bg-red-50/30 rounded-2xl hover:bg-white border border-transparent hover:border-red-100 transition-all cursor-pointer">
+                              <div className="flex items-center gap-2 mb-1">
+                                <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
+                                <h5 className="text-[10px] font-black text-red-500 uppercase tracking-widest">Low Stock Alert</h5>
+                              </div>
+                              <h5 className="text-xs font-black text-gray-800">{item.name}</h5>
+                              <p className="text-[10px] text-red-400 font-bold mt-1">Stock Left: {item.stock}</p>
+                            </div>
+                          ))}
+                        </>
                       )}
                     </div>
-                  </div>
-                  {isOnline && (
-                    <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-[#2d2a26]"></div>
-                  )}
                 </div>
+              )}
+            </div>
 
-                {/* Overlaid Clerk UserButton - hidden but clickable over the entire container */}
-                <div className="absolute inset-0 opacity-0 z-10 cursor-pointer [&_button]:w-full [&_button]:h-full [&_button]:rounded-full">
-                  <UserButton 
-                    afterSignOutUrl="/" 
-                    appearance={{
-                      elements: {
-                        userButtonTrigger: "w-full h-full",
-                        rootBox: "w-full h-full"
-                      }
-                    }}
-                  />
+            {/* Profile Section */}
+            <div className="relative bg-[#2d2a26] border border-[#2d2a26] rounded-xl px-3 lg:px-5 py-2 lg:py-2.5 flex items-center gap-3 lg:gap-4 hover:opacity-95 transition-all cursor-pointer group shadow-md shadow-gray-200/50">
+              <div className="text-left hidden lg:block">
+                <h5 className="text-[10px] font-black text-white leading-none mb-1.5 uppercase tracking-wide">{profileName.split(' ')[0]}</h5>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[7px] font-black text-[#eca840] uppercase tracking-[0.2em]">{isOnline ? 'CONNECTED' : 'OFFLINE'}</span>
                 </div>
+              </div>
+              
+              <div className="relative">
+                <div className={`w-8 h-8 lg:w-9 lg:h-9 rounded-full p-[1.5px] transition-all duration-500 ${isOnline ? 'bg-[#eca840]' : 'bg-gray-400'}`}>
+                  <div className="w-full h-full rounded-full overflow-hidden border-2 border-[#2d2a26] bg-gray-100 flex items-center justify-center">
+                    {profileImage ? (
+                      <img src={profileImage} alt="User" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-xs font-black text-gray-400">{profileName.charAt(0)}</span>
+                    )}
+                  </div>
+                </div>
+                {isOnline && (
+                  <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 lg:w-2.5 lg:h-2.5 bg-green-500 rounded-full border-2 border-[#2d2a26]"></div>
+                )}
+              </div>
+
+              {/* Overlaid Clerk UserButton */}
+              <div className="absolute inset-0 opacity-0 z-10 cursor-pointer [&_button]:w-full [&_button]:h-full [&_button]:rounded-full">
+                <UserButton 
+                  afterSignOutUrl="/" 
+                  appearance={{
+                    elements: {
+                      userButtonTrigger: "w-full h-full",
+                      rootBox: "w-full h-full"
+                    }
+                  }}
+                />
               </div>
             </div>
           </div>
