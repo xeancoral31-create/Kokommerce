@@ -15449,73 +15449,76 @@ function SellerCategories(_ref) {
     }), isModalOpen && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "fixed inset-0 z-[2000] flex items-center justify-center p-6",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "absolute inset-0 bg-black/40 backdrop-blur-sm shadow-2xl",
+        className: "absolute inset-0 bg-black/60 backdrop-blur-md",
         onClick: function onClick() {
           return setIsModalOpen(false);
         }
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "relative w-full max-w-2xl bg-white rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300",
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "p-12",
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "flex justify-between items-start mb-10",
+        className: "relative w-full max-w-lg bg-white rounded-[2rem] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500",
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "max-h-[85vh] overflow-y-auto formal-scrollbar",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "p-10",
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
-                className: "text-3xl font-black text-gray-900 tracking-tight",
-                children: editingCategory ? 'Refine Collection' : 'New Collection'
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                className: "text-sm text-gray-400 font-medium mt-1",
-                children: "Define the sensory boundaries of your artisanal catalog."
-              })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-              onClick: function onClick() {
-                return setIsModalOpen(false);
-              },
-              className: "w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all",
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-                className: "w-6 h-6",
-                fill: "none",
-                viewBox: "0 0 24 24",
-                stroke: "currentColor",
-                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                  strokeWidth: 2,
-                  d: "M6 18L18 6M6 6l12 12"
-                })
-              })
-            })]
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("form", {
-            onSubmit: handleSubmit,
-            className: "space-y-8",
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "space-y-2",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                className: "text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1",
-                children: "Collection Name"
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
-                type: "text",
-                value: data.name,
-                onChange: function onChange(e) {
-                  return setData('name', e.target.value);
+              className: "flex justify-between items-start mb-8 pb-6 border-b border-gray-50",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                  className: "text-[9px] font-black text-[#eca840] uppercase tracking-[0.3em] mb-1 block",
+                  children: "Catalog Architect"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
+                  className: "text-2xl font-black text-gray-900 tracking-tighter",
+                  children: editingCategory ? 'Update Collection' : 'New Collection'
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                onClick: function onClick() {
+                  return setIsModalOpen(false);
                 },
-                className: "w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#f5a623]/20",
-                placeholder: "e.g. Signature Kakanin"
-              }), errors.name && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                className: "text-red-500 text-[10px] font-bold ml-1",
-                children: errors.name
+                className: "w-10 h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all",
+                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                  className: "w-5 h-5",
+                  fill: "none",
+                  viewBox: "0 0 24 24",
+                  stroke: "currentColor",
+                  children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: 2.5,
+                    d: "M6 18L18 6M6 6l12 12"
+                  })
+                })
               })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "space-y-2",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                className: "text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1",
-                children: "Collection Image"
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                className: "flex items-center gap-4",
-                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  className: "flex-1 bg-gray-50 rounded-2xl p-1 flex items-center",
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("form", {
+              onSubmit: handleSubmit,
+              className: "space-y-6",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "space-y-2",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
+                  className: "text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1",
+                  children: "Identity"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                  className: "relative group",
+                  children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+                    type: "text",
+                    value: data.name,
+                    onChange: function onChange(e) {
+                      return setData('name', e.target.value);
+                    },
+                    className: "w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-bold text-gray-700 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all placeholder:text-gray-300",
+                    placeholder: "e.g. Signature Sourdough"
+                  })
+                }), errors.name && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                  className: "text-red-500 text-[9px] font-bold ml-1",
+                  children: errors.name
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "space-y-2",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
+                  className: "text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1",
+                  children: "Visual Asset"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                  className: "bg-gray-50 border-2 border-dashed border-gray-100 rounded-xl p-4 transition-colors hover:border-[#eca840]/30",
                   children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("label", {
-                    className: "flex-1 cursor-pointer",
+                    className: "cursor-pointer group flex flex-col items-center justify-center py-4",
                     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
                       type: "file",
                       className: "hidden",
@@ -15524,68 +15527,88 @@ function SellerCategories(_ref) {
                         var file = (_e$target$files = e.target.files) === null || _e$target$files === void 0 ? void 0 : _e$target$files[0];
                         if (file) setData('image_file', file);
                       }
+                    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                      className: "w-6 h-6 text-gray-300 mb-2 group-hover:text-[#eca840] transition-colors",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      stroke: "currentColor",
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: 2,
+                        d: "M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      })
                     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                      className: "px-6 py-3 text-xs font-bold text-gray-500 truncate",
-                      children: data.image_file ? data.image_file.name : data.image ? 'Existing Image' : 'Select a high-quality visual...'
+                      className: "text-[10px] font-black text-gray-500 uppercase tracking-widest truncate max-w-[200px]",
+                      children: data.image_file ? data.image_file.name : data.image ? 'Update Current Asset' : 'Select Gallery Image'
                     })]
                   })
-                })
-              }), errors.image_file && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                className: "text-red-500 text-[10px] font-bold ml-1",
-                children: errors.image_file
-              })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "grid grid-cols-2 gap-8",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                }), errors.image_file && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                  className: "text-red-500 text-[9px] font-bold ml-1",
+                  children: errors.image_file
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
                 className: "space-y-2",
                 children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                  className: "text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1",
-                  children: "Sensory Status"
+                  className: "text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1",
+                  children: "Operational State"
                 }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("select", {
                   value: data.status,
                   onChange: function onChange(e) {
                     return setData('status', e.target.value);
                   },
-                  className: "w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#f5a623]/20",
+                  className: "w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-bold text-gray-700 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all appearance-none cursor-pointer",
                   children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
                     value: "Active",
-                    children: "Active"
+                    children: "Public / Active"
                   }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
                     value: "Inactive",
-                    children: "Inactive"
+                    children: "Archived / Hidden"
                   })]
                 })]
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
                 className: "space-y-2",
                 children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                  className: "text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1",
-                  children: "Quick Tip"
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  className: "px-6 py-4 bg-orange-50 rounded-2xl text-[10px] font-bold text-orange-600 leading-relaxed",
-                  children: "High-quality images increase customer engagement by up to 40%."
+                  className: "text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1",
+                  children: "Sensory Narrative"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("textarea", {
+                  value: data.description,
+                  onChange: function onChange(e) {
+                    return setData('description', e.target.value);
+                  },
+                  rows: 3,
+                  className: "w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-bold text-gray-700 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all resize-none placeholder:text-gray-300",
+                  placeholder: "Articulate the aroma, texture, and inspiration behind this collection..."
                 })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "pt-4",
+                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                  type: "submit",
+                  disabled: processing,
+                  className: "w-full py-5 bg-[#eca840] text-white rounded-xl font-black text-[10px] uppercase tracking-[0.3em] shadow-xl shadow-[#eca840]/10 hover:bg-gray-900 transition-all disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2",
+                  children: processing ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+                    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("svg", {
+                      className: "animate-spin h-3.5 w-3.5 text-white",
+                      fill: "none",
+                      viewBox: "0 0 24 24",
+                      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("circle", {
+                        className: "opacity-25",
+                        cx: "12",
+                        cy: "12",
+                        r: "10",
+                        stroke: "currentColor",
+                        strokeWidth: "4"
+                      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                        className: "opacity-75",
+                        fill: "currentColor",
+                        d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      })]
+                    }), "Processing"]
+                  }) : editingCategory ? 'Commit Changes' : 'Initialize Collection'
+                })
               })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "space-y-2",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                className: "text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1",
-                children: "Sensory Description"
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("textarea", {
-                value: data.description,
-                onChange: function onChange(e) {
-                  return setData('description', e.target.value);
-                },
-                rows: 3,
-                className: "w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#f5a623]/20 resize-none",
-                placeholder: "Describe the aroma and texture..."
-              })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-              type: "submit",
-              disabled: processing,
-              className: "w-full py-5 bg-[#eca840] text-white rounded-2xl font-[1000] text-[11px] uppercase tracking-[0.25em] shadow-xl shadow-[#eca840]/20 hover:bg-[#d69635] hover:scale-[1.01] transition-all disabled:opacity-50 active:scale-95",
-              children: processing ? 'Crafting...' : editingCategory ? 'Save Collection' : 'Launch Collection'
             })]
-          })]
+          })
         })
       })]
     })]
@@ -18780,280 +18803,208 @@ function SellerProducts(_ref) {
     }), isModalOpen && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "fixed inset-0 z-[2000] flex items-center justify-center p-6",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "absolute inset-0 bg-black/40 backdrop-blur-sm",
+        className: "absolute inset-0 bg-black/60 backdrop-blur-md",
         onClick: function onClick() {
           return setIsModalOpen(false);
         }
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "relative w-full max-w-2xl bg-white rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[85vh]",
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "p-12 overflow-y-auto custom-scrollbar",
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "flex justify-between items-start mb-10",
+        className: "relative w-full max-w-lg bg-white rounded-[2rem] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500",
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "max-h-[85vh] overflow-y-auto formal-scrollbar",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "p-10",
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
-                className: "text-3xl font-black text-gray-900 tracking-tight uppercase leading-none",
-                children: editingProduct ? 'Edit Masterpiece' : 'Add New Creation'
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                className: "text-[10px] text-gray-300 font-black uppercase tracking-[0.2em] mt-3",
-                children: "Precision inventory onboarding sequence"
-              })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-              onClick: function onClick() {
-                return setIsModalOpen(false);
-              },
-              className: "w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100",
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-                className: "w-6 h-6",
-                fill: "none",
-                viewBox: "0 0 24 24",
-                stroke: "currentColor",
-                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                  strokeWidth: 2.5,
-                  d: "M6 18L18 6M6 6l12 12"
-                })
-              })
-            })]
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("form", {
-            onSubmit: handleSubmit,
-            className: "space-y-10",
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "grid grid-cols-2 gap-8",
+              className: "flex justify-between items-start mb-8 pb-6 border-b border-gray-50",
               children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "space-y-3",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                  className: "text-[9px] font-black text-[#eca840] uppercase tracking-[0.3em] mb-1 block",
+                  children: "Masterpiece Architect"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
+                  className: "text-2xl font-black text-gray-900 tracking-tighter",
+                  children: editingProduct ? 'Refine Masterpiece' : 'Initialize Creation'
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                onClick: function onClick() {
+                  return setIsModalOpen(false);
+                },
+                className: "w-10 h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all",
+                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                  className: "w-5 h-5",
+                  fill: "none",
+                  viewBox: "0 0 24 24",
+                  stroke: "currentColor",
+                  children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: 2.5,
+                    d: "M6 18L18 6M6 6l12 12"
+                  })
+                })
+              })]
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("form", {
+              onSubmit: handleSubmit,
+              className: "space-y-6",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "space-y-4 bg-gray-50/50 p-6 rounded-2xl border border-gray-100",
                 children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                  className: "text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1",
-                  children: "Identity Reference"
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
-                  type: "text",
-                  value: data.name,
-                  onChange: function onChange(e) {
-                    return setData('name', e.target.value);
-                  },
-                  className: "w-full bg-gray-50 border border-transparent rounded-2xl px-6 py-4 text-xs font-bold text-gray-700 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all ".concat(errors.name ? 'border-red-500' : ''),
-                  placeholder: "e.g. Artisanal Sourdough"
-                }), errors.name && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                  className: "text-red-500 text-[10px] font-bold ml-1 uppercase",
-                  children: errors.name
+                  className: "text-[9px] font-black text-gray-400 uppercase tracking-widest block border-b border-gray-200/50 pb-2 mb-4",
+                  children: "Visual Reference"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "flex gap-6 items-center",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                    className: "relative w-20 h-20 bg-white rounded-xl overflow-hidden border border-gray-200 shrink-0 shadow-inner group",
+                    children: modalPreview ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+                      src: modalPreview,
+                      alt: "Preview",
+                      className: "w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                      className: "w-full h-full flex items-center justify-center text-gray-100",
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                        className: "w-8 h-8",
+                        fill: "none",
+                        viewBox: "0 0 24 24",
+                        stroke: "currentColor",
+                        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+                          strokeLinecap: "round",
+                          strokeLinejoin: "round",
+                          strokeWidth: 2,
+                          d: "M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        })
+                      })
+                    })
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                    className: "flex-1",
+                    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("label", {
+                      className: "inline-flex px-5 py-2.5 bg-white border border-gray-200 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] text-gray-600 cursor-pointer hover:bg-gray-900 hover:text-white transition-all active:scale-95",
+                      children: ["Establish Visual", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+                        type: "file",
+                        className: "hidden",
+                        onChange: handleFileChange,
+                        accept: "image/*"
+                      })]
+                    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                      className: "text-[8px] text-gray-400 font-bold uppercase mt-2 tracking-widest",
+                      children: "Recommended: High Resolution"
+                    })]
+                  })]
+                }), errors.image_file && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                  className: "text-red-500 text-[9px] font-bold mt-2",
+                  children: errors.image_file
                 })]
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "space-y-3",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                  className: "text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1",
-                  children: "Taxonomy Hub"
+                className: "space-y-4",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "space-y-2",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
+                    className: "text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1",
+                    children: "Identity Reference"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+                    type: "text",
+                    value: data.name,
+                    onChange: function onChange(e) {
+                      return setData('name', e.target.value);
+                    },
+                    className: "w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-bold text-gray-700 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all placeholder:text-gray-300",
+                    placeholder: "e.g. Signature Ensaymada"
+                  })]
                 }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                  className: "relative",
-                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("select", {
+                  className: "space-y-2",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
+                    className: "text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1",
+                    children: "Archive Classification"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("select", {
                     value: data.category_id,
                     onChange: function onChange(e) {
                       return setData('category_id', e.target.value);
                     },
-                    className: "w-full appearance-none bg-gray-50 border border-transparent rounded-2xl px-6 py-4 text-xs font-bold text-gray-700 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all ".concat(errors.category_id ? 'border-red-500' : ''),
+                    className: "w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-bold text-gray-700 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all appearance-none cursor-pointer",
                     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
                       value: "",
-                      disabled: true,
-                      children: "Select Classification"
+                      children: "Select Gallery..."
                     }), categories.map(function (cat) {
                       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
                         value: cat.id,
                         children: cat.name
                       }, cat.id);
                     })]
-                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                    className: "absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-300",
-                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-                      className: "w-4 h-4",
-                      fill: "none",
-                      viewBox: "0 0 24 24",
-                      stroke: "currentColor",
-                      strokeWidth: 3,
-                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-                        strokeLinecap: "round",
-                        strokeLinejoin: "round",
-                        d: "M19 9l-7 7-7-7"
-                      })
-                    })
                   })]
-                }), errors.category_id && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                  className: "text-red-500 text-[10px] font-bold ml-1 uppercase",
-                  children: errors.category_id
-                })]
-              })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "space-y-3",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                className: "text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1",
-                children: "Artisanal Narrative"
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("textarea", {
-                value: data.description,
-                onChange: function onChange(e) {
-                  return setData('description', e.target.value);
-                },
-                rows: 4,
-                className: "w-full bg-gray-50 border border-transparent rounded-3xl px-6 py-5 text-sm font-medium text-gray-700 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all resize-none ".concat(errors.description ? 'border-red-500' : ''),
-                placeholder: "Describe the artisanal magic..."
-              }), errors.description && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                className: "text-red-500 text-[10px] font-bold ml-1 uppercase",
-                children: errors.description
-              })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "grid grid-cols-3 gap-8",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "space-y-3",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                  className: "text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1",
-                  children: "Valuation (\u20B1)"
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
-                  type: "number",
-                  value: data.price,
-                  onChange: function onChange(e) {
-                    return setData('price', e.target.value);
-                  },
-                  className: "w-full bg-gray-50 border border-transparent rounded-2xl px-6 py-4 text-sm font-black tabular-nums text-gray-900 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all ".concat(errors.price ? 'border-red-500' : '')
-                }), errors.price && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                  className: "text-red-500 text-[10px] font-bold ml-1 uppercase",
-                  children: errors.price
                 })]
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "space-y-3",
+                className: "space-y-2",
                 children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                  className: "text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1",
-                  children: "Available Units"
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
-                  type: "number",
-                  value: data.stock,
+                  className: "text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1",
+                  children: "Artisanal Narrative"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("textarea", {
+                  value: data.description,
                   onChange: function onChange(e) {
-                    return setData('stock', e.target.value);
+                    return setData('description', e.target.value);
                   },
-                  className: "w-full bg-gray-50 border border-transparent rounded-2xl px-6 py-4 text-sm font-black tabular-nums text-gray-900 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all ".concat(errors.stock ? 'border-red-500' : '')
-                }), errors.stock && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                  className: "text-red-500 text-[10px] font-bold ml-1 uppercase",
-                  children: errors.stock
+                  rows: 3,
+                  className: "w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-bold text-gray-700 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all resize-none placeholder:text-gray-300",
+                  placeholder: "Articulate the textures, aromas, and sensory profile..."
                 })]
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "space-y-3",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                  className: "text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1",
-                  children: "Availability"
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                  className: "relative",
-                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("select", {
-                    value: data.status,
+                className: "grid grid-cols-2 gap-6",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "space-y-2",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
+                    className: "text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1",
+                    children: "Valuation (\u20B1)"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+                    type: "number",
+                    value: data.price,
                     onChange: function onChange(e) {
-                      return setData('status', e.target.value);
+                      return setData('price', e.target.value);
                     },
-                    className: "w-full appearance-none bg-gray-50 border border-transparent rounded-2xl px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-700 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all ".concat(errors.status ? 'border-red-500' : ''),
-                    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
-                      value: "in_stock",
-                      children: "In Stock"
-                    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
-                      value: "pre_order",
-                      children: "Pre-Order"
-                    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
-                      value: "sold_out",
-                      children: "Sold Out"
-                    })]
-                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                    className: "absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-300",
-                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-                      className: "w-4 h-4",
-                      fill: "none",
-                      viewBox: "0 0 24 24",
-                      stroke: "currentColor",
-                      strokeWidth: 3,
-                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-                        strokeLinecap: "round",
-                        strokeLinejoin: "round",
-                        d: "M19 9l-7 7-7-7"
-                      })
-                    })
+                    className: "w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-black tabular-nums text-gray-900 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 transition-all"
                   })]
-                }), errors.status && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                  className: "text-red-500 text-[10px] font-bold ml-1 uppercase",
-                  children: errors.status
-                })]
-              })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "space-y-3",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-                className: "text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1",
-                children: "Visual Asset Connection"
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                className: "flex gap-8 items-center bg-[#fcfaf7] p-8 rounded-[2.5rem] border border-gray-100",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                  className: "relative w-32 h-32 bg-white rounded-3xl overflow-hidden border border-gray-100 flex-shrink-0 shadow-inner group",
-                  children: modalPreview ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
-                    src: modalPreview,
-                    alt: "Preview",
-                    className: "w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                    className: "w-full h-full flex items-center justify-center text-gray-100",
-                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-                      className: "w-12 h-12",
-                      fill: "none",
-                      viewBox: "0 0 24 24",
-                      stroke: "currentColor",
-                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-                        strokeLinecap: "round",
-                        strokeLinejoin: "round",
-                        strokeWidth: 2,
-                        d: "M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      })
-                    })
-                  })
                 }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                  className: "flex-1",
-                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                    className: "text-xs font-black text-gray-900 uppercase tracking-widest mb-2",
-                    children: "High-Resolution Creative"
-                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                    className: "text-[10px] text-gray-300 font-black uppercase tracking-widest mb-6 leading-relaxed",
-                    children: "Visual fidelity enhances administrative clarity."
-                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("label", {
-                    className: "inline-flex px-8 py-3 bg-white border border-gray-200 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] text-gray-600 cursor-pointer hover:bg-[#eca840] hover:text-white hover:border-[#eca840] transition-all shadow-sm active:scale-95",
-                    children: ["Establish Connection", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
-                      type: "file",
-                      className: "hidden",
-                      onChange: handleFileChange,
-                      accept: "image/*"
-                    })]
-                  }), errors.image_file && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                    className: "text-red-500 text-[10px] font-bold mt-3 uppercase",
-                    children: errors.image_file
+                  className: "space-y-2",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
+                    className: "text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1",
+                    children: "Inventory Limit"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
+                    type: "number",
+                    value: data.stock,
+                    onChange: function onChange(e) {
+                      return setData('stock', e.target.value);
+                    },
+                    className: "w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-black tabular-nums text-gray-900 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 transition-all"
                   })]
                 })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "space-y-2",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
+                  className: "text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1",
+                  children: "Availability State"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("select", {
+                  value: data.status,
+                  onChange: function onChange(e) {
+                    return setData('status', e.target.value);
+                  },
+                  className: "w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-[10px] font-black uppercase tracking-widest text-[#eca840] focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 transition-all appearance-none cursor-pointer",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
+                    value: "in_stock",
+                    children: "Ready / In Stock"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
+                    value: "pre_order",
+                    children: "Queue / Pre-Order"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
+                    value: "sold_out",
+                    children: "Archive / Sold Out"
+                  })]
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "pt-4",
+                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                  type: "submit",
+                  disabled: processing,
+                  className: "w-full py-5 bg-[#eca840] text-white rounded-xl font-black text-[10px] uppercase tracking-[0.3em] shadow-xl shadow-[#eca840]/10 hover:bg-gray-900 transition-all disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2",
+                  children: processing ? 'Processing...' : editingProduct ? 'Commit Changes' : 'Initialize Masterpiece'
+                })
               })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-              className: "pt-4",
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-                type: "submit",
-                disabled: processing,
-                className: "w-full py-5 bg-[#eca840] text-white rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.3em] shadow-[0_20px_50px_-10px_rgba(236,168,64,0.4)] hover:shadow-[0_25px_60px_-10px_rgba(236,168,64,0.5)] hover:bg-[#d69635] transition-all disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98]",
-                children: processing ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("svg", {
-                    className: "animate-spin h-5 w-5 text-white",
-                    xmlns: "http://www.w3.org/2000/svg",
-                    fill: "none",
-                    viewBox: "0 0 24 24",
-                    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("circle", {
-                      className: "opacity-25",
-                      cx: "12",
-                      cy: "12",
-                      r: "10",
-                      stroke: "currentColor",
-                      strokeWidth: "4"
-                    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-                      className: "opacity-75",
-                      fill: "currentColor",
-                      d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    })]
-                  }), "Processing Onboarding..."]
-                }) : editingProduct ? 'Commit Changes' : 'Initialize Masterpiece'
-              })
             })]
-          })]
+          })
         })
       })]
     }), isRestockModalOpen && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {

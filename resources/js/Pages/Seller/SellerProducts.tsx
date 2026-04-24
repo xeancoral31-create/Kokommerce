@@ -515,150 +515,138 @@ export default function SellerProducts({ products, archived_products, categories
         </div>
       )}
 
-      {/* Modern Creation Modal */}
+      {/* Formal Product Architect Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-          <div className="relative w-full max-w-2xl bg-white rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[85vh]">
-            <div className="p-12 overflow-y-auto custom-scrollbar">
-              <div className="flex justify-between items-start mb-10">
-                <div>
-                  <h2 className="text-3xl font-black text-gray-900 tracking-tight uppercase leading-none">{editingProduct ? 'Edit Masterpiece' : 'Add New Creation'}</h2>
-                  <p className="text-[10px] text-gray-300 font-black uppercase tracking-[0.2em] mt-3">Precision inventory onboarding sequence</p>
-                </div>
-                <button onClick={() => setIsModalOpen(false)} className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-10">
-                <div className="grid grid-cols-2 gap-8">
-                  <div className="space-y-3">
-                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1">Identity Reference</label>
-                    <input 
-                      type="text" 
-                      value={data.name}
-                      onChange={e => setData('name', e.target.value)}
-                      className={`w-full bg-gray-50 border border-transparent rounded-2xl px-6 py-4 text-xs font-bold text-gray-700 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all ${errors.name ? 'border-red-500' : ''}`} 
-                      placeholder="e.g. Artisanal Sourdough"
-                    />
-                    {errors.name && <p className="text-red-500 text-[10px] font-bold ml-1 uppercase">{errors.name}</p>}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setIsModalOpen(false)}></div>
+          <div className="relative w-full max-w-lg bg-white rounded-[2rem] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Scrollable Architectural Container */}
+            <div className="max-h-[85vh] overflow-y-auto formal-scrollbar">
+              <div className="p-10">
+                <div className="flex justify-between items-start mb-8 pb-6 border-b border-gray-50">
+                  <div>
+                    <span className="text-[9px] font-black text-[#eca840] uppercase tracking-[0.3em] mb-1 block">Masterpiece Architect</span>
+                    <h2 className="text-2xl font-black text-gray-900 tracking-tighter">{editingProduct ? 'Refine Masterpiece' : 'Initialize Creation'}</h2>
                   </div>
-                  <div className="space-y-3">
-                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1">Taxonomy Hub</label>
-                    <div className="relative">
-                        <select 
-                        value={data.category_id}
-                        onChange={e => setData('category_id', e.target.value)}
-                        className={`w-full appearance-none bg-gray-50 border border-transparent rounded-2xl px-6 py-4 text-xs font-bold text-gray-700 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all ${errors.category_id ? 'border-red-500' : ''}`}
-                        >
-                        <option value="" disabled>Select Classification</option>
-                        {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
-                        </select>
-                        <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-300">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-                        </div>
-                    </div>
-                    {errors.category_id && <p className="text-red-500 text-[10px] font-bold ml-1 uppercase">{errors.category_id}</p>}
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1">Artisanal Narrative</label>
-                  <textarea 
-                    value={data.description}
-                    onChange={e => setData('description', e.target.value)}
-                    rows={4}
-                    className={`w-full bg-gray-50 border border-transparent rounded-3xl px-6 py-5 text-sm font-medium text-gray-700 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all resize-none ${errors.description ? 'border-red-500' : ''}`} 
-                    placeholder="Describe the artisanal magic..."
-                  ></textarea>
-                  {errors.description && <p className="text-red-500 text-[10px] font-bold ml-1 uppercase">{errors.description}</p>}
-                </div>
-
-                <div className="grid grid-cols-3 gap-8">
-                  <div className="space-y-3">
-                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1">Valuation (₱)</label>
-                    <input 
-                      type="number" 
-                      value={data.price}
-                      onChange={e => setData('price', e.target.value)}
-                      className={`w-full bg-gray-50 border border-transparent rounded-2xl px-6 py-4 text-sm font-black tabular-nums text-gray-900 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all ${errors.price ? 'border-red-500' : ''}`} 
-                    />
-                    {errors.price && <p className="text-red-500 text-[10px] font-bold ml-1 uppercase">{errors.price}</p>}
-                  </div>
-                  <div className="space-y-3">
-                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1">Available Units</label>
-                    <input 
-                      type="number" 
-                      value={data.stock}
-                      onChange={e => setData('stock', e.target.value)}
-                      className={`w-full bg-gray-50 border border-transparent rounded-2xl px-6 py-4 text-sm font-black tabular-nums text-gray-900 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all ${errors.stock ? 'border-red-500' : ''}`} 
-                    />
-                    {errors.stock && <p className="text-red-500 text-[10px] font-bold ml-1 uppercase">{errors.stock}</p>}
-                  </div>
-                  <div className="space-y-3">
-                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1">Availability</label>
-                    <div className="relative">
-                        <select 
-                        value={data.status}
-                        onChange={e => setData('status', e.target.value)}
-                        className={`w-full appearance-none bg-gray-50 border border-transparent rounded-2xl px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-700 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all ${errors.status ? 'border-red-500' : ''}`}
-                        >
-                        <option value="in_stock">In Stock</option>
-                        <option value="pre_order">Pre-Order</option>
-                        <option value="sold_out">Sold Out</option>
-                        </select>
-                        <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-300">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-                        </div>
-                    </div>
-                    {errors.status && <p className="text-red-500 text-[10px] font-bold ml-1 uppercase">{errors.status}</p>}
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1">Visual Asset Connection</label>
-                  <div className="flex gap-8 items-center bg-[#fcfaf7] p-8 rounded-[2.5rem] border border-gray-100">
-                    <div className="relative w-32 h-32 bg-white rounded-3xl overflow-hidden border border-gray-100 flex-shrink-0 shadow-inner group">
-                      {modalPreview ? (
-                        <img src={modalPreview} alt="Preview" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-100">
-                          <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs font-black text-gray-900 uppercase tracking-widest mb-2">High-Resolution Creative</p>
-                      <p className="text-[10px] text-gray-300 font-black uppercase tracking-widest mb-6 leading-relaxed">Visual fidelity enhances administrative clarity.</p>
-                      <label className="inline-flex px-8 py-3 bg-white border border-gray-200 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] text-gray-600 cursor-pointer hover:bg-[#eca840] hover:text-white hover:border-[#eca840] transition-all shadow-sm active:scale-95">
-                        Establish Connection
-                        <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
-                      </label>
-                      {errors.image_file && <p className="text-red-500 text-[10px] font-bold mt-3 uppercase">{errors.image_file}</p>}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-4">
-                  <button 
-                    type="submit" 
-                    disabled={processing}
-                    className="w-full py-5 bg-[#eca840] text-white rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.3em] shadow-[0_20px_50px_-10px_rgba(236,168,64,0.4)] hover:shadow-[0_25px_60px_-10px_rgba(236,168,64,0.5)] hover:bg-[#d69635] transition-all disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98]"
-                  >
-                    {processing ? (
-                      <>
-                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                        Processing Onboarding...
-                      </>
-                    ) : (editingProduct ? 'Commit Changes' : 'Initialize Masterpiece')}
+                  <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
                 </div>
-              </form>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Visual Identity Section */}
+                  <div className="space-y-4 bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
+                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block border-b border-gray-200/50 pb-2 mb-4">Visual Reference</label>
+                    <div className="flex gap-6 items-center">
+                      <div className="relative w-20 h-20 bg-white rounded-xl overflow-hidden border border-gray-200 shrink-0 shadow-inner group">
+                        {modalPreview ? (
+                          <img src={modalPreview} alt="Preview" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-100">
+                            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <label className="inline-flex px-5 py-2.5 bg-white border border-gray-200 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] text-gray-600 cursor-pointer hover:bg-gray-900 hover:text-white transition-all active:scale-95">
+                          Establish Visual
+                          <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
+                        </label>
+                        <p className="text-[8px] text-gray-400 font-bold uppercase mt-2 tracking-widest">Recommended: High Resolution</p>
+                      </div>
+                    </div>
+                    {errors.image_file && <p className="text-red-500 text-[9px] font-bold mt-2">{errors.image_file}</p>}
+                  </div>
+
+                  {/* Core Classification */}
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                        <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Identity Reference</label>
+                        <input 
+                            type="text" 
+                            value={data.name}
+                            onChange={e => setData('name', e.target.value)}
+                            className="w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-bold text-gray-700 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all placeholder:text-gray-300" 
+                            placeholder="e.g. Signature Ensaymada"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Archive Classification</label>
+                        <select 
+                            value={data.category_id}
+                            onChange={e => setData('category_id', e.target.value)}
+                            className="w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-bold text-gray-700 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all appearance-none cursor-pointer"
+                        >
+                            <option value="">Select Gallery...</option>
+                            {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+                        </select>
+                    </div>
+                  </div>
+
+                  {/* Narrative Section */}
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Artisanal Narrative</label>
+                    <textarea 
+                      value={data.description}
+                      onChange={e => setData('description', e.target.value)}
+                      rows={3}
+                      className="w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-bold text-gray-700 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all resize-none placeholder:text-gray-300" 
+                      placeholder="Articulate the textures, aromas, and sensory profile..."
+                    ></textarea>
+                  </div>
+
+                  {/* Financial & Inventory */}
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Valuation (₱)</label>
+                      <input 
+                        type="number" 
+                        value={data.price}
+                        onChange={e => setData('price', e.target.value)}
+                        className="w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-black tabular-nums text-gray-900 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 transition-all" 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Inventory Limit</label>
+                      <input 
+                        type="number" 
+                        value={data.stock}
+                        onChange={e => setData('stock', e.target.value)}
+                        className="w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-sm font-black tabular-nums text-gray-900 focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 transition-all" 
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Availability State</label>
+                    <select 
+                        value={data.status}
+                        onChange={e => setData('status', e.target.value)}
+                        className="w-full bg-gray-50 border border-transparent rounded-xl px-5 py-4 text-[10px] font-black uppercase tracking-widest text-[#eca840] focus:bg-white focus:ring-2 focus:ring-[#eca840]/10 transition-all appearance-none cursor-pointer"
+                    >
+                        <option value="in_stock">Ready / In Stock</option>
+                        <option value="pre_order">Queue / Pre-Order</option>
+                        <option value="sold_out">Archive / Sold Out</option>
+                    </select>
+                  </div>
+
+                  <div className="pt-4">
+                    <button 
+                      type="submit" 
+                      disabled={processing}
+                      className="w-full py-5 bg-[#eca840] text-white rounded-xl font-black text-[10px] uppercase tracking-[0.3em] shadow-xl shadow-[#eca840]/10 hover:bg-gray-900 transition-all disabled:opacity-50 active:scale-95 flex items-center justify-center gap-2"
+                    >
+                      {processing ? 'Processing...' : (editingProduct ? 'Commit Changes' : 'Initialize Masterpiece')}
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       )}
+
 
       {/* Restock Modal */}
       {isRestockModalOpen && (
