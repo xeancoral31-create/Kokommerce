@@ -210,10 +210,9 @@ export default function SellerOffers({ promotions, archived_promotions, products
       {isModalOpen && (
         <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setIsModalOpen(false)}></div>
-          <div className="relative w-full max-w-4xl bg-white rounded-[3.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.25)] overflow-hidden animate-in zoom-in-95 duration-500 flex flex-col md:flex-row">
-
+          <div className="relative w-full max-w-4xl bg-white rounded-[3.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.25)] overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-700 flex flex-col md:flex-row">
             {/* Left Column: Formal Form */}
-            <div className="flex-1 p-12 lg:p-16 border-r border-gray-50 overflow-y-auto max-h-[90vh] custom-scrollbar">
+            <div className="flex-1 p-12 lg:p-16 border-r border-gray-50 overflow-y-auto max-h-[90vh] formal-scrollbar">
               <div className="mb-16">
                 <div className="flex justify-between items-center relative">
                   {[
