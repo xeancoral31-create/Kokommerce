@@ -20,6 +20,7 @@ class SellerProductController extends Controller
             'stats' => [
                 'total_items' => Product::count(),
                 'in_stock_count' => Product::where('status', 'in_stock')->count(),
+                'sold_out_count' => Product::where('status', 'sold_out')->count(),
                 'low_stock' => Product::where('status', '!=', 'pre_order')
                     ->where(function($query) {
                         $query->where('status', 'sold_out')
@@ -37,10 +38,19 @@ class SellerProductController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'price' => 'nullable|numeric|min:0',
+            'solo_price' => 'required|numeric|min:0',
+            'solo_unit' => 'nullable|string|max:50',
+            'package_price' => 'required|numeric|min:0',
+            'package_unit' => 'nullable|string|max:50',
+            'package_qty' => 'nullable|integer|min:1',
             'stock' => 'required|integer|min:0',
-            'image_file' => 'nullable|image|max:2048', // Real file upload
-            'image' => 'nullable|string', // Fallback for existing/mock images
+            'image_file' => 'nullable|image|max:2048', 
+            'solo_image_file' => 'nullable|image|max:2048',
+            'package_image_file' => 'nullable|image|max:2048',
+            'image' => 'nullable|string',
+            'solo_image' => 'nullable|string',
+            'package_image' => 'nullable|string',
             'status' => 'required|string',
         ]);
 
@@ -49,9 +59,26 @@ class SellerProductController extends Controller
             $validated['image'] = '/storage/' . $path;
         }
 
-        $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']) . '-' . uniqid();
+        if ($request->hasFile('solo_image_file')) {
+            $path = $request->file('solo_image_file')->store('products', 'public');
+            $validated['solo_image'] = '/storage/' . $path;
+        }
+
+        if ($request->hasFile('package_image_file')) {
+            $path = $request->file('package_image_file')->store('products', 'public');
+            $validated['package_image'] = '/storage/' . $path;
+        }
+
+        $validated['price'] = $validated['price'] ?? $validated['solo_price'];
         $validated['rating'] = 5.0; // Default rating for new products
         $validated['reviews_count'] = 0;
+
+        // Synchronize status with stock
+        if ($validated['stock'] == 0) {
+            $validated['status'] = 'sold_out';
+        } elseif ($validated['status'] === 'sold_out' && $validated['stock'] > 0) {
+            $validated['status'] = 'in_stock';
+        }
         
         $newProduct = Product::create($validated);
         
@@ -66,12 +93,25 @@ class SellerProductController extends Controller
             ]
         ]);
 
-        \App\Models\SellerNotification::create([
+        \App\Models\Notification::create([
+            'user_id' => auth()->id(),
             'type' => 'product_added',
             'title' => 'New Product Added',
             'message' => "Fresh batch alert! '{$validated['name']}' has been added to your inventory.",
             'is_read' => false
         ]);
+
+        // Notify all Buyers
+        $buyers = \App\Models\User::where('role', 'buyer')->get();
+        foreach ($buyers as $buyerUser) {
+            \App\Models\Notification::create([
+                'user_id' => $buyerUser->id,
+                'type' => 'new_product',
+                'title' => 'New Masterpiece Available!',
+                'message' => "Freshly baked: '{$validated['name']}' is now available in our artisanal collection. Check it out!",
+                'data' => ['product_id' => $newProduct->id]
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Product created successfully!');
     }
@@ -82,16 +122,46 @@ class SellerProductController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'price' => 'nullable|numeric|min:0',
+            'solo_price' => 'required|numeric|min:0',
+            'solo_unit' => 'nullable|string|max:50',
+            'package_price' => 'required|numeric|min:0',
+            'package_unit' => 'nullable|string|max:50',
+            'package_qty' => 'nullable|integer|min:1',
             'stock' => 'required|integer|min:0',
             'image_file' => 'nullable|image|max:2048',
+            'solo_image_file' => 'nullable|image|max:2048',
+            'package_image_file' => 'nullable|image|max:2048',
             'image' => 'nullable|string',
+            'solo_image' => 'nullable|string',
+            'package_image' => 'nullable|string',
             'status' => 'required|string',
         ]);
 
         if ($request->hasFile('image_file')) {
             $path = $request->file('image_file')->store('products', 'public');
             $validated['image'] = '/storage/' . $path;
+        }
+
+        if ($request->hasFile('solo_image_file')) {
+            $path = $request->file('solo_image_file')->store('products', 'public');
+            $validated['solo_image'] = '/storage/' . $path;
+        }
+
+        if ($request->hasFile('package_image_file')) {
+            $path = $request->file('package_image_file')->store('products', 'public');
+            $validated['package_image'] = '/storage/' . $path;
+        }
+
+        if (!$request->price) {
+            $validated['price'] = $validated['solo_price'];
+        }
+
+        // Synchronize status with stock
+        if ($validated['stock'] == 0) {
+            $validated['status'] = 'sold_out';
+        } elseif ($validated['status'] === 'sold_out' && $validated['stock'] > 0) {
+            $validated['status'] = 'in_stock';
         }
 
         $product->update($validated);
@@ -172,12 +242,14 @@ class SellerProductController extends Controller
             'quantity' => 'required|integer|min:1'
         ]);
 
-        $product->increment('stock', $validated['quantity']);
+        $product->stock += $validated['quantity'];
         
-        // Update status if it was sold out
+        // Automatically mark as in_stock if it was previously sold_out
         if ($product->status === 'sold_out' && $product->stock > 0) {
-            $product->update(['status' => 'in_stock']);
+            $product->status = 'in_stock';
         }
+        
+        $product->save();
 
         \App\Models\ActivityLog::create([
             'username' => 'Seller',
@@ -190,7 +262,8 @@ class SellerProductController extends Controller
             ]
         ]);
 
-        \App\Models\SellerNotification::create([
+        \App\Models\Notification::create([
+            'user_id' => auth()->id(),
             'type' => 'stock_update',
             'title' => 'Inventory Replenished',
             'message' => "Restock successful! {$validated['quantity']} units added to '{$product->name}'. Total stock: {$product->stock}.",

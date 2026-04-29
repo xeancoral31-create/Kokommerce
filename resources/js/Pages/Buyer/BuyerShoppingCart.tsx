@@ -8,45 +8,133 @@ declare function route(name: string, params?: any): string;
 
 interface BuyerShoppingCartProps {
     cart_items: any[];
+    active_promotions: any[];
 }
 
-export default function BuyerShoppingCart({ cart_items }: BuyerShoppingCartProps) {
-    const { cartItems, setItems, removeFromCart, updateQty } = useCart();
+export default function BuyerShoppingCart({ cart_items, active_promotions }: BuyerShoppingCartProps) {
+    const { 
+        cartItems, 
+        setItems, 
+        removeFromCart, 
+        updateQty, 
+        updateVariant,
+        appliedVoucher, 
+        applyVoucher, 
+        removeVoucher
+    } = useCart();
+    const [voucherCode, setVoucherCode] = React.useState(appliedVoucher?.code || '');
+    const [voucherError, setVoucherError] = React.useState('');
+    const [isInitialized, setIsInitialized] = React.useState(false);
+    const [isRemoving, setIsRemoving] = React.useState<number | string | null>(null);
+    const [isApplying, setIsApplying] = React.useState(false);
 
     // Sync backend items to global context on initial load if context is empty
     // and backend has items (useful for deep-linking or refreshes)
     React.useEffect(() => {
-        if (cartItems.length === 0 && cart_items && cart_items.length > 0) {
+        if (!isInitialized && cart_items && cart_items.length > 0) {
             setItems(cart_items);
+            setIsInitialized(true);
+        } else if (!isInitialized) {
+            setIsInitialized(true);
         }
-    }, [cart_items]);
+    }, [cart_items, isInitialized]);
 
+    const handleApplyVoucher = () => {
+        setIsApplying(true);
+        setVoucherError('');
+        
+        // Simulate artisanal validation delay
+        setTimeout(() => {
+            const promo = active_promotions.find(p => p.code.toUpperCase() === voucherCode.toUpperCase());
+            
+            if (promo) {
+                // Determine if the promotion validity period has mathematically concluded
+                const isExpired = promo.end_date && new Date(promo.end_date) < new Date();
+                const isUsed = promo.is_used;
+
+                if (isExpired) {
+                    setVoucherError('This code has expired.');
+                    setVoucherCode(''); 
+                } else if (isUsed) {
+                    setVoucherError('This reward has already been claimed by your account.');
+                    setVoucherCode(''); 
+                } else {
+                    // Check if the product is in the cart if the promo is product-specific
+                    // Per artisanal protocol, vouchers are strictly for Package variants
+                    const isPackageInCart = cartItems.some(item => item.id === promo.product_id && item.priceType === 'Package');
+                    
+                    if (promo.product_id && !isPackageInCart) {
+                        setVoucherError(`This code is only for the Package variant of ${promo.product?.name || 'selections'}.`);
+                    } else {
+                        applyVoucher(promo);
+                        setVoucherError('');
+                    }
+                }
+            } else {
+                setVoucherError('Invalid voucher code.');
+                setVoucherCode(''); // Reject invalid codes as well
+            }
+            setIsApplying(false);
+        }, 800);
+    };
+
+    // Calculate totals and discounts
     const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.qty), 0);
     const delivery = 20;
-    const total = subtotal + delivery;
+
+    // Determine the base subtotal for items that are eligible for discounts (Package selections)
+    const packageItemsSubtotal = cartItems
+        .filter(item => item.priceType === 'Package')
+        .reduce((acc, item) => acc + (item.price * item.qty), 0);
+
+    // Calculate item-specific discounts
+    const discountAmount = cartItems.reduce((acc, item) => {
+        if (appliedVoucher) {
+            // Product-specific bounty, restricted to Package variants per artisanal policy
+            if (appliedVoucher.product_id && item.id === appliedVoucher.product_id && item.priceType === 'Package') {
+                if (appliedVoucher.type === 'percentage') {
+                    return acc + (item.price * item.qty * (appliedVoucher.discount_value / 100));
+                } else {
+                    return acc + (appliedVoucher.discount_value);
+                }
+            }
+        }
+        return acc;
+    }, 0) + (appliedVoucher && !appliedVoucher.product_id ? 
+        (appliedVoucher.type === 'percentage' ? (packageItemsSubtotal * (appliedVoucher.discount_value / 100)) : (packageItemsSubtotal > 0 ? appliedVoucher.discount_value : 0)) 
+        : 0);
+
+    const total = subtotal + delivery - discountAmount;
 
     return (
         <BuyerLayout>
-            <Head title="Your Selection - Kokommerce" />
+            <Head title="Your Bag - Kokommerce" />
 
-            <div className="max-w-7xl mx-auto px-4 pb-32">
+            <div className="max-w-7xl mx-auto px-6 pb-32 mt-16 md:mt-24">
                 <header className="mb-10 md:mb-16">
+                    <div className="mb-10">
+                        <Link 
+                            href="/buyer/shop" 
+                            className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#d4af37] transition-all duration-300 active:scale-95 group shadow-sm"
+                        >
+                            <svg className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                            Back to Shop
+                        </Link>
+                    </div>
                     <div className="flex flex-wrap items-center gap-2 md:gap-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-gray-400 mb-6">
-                        <span className="text-[#d4af37]">01. Selection</span>
+                        <span className="text-[#d4af37]">01. Bag</span>
                         <span className="w-4 md:w-8 h-[1px] bg-gray-200"></span>
                         <span>02. Delivery</span>
                         <span className="w-4 md:w-8 h-[1px] bg-gray-200"></span>
                         <span>03. Payment</span>
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tighter leading-none mb-4 italic">
-                        The Selection <span className="text-[#d4af37]">Basket.</span>
-                    </h1>
-                    <p className="text-gray-400 font-bold uppercase tracking-widest text-xs md:text-sm">Review your curated items before we fire the ovens.</p>
+                        Your <span className="text-[#d4af37]">Bag.</span>
+                    <p className="text-gray-400 font-bold uppercase tracking-widest text-xs md:text-sm">Review your bag before checking out.</p>
                 </header>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
                     {/* Items List */}
-                    <div className="lg:col-span-8 flex flex-col gap-4 md:gap-0 md:space-y-1">
+                    <div className="lg:col-span-8 flex flex-col gap-4">
                         <div className="hidden md:grid grid-cols-12 px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-100">
                             <span className="col-span-6">Product Details</span>
                             <span className="col-span-2 text-center">Quantity</span>
@@ -56,85 +144,175 @@ export default function BuyerShoppingCart({ cart_items }: BuyerShoppingCartProps
 
                         {cartItems.length > 0 ? (
                             cartItems.map(item => (
-                                <div key={item.id} className="flex flex-col md:grid md:grid-cols-12 items-center px-6 md:px-8 py-8 md:py-12 bg-white hover:bg-gray-50/50 transition-colors group rounded-3xl md:rounded-none border md:border-none border-gray-100 shadow-sm md:shadow-none gap-6 md:gap-0">
-                                    <div className="w-full md:col-span-6 flex gap-4 md:gap-8 items-center">
-                                        <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-2xl overflow-hidden shadow-lg group-hover:scale-[1.02] transition-transform duration-500">
+                                <div key={item.id} className="flex flex-col md:grid md:grid-cols-12 items-center px-6 py-6 md:py-8 bg-white hover:bg-gray-50/50 transition-colors group rounded-2xl border border-gray-100 shadow-sm gap-6 md:gap-0">
+                                    <div className="w-full md:col-span-6 flex gap-4 md:gap-6 items-center">
+                                        <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-xl overflow-hidden shadow-sm group-hover:scale-[1.02] transition-transform duration-500">
                                             <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
                                         </div>
                                         <div>
-                                            <span className="text-[9px] font-black uppercase tracking-widest text-[#d4af37] mb-1 md:mb-2 block">{item.tag}</span>
-                                            <h3 className="text-xl md:text-2xl font-black text-gray-900 tracking-tight leading-tight mb-1 md:mb-2">{item.name}</h3>
-                                            <p className="text-xs text-gray-400 font-medium italic line-clamp-2 md:line-clamp-none">{item.desc}</p>
+                                            <span className="text-[9px] font-bold uppercase tracking-widest text-[#d4af37] mb-1 block">{item.tag}</span>
+                                            <h3 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight leading-tight mb-1">{item.name}</h3>
+                                            <p className="text-xs text-gray-400 font-medium italic line-clamp-2 md:line-clamp-none mb-3">{item.desc}</p>
+                                            <div className="flex bg-gray-100/50 p-1 rounded-xl border border-gray-100 max-w-[180px]">
+                                                <button 
+                                                    onClick={() => updateVariant(item.id, 'Solo')}
+                                                    className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all ${item.priceType === 'Solo' ? 'bg-white text-[#d4af37] shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
+                                                >
+                                                    Solo
+                                                </button>
+                                                <button 
+                                                    onClick={() => updateVariant(item.id, 'Package')}
+                                                    className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all ${item.priceType === 'Package' ? 'bg-white text-[#d4af37] shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
+                                                >
+                                                    Package
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div className="w-full md:col-span-6 flex items-center justify-between md:grid md:grid-cols-6 md:gap-0">
                                         <div className="md:col-span-2 flex justify-start md:justify-center">
-                                            <div className="flex items-center gap-4 md:gap-6 bg-gray-50 rounded-2xl px-4 md:px-5 py-2 md:py-3 border border-gray-100">
-                                                <button
-                                                    onClick={() => updateQty(item.id, -1)}
-                                                    className="text-gray-300 hover:text-black transition-colors font-light text-xl"
-                                                >
-                                                    −
-                                                </button>
-                                                <span className="font-black text-gray-900 min-w-[20px] text-center">{item.qty}</span>
-                                                <button
-                                                    onClick={() => updateQty(item.id, 1)}
-                                                    className="text-gray-300 hover:text-black transition-colors font-light text-xl"
-                                                >
-                                                    +
-                                                </button>
+                                            <div className="flex flex-col items-center gap-2">
+                                                <div className="flex items-center gap-4 md:gap-6 bg-[#fcfaf7] rounded-2xl px-5 md:px-6 py-2.5 md:py-3.5 border border-[#d4af37]/20 shadow-sm transition-all hover:border-[#d4af37]/40 hover:bg-white group/qty">
+                                                    <button
+                                                        onClick={() => updateQty(item.id, -1)}
+                                                        className="transition-colors font-black text-xl text-gray-300 hover:text-[#d4af37] active:scale-90"
+                                                        title={item.isFixedQty ? "Remove one batch of 4" : "Decrease quantity"}
+                                                    >
+                                                        −
+                                                    </button>
+                                                    <div className="flex flex-col items-center min-w-[40px]">
+                                                        <div className="flex items-baseline gap-1">
+                                                            {item.isFixedQty && (
+                                                                <span className="text-[12px] font-black text-[#eca840] animate-pulse">4x</span>
+                                                            )}
+                                                            <span className="font-black text-gray-900 text-2xl leading-none tracking-tighter">
+                                                                {item.isFixedQty ? item.qty / 4 : item.qty}
+                                                            </span>
+                                                        </div>
+                                                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] mt-1 leading-none">{item.isFixedQty ? 'BATCHES' : 'UNITS'}</span>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => updateQty(item.id, 1)}
+                                                        className="transition-colors font-black text-xl text-gray-300 hover:text-[#d4af37] active:scale-90"
+                                                        title={item.isFixedQty ? "Add one batch of 4" : "Increase quantity"}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div className="md:col-span-2 text-center md:text-center shrink-0">
-                                            <p className="text-lg md:text-xl font-black text-gray-900 tracking-tighter">₱{(item.price * item.qty).toLocaleString()}</p>
-                                            <p className="text-[9px] md:text-[10px] text-gray-400 font-bold uppercase tracking-widest">₱{item.price.toLocaleString()} ea</p>
+                                        <div className="md:col-span-2 text-center shrink-0">
+                                            <div className="flex flex-col items-center md:items-center">
+                                                <p className={`text-lg md:text-xl font-black tracking-tighter ${appliedVoucher && item.id === appliedVoucher.product_id ? 'text-green-600' : 'text-[#2d2a26]'}`}>
+                                                    ₱{(item.price * item.qty - (appliedVoucher && item.id === appliedVoucher.product_id ? (appliedVoucher.type === 'percentage' ? (item.price * item.qty * (appliedVoucher.discount_value / 100)) : appliedVoucher.discount_value) : 0)).toLocaleString()}
+                                                </p>
+                                                {appliedVoucher && item.id === appliedVoucher.product_id && (
+                                                    <p className="text-[9px] font-bold text-green-500 uppercase tracking-widest line-through mb-1">₱{(item.price * item.qty).toLocaleString()}</p>
+                                                )}
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="text-[8px] font-black text-white bg-[#d4af37] px-1.5 py-0.5 rounded uppercase tracking-tighter">
+                                                        {item.isFixedQty ? '4x BATCH' : 'UNIT'}
+                                                    </span>
+                                                    <p className="text-[9px] md:text-[10px] text-gray-400 font-bold uppercase tracking-widest">₱{item.price.toLocaleString()}</p>
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        <div className="md:col-span-2 text-right">
-                                            <button onClick={() => removeFromCart(item.id)} className="w-10 h-10 rounded-full bg-gray-50 text-gray-300 hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center md:ml-auto">
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                        <div className={`md:col-span-2 flex justify-end transition-all duration-500 ${isRemoving === item.id ? 'scale-75 opacity-0 blur-sm' : ''}`}>
+                                            <button 
+                                                onClick={async (e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    setIsRemoving(item.id);
+                                                    setTimeout(() => {
+                                                        removeFromCart(item.id);
+                                                        setIsRemoving(null);
+                                                    }, 500);
+                                                }} 
+                                                className="w-14 h-14 rounded-2xl bg-white text-gray-300 hover:bg-black hover:text-white hover:rotate-6 transition-all duration-500 flex items-center justify-center group/trash border border-gray-100 shadow-[0_4px_10px_rgba(0,0,0,0.03)] active:scale-95"
+                                                title="Remove selection from bag"
+                                            >
+                                                <svg className="w-6 h-6 transition-transform group-hover/trash:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <div className="py-40 text-center bg-gray-50 rounded-[3rem] border border-gray-100 shadow-inner flex flex-col items-center justify-center px-8">
-                                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-sm mb-10 text-gray-200">
-                                    <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            <div className="py-24 text-center bg-gray-50 rounded-2xl border border-gray-100 shadow-inner flex flex-col items-center justify-center px-8">
+                                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 text-gray-200">
+                                    <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                     </svg>
                                 </div>
-                                <h3 className="text-2xl font-black text-gray-900 tracking-tight mb-4 uppercase">Selection Currently Vacant</h3>
-                                <p className="text-gray-400 font-medium italic max-w-xs mb-10 leading-relaxed">Your artisanal selection basket is awaiting fresh additions from our curated gallery.</p>
-                                <Link href={route('buyer.shop')} className="inline-flex items-center gap-4 bg-[#2d2a26] text-white px-10 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl hover:bg-black transition-all">
-                                    Browse the Gallery
-                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                                <h3 className="text-xl font-bold text-gray-900 tracking-tight mb-2 uppercase">Your Bag is Empty</h3>
+                                <p className="text-gray-400 font-medium italic max-w-xs mb-8 text-sm">Add some items from our shop to get started.</p>
+                                <Link href={route('buyer.shop')} className="inline-flex items-center gap-3 bg-[#2d2a26] text-white px-8 py-3.5 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] shadow-md hover:bg-black transition-all">
+                                    Go to Shop
+                                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                                 </Link>
                             </div>
-                        )}
-
+                          )}
                     </div>
 
                     {/* Order Summary - Premium Receipt Style */}
                     <div className="lg:col-span-4">
-                        <div className="sticky top-32">
-                            <div className="bg-[#1a1a1a] rounded-[3rem] p-12 text-white shadow-2xl relative overflow-hidden">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-[#d4af37] translate-x-16 -translate-y-16 rotate-45 opacity-20"></div>
+                        <div className="sticky top-24">
+                            <div className="bg-[#1a1a1a] rounded-2xl p-8 text-white shadow-xl relative overflow-hidden text-sm">
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-[#d4af37] translate-x-12 -translate-y-12 rotate-45 opacity-20"></div>
 
-                                <h2 className="text-2xl font-black mb-10 tracking-tight">Voucher Box</h2>
-                                <div className="flex gap-4 mb-16">
-                                    <input type="text" placeholder="BREADLOVE20" className="flex-grow bg-white/10 border border-white/10 rounded-xl px-6 py-4 text-xs font-bold tracking-widest uppercase outline-none focus:border-[#d4af37] transition-all" />
-                                    <button className="bg-white text-black px-6 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-[#d4af37] hover:text-white transition-all">Apply</button>
+                                <h2 className="text-xl font-bold mb-8 tracking-tight italic">Vouchers</h2>
+                                <div className="space-y-4 mb-16">
+                                    <div className="flex gap-4">
+                                        <input 
+                                            type="text" 
+                                            placeholder="BREADLOVE20" 
+                                            value={voucherCode}
+                                            onChange={(e) => setVoucherCode(e.target.value)}
+                                            disabled={!!appliedVoucher}
+                                            className={`flex-grow bg-white/10 border ${voucherError ? 'border-red-500/50' : 'border-white/10'} rounded-xl px-6 py-4 text-xs font-bold tracking-widest uppercase outline-none focus:border-[#d4af37] transition-all disabled:opacity-50`} 
+                                        />
+                                        {appliedVoucher ? (
+                                            <button 
+                                                onClick={removeVoucher}
+                                                className="bg-red-500 text-white px-6 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-red-600 transition-all"
+                                            >
+                                                Remove
+                                            </button>
+                                        ) : (
+                                            <button 
+                                                onClick={handleApplyVoucher}
+                                                disabled={!voucherCode || isApplying}
+                                                className="bg-white text-black px-6 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-[#d4af37] hover:text-white transition-all disabled:opacity-30"
+                                            >
+                                                {isApplying ? '...' : 'Apply'}
+                                            </button>
+                                        )}
+                                    </div>
+                                    {voucherError && <p className="text-[9px] font-black text-red-400 uppercase tracking-widest text-center animate-pulse">{voucherError}</p>}
+                                    {appliedVoucher && (
+                                        <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/20 p-4 rounded-xl animate-in zoom-in-95 duration-300">
+                                            <div className="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+                                            <span className="text-[9px] font-black text-green-400 uppercase tracking-[0.2em]">{appliedVoucher.title} Applied</span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="space-y-6 pb-12 border-b border-white/10">
                                     <div className="flex justify-between items-center">
-                                        <span className="text-white/40 text-[10px] md:text-xs font-bold uppercase tracking-widest">Basket Subtotal</span>
+                                        <span className="text-white/40 text-[10px] md:text-xs font-bold uppercase tracking-widest">Subtotal</span>
                                         <span className="text-lg md:text-xl font-black tracking-tight">₱{subtotal.toLocaleString()}.00</span>
                                     </div>
+                                    {discountAmount > 0 && (
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-green-500/60 text-[10px] md:text-xs font-black uppercase tracking-widest">Discount</span>
+                                            <span className="text-lg md:text-xl font-black tracking-tight text-green-400">- ₱{discountAmount.toLocaleString()}.00</span>
+                                        </div>
+                                    )}
                                     <div className="flex justify-between items-center">
                                         <span className="text-white/40 text-[10px] md:text-xs font-bold uppercase tracking-widest">Delivery Fee</span>
                                         <span className="text-lg md:text-xl font-black tracking-tight">₱{delivery.toLocaleString()}.00</span>
@@ -145,20 +323,20 @@ export default function BuyerShoppingCart({ cart_items }: BuyerShoppingCartProps
                                     </div>
                                 </div>
 
-                                <div className="pt-12 mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-0">
+                                <div className="pt-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-2 md:gap-0">
                                     <div>
-                                        <p className="text-white/30 text-[9px] font-black uppercase tracking-[0.3em] mb-2 leading-none">Final Commitment</p>
-                                        <p className="text-gray-400 text-[10px] font-medium leading-none">Inclusive of local taxes</p>
+                                        <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1 leading-none">Total</p>
+                                        <p className="text-gray-500 text-[10px] font-medium leading-none">Inclusive of local taxes</p>
                                     </div>
-                                    <p className="text-4xl md:text-5xl font-black tracking-tighter text-[#d4af37]">₱{total.toLocaleString()}</p>
+                                    <p className="text-2xl md:text-3xl font-bold tracking-tight text-[#d4af37]">₱{total.toLocaleString()}</p>
                                 </div>
 
                                 <Link
-                                    href={route('buyer.delivery')}
-                                    className="w-full py-7 bg-[#d4af37] text-[#1a1a1a] rounded-[2rem] text-xs font-black uppercase tracking-[0.3em] flex items-center justify-center gap-4 hover:bg-white hover:-translate-y-1 transition-all shadow-xl shadow-[#d4af37]/20 group"
+                                    href="/buyer/delivery"
+                                    className="w-full py-4 bg-[#d4af37] text-[#1a1a1a] rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-white transition-all shadow-md group"
                                 >
                                     Proceed to Delivery
-                                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                                 </Link>
 
                                 <div className="mt-10 flex flex-col items-center gap-4">
@@ -171,11 +349,11 @@ export default function BuyerShoppingCart({ cart_items }: BuyerShoppingCartProps
                                 </div>
                             </div>
 
-                            <div className="mt-8 p-10 bg-[#fdfcf0] rounded-[2.5rem] border border-[#f0ead2]">
-                                <div className="flex gap-4 items-start">
-                                    <div className="w-2 h-2 rounded-full bg-[#d4af37] mt-1 shrink-0"></div>
-                                    <p className="text-[10px] font-bold text-gray-500 uppercase leading-loose tracking-widest">
-                                        Each loaf is hand-scored and fired fresh upon your confirmation. Quality assurance is our formal commitment.
+                            <div className="mt-6 p-6 bg-[#fdfcf0] rounded-2xl border border-[#f0ead2]">
+                                <div className="flex gap-3 items-start">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] mt-1 shrink-0"></div>
+                                    <p className="text-[10px] font-medium text-gray-600 leading-relaxed">
+                                        Each item is baked fresh for your order.
                                     </p>
                                 </div>
                             </div>

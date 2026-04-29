@@ -45,10 +45,13 @@ class AuthSyncController extends Controller
 
         Auth::login($user);
 
+        // Direct role-based redirect — no OTP step for social login
+        $redirect = $role === 'seller' ? route('seller.dashboard') : route('buyer.home');
+
         return response()->json([
             'success' => true,
             'role' => $role,
-            'redirect' => $role === 'seller' ? route('seller.dashboard') : route('buyer.home')
+            'redirect' => $redirect
         ]);
     }
 }

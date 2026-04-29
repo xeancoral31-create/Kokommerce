@@ -1,6 +1,7 @@
 import React from 'react';
 import SellerLayout from '../../Components/SellerLayout';
 import { Head, useForm } from '@inertiajs/inertia-react';
+import CountdownTimer from '../../Components/CountdownTimer';
 
 declare function route(name: string, params?: any): string;
 
@@ -23,7 +24,22 @@ export default function SellerOffers({ promotions, archived_promotions, products
   const [editingPromo, setEditingPromo] = React.useState<any>(null);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [currentStep, setCurrentStep] = React.useState(1);
+  const [expiredIds, setExpiredIds] = React.useState<Record<number, boolean>>({});
   const itemsPerPage = 7;
+
+  React.useEffect(() => {
+    const initial: Record<number, boolean> = {};
+    [...promotions, ...archived_promotions].forEach(p => {
+      if (p.end_date && new Date(p.end_date) < new Date()) {
+        initial[p.id] = true;
+      }
+    });
+    setExpiredIds(initial);
+  }, [promotions, archived_promotions]);
+
+  const handleExpire = (id: number) => {
+    setExpiredIds(prev => ({ ...prev, [id]: true }));
+  };
 
   const { data, setData, post, put, delete: destroy, reset, processing, errors } = useForm({
     title: '',
@@ -33,7 +49,8 @@ export default function SellerOffers({ promotions, archived_promotions, products
     discount_value: '',
     product_id: '',
     status: 'active',
-    image: ''
+    image: '',
+    end_date: ''
   });
 
   const openAddModal = () => {
@@ -45,6 +62,15 @@ export default function SellerOffers({ promotions, archived_promotions, products
 
   const openEditModal = (promo: any) => {
     setEditingPromo(promo);
+    
+    // Format date for datetime-local input (YYYY-MM-DDTHH:mm)
+    let formattedDate = '';
+    if (promo.end_date) {
+      const d = new Date(promo.end_date);
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      formattedDate = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
     setData({
       title: promo.title,
       description: promo.description || '',
@@ -53,7 +79,8 @@ export default function SellerOffers({ promotions, archived_promotions, products
       discount_value: promo.discount_value,
       product_id: promo.product_id || '',
       status: promo.status,
-      image: promo.image || ''
+      image: promo.image || '',
+      end_date: formattedDate
     });
     setCurrentStep(1);
     setIsModalOpen(true);
@@ -63,11 +90,18 @@ export default function SellerOffers({ promotions, archived_promotions, products
     e.preventDefault();
     if (editingPromo) {
       put(route('seller.promotions.update', editingPromo.id), {
-        onSuccess: () => setIsModalOpen(false)
+        onSuccess: () => {
+          setIsModalOpen(false);
+          setEditingPromo(null);
+        },
+        preserveScroll: true
       });
     } else {
       post(route('seller.promotions.store'), {
-        onSuccess: () => setIsModalOpen(false)
+        onSuccess: () => {
+          setIsModalOpen(false);
+        },
+        preserveScroll: true
       });
     }
   };
@@ -156,6 +190,8 @@ export default function SellerOffers({ promotions, archived_promotions, products
                     key={promo.id}
                     promo={promo}
                     isArchived={activeTab === 'Archive'}
+                    isExpired={expiredIds[promo.id]}
+                    onExpire={() => handleExpire(promo.id)}
                     onEdit={() => openEditModal(promo)}
                     onDelete={() => activeTab === 'Active Campaigns' ? handleDelete(promo) : handlePermanentDelete(promo.id)}
                     onRestore={() => handleRestore(promo.id)}
@@ -209,8 +245,8 @@ export default function SellerOffers({ promotions, archived_promotions, products
       {/* Promotion Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setIsModalOpen(false)}></div>
-          <div className="relative w-full max-w-4xl bg-white rounded-[3.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.25)] overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-700 flex flex-col md:flex-row">
+          <div className="absolute inset-0 bg-black/65 backdrop-blur-xl transition-all duration-1000"></div>
+          <div className="relative w-full max-w-4xl bg-white rounded-[3.5rem] shadow-[0_80px_150px_-30px_rgba(0,0,0,0.3)] overflow-hidden animate-in fade-in zoom-in-95 duration-500 flex flex-col md:flex-row border border-white/20">
             {/* Left Column: Formal Form */}
             <div className="flex-1 p-12 lg:p-16 border-r border-gray-50 overflow-y-auto max-h-[90vh] formal-scrollbar">
               <div className="mb-16">
@@ -356,15 +392,49 @@ export default function SellerOffers({ promotions, archived_promotions, products
 
                 {currentStep === 4 && (
                   <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div className="space-y-2 group">
-                      <label className="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em] ml-1 group-focus-within:text-[#eca840] transition-colors">Narrative & Legacy Details</label>
+                    <div className="space-y-4 group">
+                      <label className="text-[10px] font-[1000] text-gray-400 uppercase tracking-[0.4em] ml-1 group-focus-within:text-[#eca840] transition-colors">Narrative & Campaign Story</label>
                       <textarea
                         value={data.description}
                         onChange={e => setData('description', e.target.value)}
-                        rows={5}
-                        placeholder="Describe the story and value of this promotion..."
-                        className={`w-full bg-gray-50 border border-gray-100 rounded-2xl px-6 py-4.5 text-sm font-medium text-gray-600 focus:ring-4 focus:ring-[#eca840]/10 focus:bg-white transition-all resize-none ${errors.description ? 'border-red-300' : ''}`}
+                        rows={4}
+                        placeholder="Inscribe the story and value proposition of this campaign..."
+                        className={`w-full bg-gray-50/50 border border-stone-100 rounded-[2rem] px-8 py-6 text-sm font-medium text-gray-700 focus:ring-8 focus:ring-[#eca840]/5 focus:bg-white transition-all resize-none placeholder:text-gray-200 ${errors.description ? 'border-red-300' : ''}`}
                       ></textarea>
+                    </div>
+
+                    <div className="space-y-4 group">
+                      <div className="flex justify-between items-center px-1">
+                        <label className="text-[10px] font-[1000] text-gray-400 uppercase tracking-[0.4em] group-focus-within:text-[#eca840] transition-colors">Manifest Validity Period</label>
+                        <span className="text-[9px] font-black text-[#eca840] uppercase tracking-widest italic animate-pulse">Time Sensitive</span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type="datetime-local"
+                          value={data.end_date}
+                          onChange={e => setData('end_date', e.target.value)}
+                          className={`w-full bg-[#1c1917] border border-white/5 rounded-[2rem] px-8 py-6 text-sm font-[1000] text-[#eca840] tracking-widest focus:ring-8 focus:ring-[#eca840]/10 transition-all ${errors.end_date ? 'border-red-500' : ''} [color-scheme:dark]`}
+                        />
+                        <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none opacity-20">
+                          <svg className="w-5 h-5 text-[#eca840]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4 group">
+                      <label className="text-[10px] font-[1000] text-gray-400 uppercase tracking-[0.4em] ml-1">Campaign visibility status</label>
+                      <div className="flex gap-4">
+                        {['active', 'hidden'].map(status => (
+                          <button
+                            key={status}
+                            type="button"
+                            onClick={() => setData('status', status)}
+                            className={`flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border ${data.status === status ? 'bg-gray-900 text-white border-gray-900' : 'bg-gray-50 text-gray-400 border-gray-100 hover:border-gray-200'}`}
+                          >
+                            {status}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -434,8 +504,16 @@ export default function SellerOffers({ promotions, archived_promotions, products
                     <span className="text-sm font-bold text-gray-400">OFF</span>
                   </div>
                 </div>
-                <div className="text-center">
+                <div className="text-center w-full">
                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 italic">"{data.description?.substring(0, 50) || 'Your campaign legacy begins here...'}{data.description?.length > 50 ? '...' : ''}"</p>
+                  <div className="mt-8 pt-6 border-t border-white/50">
+                    <CountdownTimer 
+                      endDate={data.end_date} 
+                      className="flex flex-col items-center"
+                      labelClassName="text-[9px] font-black text-gray-300 uppercase tracking-widest mb-2"
+                      timeClassName="text-2xl font-black text-gray-900 tabular-nums"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -477,23 +555,37 @@ const PromoStatCard = ({ label, value, change, icon }: any) => (
   </div>
 );
 
-const CampaignCard = ({ promo, onEdit, onDelete, isArchived, onRestore }: any) => (
+const CampaignCard = ({ promo, onEdit, onDelete, isArchived, onRestore, isExpired, onExpire }: any) => {
+  
+  return (
   <div className="group bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-[0_4px_25px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.08)] hover:-translate-y-1 duration-500 flex flex-col h-full bg-gradient-to-b from-white to-gray-50/20">
     {/* Visual Header */}
     <div className="relative aspect-[16/11] overflow-hidden bg-gray-100">
       <img 
         src={promo.image || promo.product?.image || "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=600"} 
         alt={promo.title} 
-        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+        className={`w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 ${isExpired ? 'grayscale contrast-125' : ''}`} 
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-transparent to-transparent opacity-60"></div>
+      <div className={`absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent opacity-60 ${isExpired ? 'bg-red-950/20' : ''}`}></div>
+      {isExpired && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="border-4 border-red-500/30 rounded-full p-8 rotate-12 scale-150 opacity-20">
+             <span className="text-4xl font-black text-red-600 uppercase tracking-[0.3em]">EXPIRED</span>
+          </div>
+        </div>
+      )}
       
       {/* Status Badge */}
-      <div className="absolute top-6 left-6">
+      <div className="absolute top-6 left-6 flex flex-col gap-2">
         <span className={`px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-[0.2em] shadow-xl backdrop-blur-md flex items-center gap-2 ${isArchived ? 'bg-gray-900/80 text-gray-300' : 'bg-white/90 text-gray-900'}`}>
-          <div className={`w-1.5 h-1.5 rounded-full ${isArchived ? 'bg-gray-500' : 'bg-[#eca840] animate-pulse'}`}></div>
-          {isArchived ? 'Archived Campaign' : 'Live Promotion'}
+          <div className={`w-1.5 h-1.5 rounded-full ${isArchived ? 'bg-gray-500' : isExpired ? 'bg-red-500' : 'bg-[#eca840] animate-pulse'}`}></div>
+          {isArchived ? 'Archived Campaign' : isExpired ? 'Campaign Expired' : 'Live Promotion'}
         </span>
+        {isExpired && !isArchived && (
+          <span className="px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-[0.2em] shadow-xl backdrop-blur-md bg-red-600 text-white flex items-center gap-2 animate-bounce">
+            Expired
+          </span>
+        )}
       </div>
 
       {/* Code Badge */}
@@ -514,19 +606,28 @@ const CampaignCard = ({ promo, onEdit, onDelete, isArchived, onRestore }: any) =
             {promo.product?.name || 'GLOBAL CATALOG OFFER'}
           </p>
         </div>
-        <div className="text-right">
+        <div className={`${isExpired ? 'opacity-30' : ''} text-right transition-all`}>
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-black text-gray-900 tabular-nums">{promo.discount_value}</span>
-            <span className="text-sm font-black text-[#eca840]">{promo.type === 'percentage' ? '%' : '₱'}</span>
+            <span className={`text-2xl font-black ${isExpired ? 'text-gray-400' : 'text-gray-900'} tabular-nums`}>{promo.discount_value}</span>
+            <span className={`text-sm font-black ${isExpired ? 'text-gray-300' : 'text-[#eca840]'}`}>{promo.type === 'percentage' ? '%' : '₱'}</span>
           </div>
           <p className="text-[8px] font-black text-gray-300 uppercase tracking-widest leading-none mt-1">Benefit</p>
         </div>
       </div>
 
-      <div className="mb-8 p-5 bg-gray-50 rounded-2xl border border-gray-100 flex-1">
-        <p className="text-[10px] text-gray-500 leading-relaxed font-medium italic line-clamp-2">
+      <div className="mb-8 p-5 bg-gray-50 rounded-2xl border border-gray-100 flex-1 flex flex-col">
+        <p className="text-[10px] text-gray-500 leading-relaxed font-medium italic line-clamp-2 mb-4">
           "{promo.description || 'This campaign represents a unique artisanal invitation for our valued global patrons.'}"
         </p>
+        <div className="mt-auto pt-4 border-t border-gray-200/50">
+          <CountdownTimer 
+            endDate={promo.end_date} 
+            onExpire={onExpire}
+            className="flex flex-col"
+            labelClassName="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1"
+            timeClassName={`text-[10px] font-bold tabular-nums ${isExpired ? 'text-red-500' : 'text-gray-900'}`}
+          />
+        </div>
       </div>
 
       {/* Admin Controls */}
@@ -569,4 +670,5 @@ const CampaignCard = ({ promo, onEdit, onDelete, isArchived, onRestore }: any) =
       </div>
     </div>
   </div>
-);
+    );
+};

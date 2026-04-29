@@ -112,7 +112,7 @@ export default function SellerSettings({ store_profile, operating_hours, payment
   };
 
   const handleUpdateSchedule = () => {
-    alert("Artisanal Schedule Management: Your operating hours are currently being synchronized with our logistics engine.");
+    alert("Artisanal Schedule Management: Your operating hours are currently being synchronized with our delivery fee engine.");
   };
 
   const submit = (e: React.FormEvent) => {

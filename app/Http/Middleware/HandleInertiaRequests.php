@@ -38,7 +38,11 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'seller_notifications' => [
                 'low_stock' => \App\Models\Product::where('stock', '<', 5)->get(),
-                'recent' => \App\Models\SellerNotification::where('is_read', false)->latest()->take(10)->get()
+                'recent' => \App\Models\Notification::where('user_id', auth()->id())
+                            ->where('is_read', false)
+                            ->latest()
+                            ->take(10)
+                            ->get()
             ],
             'store_profile' => session('store_profile', [
                 'name' => 'Kokommerce Artisanal',

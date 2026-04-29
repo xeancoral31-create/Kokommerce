@@ -59,17 +59,40 @@ class SellerPromotionController extends Controller
             'type' => 'required|in:percentage,fixed',
             'discount_value' => 'required|numeric',
             'product_id' => 'nullable|exists:products,id',
-            'image' => 'nullable|string'
+            'image' => 'nullable|string',
+            'end_date' => 'nullable|date'
         ]);
 
-        Promotion::create($validated);
+        $promotion = Promotion::create($validated);
         
-        \App\Models\SellerNotification::create([
+        // Dispatch Professional Bounty Notification to all Users
+        $users = \App\Models\User::whereNotNull('email')->get();
+        foreach($users as $user) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($user->email)->queue(new \App\Mail\PromotionNotificationMail($promotion));
+            } catch (\Exception $e) {
+                \Log::error("Failed to send promo email to {$user->email}: " . $e->getMessage());
+            }
+        }
+
+        \App\Models\Notification::create([
             'type' => 'offer_created',
             'title' => 'New Special Offer Created',
-            'message' => "Campaign '{$validated['title']}' is now live. Customers are ready for these deals!",
+            'message' => "Campaign '{$validated['title']}' is now live. Notification dispatched to all users.",
+            'user_id' => auth()->id(),
             'is_read' => false
         ]);
+
+        // Notify all Buyers via Notification System
+        foreach ($users as $u) {
+            \App\Models\Notification::create([
+                'user_id' => $u->id,
+                'type' => 'promotion',
+                'title' => 'Exclusive Invitation: ' . $validated['title'],
+                'message' => "An artisanal offer awaits you! Use code '{$validated['code']}' to redeem your special reward. " . $validated['description'],
+                'data' => ['promotion_id' => $promotion->id, 'code' => $validated['code']]
+            ]);
+        }
 
         return redirect()->back();
     }
@@ -79,10 +102,13 @@ class SellerPromotionController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'code' => 'required|string|unique:promotions,code,' . $promotion->id,
+            'type' => 'required|in:percentage,fixed',
             'status' => 'required|string',
             'discount_value' => 'required|numeric',
             'product_id' => 'nullable|exists:products,id',
-            'image' => 'nullable|string'
+            'image' => 'nullable|string',
+            'end_date' => 'nullable|date'
         ]);
 
         $promotion->update($validated);

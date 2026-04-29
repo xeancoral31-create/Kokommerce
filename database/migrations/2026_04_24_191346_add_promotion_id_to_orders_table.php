@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWhitelistTable extends Migration
+class AddPromotionIdToOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateWhitelistTable extends Migration
      */
     public function up()
     {
-        Schema::create('whitelist', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('orders', function (Blueprint $table) {
+            $table->foreignId('promotion_id')->nullable()->constrained('promotions')->onDelete('set null');
         });
     }
 
@@ -26,6 +25,8 @@ class CreateWhitelistTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('whitelist');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('promotion_id');
+        });
     }
 }

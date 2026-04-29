@@ -6,6 +6,7 @@ import { createInertiaApp } from '@inertiajs/inertia-react';
 import { InertiaProgress } from '@inertiajs/progress';
 import { ClerkProvider } from '@clerk/clerk-react';
 import { CartProvider } from './Context/CartContext';
+import { WishlistProvider } from './Context/WishlistContext';
 
 /**
  * CONSOLE NOISE SUPPRESSOR
@@ -38,6 +39,8 @@ if (typeof window !== 'undefined') {
     };
 }
 
+import { ThemeProvider } from './Context/ThemeContext';
+
 InertiaProgress.init({ color: '#eca840' });
 
 const PUBLISHABLE_KEY = process.env.MIX_CLERK_PUBLISHABLE_KEY || 'pk_test_d2lzZS1kYXNzaWUtODYuY2xlcmsuYWNjb3VudHMuZGV2JA';
@@ -50,9 +53,13 @@ createInertiaApp({
   setup({ el, App, props }) {
     render(
       <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-        <CartProvider>
-          <App {...props} />
-        </CartProvider>
+        <ThemeProvider>
+          <WishlistProvider>
+              <CartProvider>
+                  <App {...props} />
+              </CartProvider>
+          </WishlistProvider>
+        </ThemeProvider>
       </ClerkProvider>,
       el
     );

@@ -42,7 +42,7 @@ class SellerOrderController extends Controller
         }
         $avgPrepTimeValue = $countForPrep > 0 ? round($totalMinutes / $countForPrep, 1) : 0;
 
-        $orders = Order::with('buyer')->latest()->get()->map(function($order) {
+        $orders = Order::with(['buyer', 'orderItems.product'])->latest()->get()->map(function($order) {
             if ($order->buyer) {
                 $user = \App\Models\User::where('email', $order->buyer->email)->first();
                 $order->buyer->profile_image = $user && $user->image 

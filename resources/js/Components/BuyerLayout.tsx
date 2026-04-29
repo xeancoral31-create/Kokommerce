@@ -15,10 +15,10 @@ export default function BuyerLayout({ children }: { children: React.ReactNode })
     const { url } = usePage();
 
     return (
-        <div className="buyer-layout">
+        <div className="buyer-layout min-h-screen bg-[#fcfaf7] dark:bg-gray-950 transition-colors duration-500">
             <Navbar />
             
-            <main className="buyer-container pt-32">
+            <main className="buyer-container pt-32 px-4 md:px-8">
                 {children}
             </main>
 

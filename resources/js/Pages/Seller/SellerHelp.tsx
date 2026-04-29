@@ -73,7 +73,7 @@ export default function SellerHelp({ tickets, common_questions }: HelpProps) {
          />
          <div className="bg-white rounded-[3rem] p-12 border border-gray-100 shadow-2xl flex flex-col h-full transform transition hover:-translate-y-2 duration-500">
             <div className="w-16 h-16 rounded-[1.5rem] bg-orange-50 flex items-center justify-center text-3xl mb-10 shadow-sm">🚚</div>
-            <h3 className="text-2xl font-black text-gray-900 mb-6">Logistics Center</h3>
+            <h3 className="text-2xl font-black text-gray-900 mb-6">Delivery Fee Center</h3>
             <div className="space-y-4 mb-auto">
                <div className="bg-gray-50/50 p-4 rounded-xl flex justify-between items-center group/btn cursor-pointer hover:bg-orange-50 transition-all border border-gray-100/50">
                   <span className="text-xs font-bold text-gray-700 group-hover/btn:text-[#f5a623]">Print Shipping Labels</span>

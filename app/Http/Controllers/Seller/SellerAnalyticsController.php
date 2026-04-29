@@ -136,6 +136,9 @@ class SellerAnalyticsController extends Controller
                     $catName = $item['category'] ?? null;
                     $prodId = $item['id'] ?? null;
                     if (!$catName && $prodId) {
+                        if (is_string($prodId)) {
+                            $prodId = explode('_', $prodId)[0];
+                        }
                         $p = Product::find($prodId);
                         if ($p && $p->category) $catName = $p->category->name;
                     }

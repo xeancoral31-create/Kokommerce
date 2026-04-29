@@ -6,19 +6,22 @@ use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Auth\AuthSyncController;
 
-// Artisanal Auth Bridge
+// Artisanal Auth Bridge — Social Login (Google, Facebook, TikTok)
+// Whitelisted emails → seller/dashboard | All others → buyer/home
 Route::post('/auth/sync', [AuthSyncController::class, 'sync'])->name('auth.sync');
 
 
 // Professional and Formal UI Flow Routes
 Route::get('/', function () {
     $targetCategories = ['Cakes', 'Bread', 'Cookies', 'kakanin'];
-    $favorites = collect($targetCategories)->map(function($catName) {
+    $favorites = collect($targetCategories)->map(function ($catName) {
         return \App\Models\Product::with('category')
             ->whereHas('category', fn($q) => $q->where('name', 'like', $catName))
-            ->withCount(['orderItems as total_sold' => function($query) {
-                $query->select(\DB::raw('SUM(quantity)'));
-            }])
+            ->withCount([
+                'orderItems as total_sold' => function ($query) {
+                    $query->select(\DB::raw('SUM(quantity)'));
+                }
+            ])
             ->orderByDesc('total_sold')
             ->orderByDesc('rating')
             ->first();
@@ -37,6 +40,8 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return Inertia::render('About');
 });
+
+
 
 Route::get('/shop', function () {
     return Inertia::render('Shop', [
@@ -57,13 +62,26 @@ Route::prefix('buyer')->group(function () {
     Route::get('/shop', [BuyerController::class, 'shop'])->name('buyer.shop');
     Route::get('/offer', [BuyerController::class, 'offer'])->name('buyer.offer');
     Route::get('/history', [BuyerController::class, 'history'])->name('buyer.history');
-    Route::get('/account', [BuyerController::class, 'account'])->name('buyer.account');
     Route::get('/cart', [BuyerController::class, 'cart'])->name('buyer.cart');
     Route::get('/delivery', [BuyerController::class, 'delivery'])->name('buyer.delivery');
     Route::get('/payment', [BuyerController::class, 'payment'])->name('buyer.payment');
-    
+
     Route::post('/payment/intent', [OrderController::class, 'createPaymentIntent'])->name('payment.intent');
+    Route::post('/payment/paymongo/source', [OrderController::class, 'createPaymongoSource'])->name('payment.paymongo.source');
+    Route::post('/payment/paymongo/check', [OrderController::class, 'checkPaymongoSource'])->name('payment.paymongo.check');
+    Route::get('/payment/mock-checkout', [OrderController::class, 'mockCheckout'])->name('payment.mock.checkout');
+    Route::post('/payment/mock-checkout/confirm', [OrderController::class, 'confirmMockCheckout'])->name('payment.mock.confirm');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+
+    // Notifications
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    Route::get('/wishlist', [BuyerController::class, 'wishlist'])->name('buyer.wishlist');
+});
+
+Route::get('/wishlist', function() {
+    return redirect()->route('buyer.wishlist');
 });
 
 // Seller Portal Routes (Fully Functional Module)
@@ -83,7 +101,12 @@ Route::prefix('seller')->group(function () {
     Route::get('/settings', [\App\Http\Controllers\Seller\SellerSettingsController::class, 'index'])->name('seller.settings');
     Route::post('/settings/update', [\App\Http\Controllers\Seller\SellerSettingsController::class, 'update'])->name('seller.settings.update');
     Route::get('/help', [\App\Http\Controllers\Seller\SellerHelpController::class, 'index'])->name('seller.help');
-    
+
+    // Unified Notifications
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('seller.notifications.index');
+    Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('seller.notifications.read');
+    Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('seller.notifications.read-all');
+
     // API-like endpoints for CRUD (Actions mentioned in request)
     Route::post('/products', [\App\Http\Controllers\Seller\SellerProductController::class, 'store'])->name('seller.products.store');
     Route::put('/products/{product}', [\App\Http\Controllers\Seller\SellerProductController::class, 'update'])->name('seller.products.update');
@@ -91,13 +114,13 @@ Route::prefix('seller')->group(function () {
     Route::post('/products/{id}/restore', [\App\Http\Controllers\Seller\SellerProductController::class, 'restore'])->name('seller.products.restore');
     Route::post('/products/{product}/restock', [\App\Http\Controllers\Seller\SellerProductController::class, 'restock'])->name('seller.products.restock');
     Route::delete('/products/{id}/force', [\App\Http\Controllers\Seller\SellerProductController::class, 'forceDelete'])->name('seller.products.forceDelete');
-    
+
     Route::post('/categories', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'store'])->name('seller.categories.store');
     Route::put('/categories/{category}', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'update'])->name('seller.categories.update');
     Route::delete('/categories/{category}', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'destroy'])->name('seller.categories.destroy');
     Route::post('/categories/{id}/restore', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'restore'])->name('seller.categories.restore');
     Route::delete('/categories/{id}/force', [\App\Http\Controllers\Seller\SellerCategoryController::class, 'forceDelete'])->name('seller.categories.forceDelete');
-    
+
     Route::post('/offers', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'store'])->name('seller.promotions.store');
     Route::put('/offers/{promotion}', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'update'])->name('seller.promotions.update');
     Route::delete('/offers/{promotion}', [\App\Http\Controllers\Seller\SellerPromotionController::class, 'destroy'])->name('seller.promotions.destroy');

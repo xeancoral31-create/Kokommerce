@@ -14,11 +14,13 @@ class Order extends Model
         'order_reference',
         'subtotal',
         'delivery_fee',
+        'discount_amount',
         'total_amount',
         'status',
         'payment_method',
         'delivery_address',
         'items_data',
+        'promotion_id',
     ];
 
     protected $casts = [

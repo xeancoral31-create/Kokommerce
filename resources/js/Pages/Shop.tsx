@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 
 const Search = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -33,29 +34,36 @@ interface Product {
   name: string;
   slug: string;
   description: string;
-  price: number;
+  price: number | string;
+  solo_price: number | string;
+  package_price: number | string;
+  package_qty?: number | string;
+  package_unit?: string;
   category: any;
   status: 'in_stock' | 'pre_order' | 'sold_out';
-  rating: number;
+  rating: number | string;
   reviews_count: number;
   image: string;
+  solo_image?: string;
+  package_image?: string;
+  img?: string;
+  thumbnail?: string;
   is_featured: boolean;
   is_new: boolean;
   is_top_rated: boolean;
+  stock: number;
 }
 
+
 const MOCK_PRODUCTS: Product[] = [
-  { id: 1, name: "Custard Cassava Cake", slug: "custard-cassava-cake", description: "Slow-baked with macapuno.", price: 420.0, category: "Kakanin", status: "in_stock", rating: 4.8, reviews_count: 120, image: "/images/products/cassava-cake-v2.png", is_top_rated: true, is_featured: false, is_new: false },
-  { id: 2, name: "Sea Salt Muscovado", slug: "sea-salt-muscovado", description: "Chewy cookies made with raw muscovado sugar and premium...", price: 320.0, category: "Cookies", status: "in_stock", rating: 4.8, reviews_count: 85, image: "/images/products/cookies.png", is_top_rated: false, is_featured: false, is_new: false },
-  { id: 3, name: "Artisan Pandesal", slug: "artisan-pandesal", description: "Soft, pillowy dozen.", price: 120.0, category: "Bread", status: "in_stock", rating: 5.0, reviews_count: 210, image: "/images/products/pandesal-v2.png", is_top_rated: true, is_featured: false, is_new: true },
-  { id: 4, name: "Triple Dark Truffle", slug: "triple-dark-truffle", description: "Award-winning chocolate cake.", price: 1400.0, category: "Cakes", status: "in_stock", rating: 4.9, reviews_count: 56, image: "/images/products/dark-truffle.png", is_top_rated: true, is_featured: false, is_new: false },
-  { id: 5, name: "Ensaymada Grande", slug: "ensaymada-grande", description: "Buttery brioche topped with aged queso de bola and premium butt...", price: 85.0, category: "Bread", status: "in_stock", rating: 4.9, reviews_count: 320, image: "/images/products/ensaymada.png", is_top_rated: false, is_featured: false, is_new: false },
-  { id: 6, name: "Premium Buko Pie", slug: "premium-buko-pie", description: "Fresh coconut meat in a creamy custard and buttery flaky crust.", price: 680.0, category: "Kakanin", status: "sold_out", rating: 5.0, reviews_count: 45, image: "/images/products/buko-pie.png", is_top_rated: false, is_featured: false, is_new: false }
+  { id: 1, name: "Custard Cassava Cake", slug: "custard-cassava-cake", description: "Slow-baked with macapuno.", price: 420.0, solo_price: 420.0, package_price: 2400.0, package_qty: 6, package_unit: 'Pcs', category: "Kakanin", status: "in_stock", rating: 4.8, reviews_count: 120, image: "/images/products/cassava-cake-v2.png", is_top_rated: true, is_featured: false, is_new: false, stock: 15 },
+  { id: 2, name: "Sea Salt Muscovado", slug: "sea-salt-muscovado", description: "Chewy cookies made with raw muscovado sugar and premium...", price: 320.0, solo_price: 320.0, package_price: 1800.0, package_qty: 12, package_unit: 'Pcs', category: "Cookies", status: "in_stock", rating: 4.8, reviews_count: 85, image: "/images/products/cookies.png", is_top_rated: false, is_featured: false, is_new: false, stock: 20 },
+  { id: 3, name: "Artisan Pandesal", slug: "artisan-pandesal", description: "Soft, pillowy dozen.", price: 120.0, solo_price: 120.0, package_price: 650.0, package_qty: 24, package_unit: 'Pcs', category: "Bread", status: "in_stock", rating: 5.0, reviews_count: 210, image: "/images/products/pandesal-v2.png", is_top_rated: true, is_featured: false, is_new: true, stock: 50 },
 ];
 
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
-import { useCart } from "../Context/CartContext";
+import { useCart, CartItem } from "../Context/CartContext";
 
 
 interface ShopProps {
@@ -65,13 +73,18 @@ interface ShopProps {
 
 export default function Shop({ products: initialProducts, categories: dbCategories = [] }: ShopProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts || MOCK_PRODUCTS);
-  const { addToCart } = useCart();
-  
+  const { setItems } = useCart();
+
+  // States for selection modal
+  const [selectionProduct, setSelectionProduct] = useState<Product | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const [priceType, setPriceType] = useState<'Solo' | 'Package'>('Solo');
+
   // Extract category names from database categories
   const dbCategoryNames = dbCategories.map(c => c.name);
   // Get categories inferred from products that might not be in DB yet (fallback)
   const dynamicCategories = initialProducts ? [...new Set(initialProducts.map(p => p.category?.name || p.category))] : [];
-  
+
   const categories = [...new Set([
     ...dbCategoryNames,
     ...dynamicCategories
@@ -89,11 +102,30 @@ export default function Shop({ products: initialProducts, categories: dbCategori
     }
   }, []);
 
-  const [priceRange, setPriceRange] = useState(2000);
+  const [priceRange, setPriceRange] = useState(5000);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 6;
   const [toast, setToast] = useState<{ show: boolean; message: string; type: 'success' | 'info' }>({ show: false, message: "", type: 'success' });
+
+  const showToast = (message: string, type: 'success' | 'info' = 'success') => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast({ show: false, message: "", type: 'success' }), 5000);
+  };
+
+  // Helper to split breadcrumb categories
+  const getProductCategory = (p: Product) => {
+    if (p.category?.name) return String(p.category.name);
+    if (typeof p.category === 'string' && p.category) return p.category;
+
+    const name = p.name ? p.name.toLowerCase() : '';
+    if (name.includes('sourdough') || name.includes('bread') || name.includes('loaf') || name.includes('croissant') || name.includes('toast')) return 'Bread';
+    if (name.includes('cookie') || name.includes('macadamia')) return 'Cookies';
+    if (name.includes('cake') || name.includes('tiramisu') || name.includes('cheesecake') || name.includes('tart')) return 'Cakes';
+    if (name.includes('kakanin') || name.includes('puto') || name.includes('bibingka') || name.includes('suman') || name.includes('biko') || name.includes('sapin')) return 'Kakanin';
+
+    return 'Other';
+  };
 
 
   // Filter Logic
@@ -108,13 +140,17 @@ export default function Shop({ products: initialProducts, categories: dbCategori
     }
 
     if (searchQuery) {
-      filtered = filtered.filter(p =>
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      const search = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(p => {
+        const catName = (p.category?.name || p.category || '').toLowerCase();
+        return p.name.toLowerCase().includes(search) ||
+               p.description.toLowerCase().includes(search) ||
+               catName.includes(search);
+      });
     }
 
-    filtered = filtered.filter(p => p.price <= priceRange);
+    filtered = filtered.filter(p => parseFloat(String(p.solo_price)) <= priceRange);
+
 
     if (selectedStatus) {
       filtered = filtered.filter(p => p.status === selectedStatus);
@@ -132,23 +168,49 @@ export default function Shop({ products: initialProducts, categories: dbCategori
     setSelectedCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
   };
 
-  const showToast = (message: string, type: 'success' | 'info' = 'success') => {
-    setToast({ show: true, message, type });
-    setTimeout(() => {
-      setToast({ show: false, message: "", type: 'success' });
-    }, 2500);
+  const handleOpenSelection = (product: Product) => {
+    setSelectionProduct(product);
+    setQuantity(1);
+    setPriceType('Solo');
   };
 
-  const handleAddToCart = (product: Product) => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      qty: 1,
-      img: product.image,
-      desc: product.description
+  const getProductImage = (p: Product, type?: 'Solo' | 'Package') => {
+    if (type === 'Solo' && p.solo_image) return p.solo_image;
+    if (type === 'Package' && p.package_image) return p.package_image;
+    return p.image || p.img || p.solo_image || p.package_image || p.thumbnail || '/images/placeholder.png';
+  };
+
+  const handleAddToBasket = () => {
+    if (!selectionProduct) return;
+
+    const soloPrice = selectionProduct.solo_price ? parseFloat(String(selectionProduct.solo_price)) : 0;
+    const packagePrice = selectionProduct.package_price ? parseFloat(String(selectionProduct.package_price)) : (soloPrice * 0.9);
+    const isSoloFixed4 = priceType === 'Solo' && soloPrice >= 5 && soloPrice <= 20;
+
+    const newItem: CartItem = {
+      id: selectionProduct.id + (priceType === 'Package' ? '_pkg' : '_solo'),
+      original_id: selectionProduct.id,
+      name: `${selectionProduct.name} (${priceType})`,
+      price: priceType === 'Solo' ? soloPrice : packagePrice,
+      solo_price: soloPrice,
+      package_price: packagePrice,
+      qty: isSoloFixed4 ? 4 : quantity,
+      img: getProductImage(selectionProduct, priceType),
+      priceType: priceType,
+      isFixedQty: isSoloFixed4
+    };
+
+
+    setItems((prevItems: CartItem[]) => {
+      const existing = prevItems.find(i => i.id === newItem.id);
+      if (existing) {
+        return prevItems.map(i => i.id === newItem.id ? { ...i, qty: i.qty + newItem.qty } : i);
+      }
+      return [...prevItems, newItem];
     });
-    showToast(`${product.name} added to basket!`);
+
+    showToast(`${selectionProduct.name} (${priceType}) added to basket!`);
+    setSelectionProduct(null);
   };
 
 
@@ -166,7 +228,137 @@ export default function Shop({ products: initialProducts, categories: dbCategori
               </div>
               <div>
                 <p className="text-sm font-bold text-gray-900">{toast.message}</p>
-                <p className="text-[10px] text-gray-400 font-medium">Added to your artisanal collection</p>
+                <p className="text-[10px] text-gray-400 font-medium">Added to your basket</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Selection Modal */}
+        {selectionProduct && (
+          <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6 backdrop-blur-md bg-[#1a1816]/60">
+            <div className="bg-white rounded-[2.5rem] w-full max-w-xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] animate-in zoom-in-95 fade-in duration-300 border border-white/20">
+              <div className="p-12">
+                <div className="flex justify-between items-start mb-10">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-2 h-2 rounded-full bg-[#eca840] animate-pulse"></div>
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#eca840]">Adding Item</span>
+                    </div>
+                    <h2 className="text-4xl font-black text-[#2d2a26] tracking-tighter leading-none">Choose Option</h2>
+                  </div>
+                  <button onClick={() => setSelectionProduct(null)} className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-gray-900 hover:text-white transition-all transform hover:rotate-90 duration-300">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-8 mb-10 bg-[#fcfaf7] p-8 rounded-[2rem] border border-[#f5eee6]">
+                  <div className="relative group flex-shrink-0">
+                    {/* Architectural Dynamic Visual */}
+                    <div className="w-32 h-32 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white">
+                      <img
+                        src={getProductImage(selectionProduct, priceType)}
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                        alt=""
+                      />
+
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">
+                      {selectionProduct.category?.name?.toLowerCase() === 'cake' ? 'Premium Cake' : 'Product'}
+                    </span>
+                    <h3 className="text-2xl font-black text-[#2d2a26] leading-tight mb-2 tracking-tight">{selectionProduct.name}</h3>
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl font-black text-[#eca840] tabular-nums tracking-tighter">
+                        ₱{parseFloat(String(priceType === 'Solo' ? selectionProduct.solo_price : selectionProduct.package_price)).toLocaleString()}
+                      </span>
+                      <div className="h-4 w-px bg-gray-200"></div>
+                      <span className="text-[10px] font-black text-[#2d2a26] uppercase tracking-widest bg-white px-3 py-1.5 rounded-lg border border-gray-100 shadow-sm">
+                        {selectionProduct.category?.name?.toLowerCase() === 'cake'
+                          ? (priceType === 'Solo' ? 'Slice' : 'Whole')
+                          : priceType} Mode
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Perspective Selection - Circular Toggles */}
+                <div className="mb-8">
+                  <div className="flex items-center justify-between px-2 mb-6">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Select Size</label>
+                    <span className="text-[9px] font-black text-[#eca840] uppercase tracking-widest bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
+                      {selectionProduct.category?.name?.toLowerCase() === 'cake'
+                        ? (priceType === 'Solo' ? 'Slice' : 'Whole Cake')
+                        : 'Variant Selected'}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => setPriceType('Solo')}
+                      className={`group flex items-center gap-4 px-6 py-4 rounded-full border-2 transition-all duration-500 ${priceType === 'Solo' ? 'border-[#eca840] bg-white shadow-xl shadow-orange-100' : 'border-gray-50 bg-white hover:border-gray-200'}`}
+                    >
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${priceType === 'Solo' ? 'bg-[#eca840] text-white rotate-0' : 'bg-gray-50 text-gray-300'}`}>
+                        {priceType === 'Solo' ? <div className="w-2 h-2 rounded-full bg-white animate-pulse"></div> : <div className="w-1.5 h-1.5 rounded-full bg-gray-200"></div>}
+                      </div>
+                      <div className="flex flex-col items-start leading-none">
+                        <span className={`text-[10px] font-black uppercase tracking-widest ${priceType === 'Solo' ? 'text-gray-900' : 'text-gray-400'}`}>
+                          {selectionProduct.category?.name?.toLowerCase() === 'cake' ? 'Slice' : 'Solo'}
+                        </span>
+                        <span className={`text-[9px] font-bold tabular-nums mt-1 ${priceType === 'Solo' ? 'text-[#eca840]' : 'text-gray-300'}`}>₱{parseFloat(String(selectionProduct.solo_price)).toLocaleString()}</span>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => setPriceType('Package')}
+                      className={`group flex items-center gap-4 px-6 py-4 rounded-full border-2 transition-all duration-500 ${priceType === 'Package' ? 'border-[#eca840] bg-white shadow-xl shadow-orange-100' : 'border-gray-50 bg-white hover:border-gray-200'}`}
+                    >
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${priceType === 'Package' ? 'bg-[#eca840] text-white rotate-180' : 'bg-gray-50 text-gray-300'}`}>
+                        {priceType === 'Package' ? <div className="w-2 h-2 rounded-full bg-white animate-pulse"></div> : <div className="w-1.5 h-1.5 rounded-full bg-gray-200"></div>}
+                      </div>
+                      <div className="flex flex-col items-start leading-none">
+                        <span className={`text-[10px] font-black uppercase tracking-widest ${priceType === 'Package' ? 'text-gray-900' : 'text-gray-400'}`}>
+                          {selectionProduct.category?.name?.toLowerCase() === 'cake' ? 'Whole' : 'Package'}
+                        </span>
+                        <span className={`text-[9px] font-bold tabular-nums mt-1 ${priceType === 'Package' ? 'text-[#eca840]' : 'text-gray-300'}`}>₱{parseFloat(String(selectionProduct.package_price)).toLocaleString()}</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between px-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Quantity</label>
+                    <span className="text-[10px] font-black text-gray-900 uppercase tracking-widest">{quantity} {quantity === 1 ? 'Item' : 'Items'} Selected</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                    <button
+                      onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                      className="w-14 h-14 rounded-xl bg-white shadow-sm flex items-center justify-center text-2xl font-black text-[#2d2a26] hover:bg-[#2d2a26] hover:text-white transition-all transform active:scale-90"
+                    >
+                      −
+                    </button>
+                    <span className="text-3xl font-black text-[#2d2a26] tabular-nums tracking-tighter">{quantity}</span>
+                    <button
+                      onClick={() => setQuantity(q => q + 1)}
+                      className="w-14 h-14 rounded-xl bg-white shadow-sm flex items-center justify-center text-2xl font-black text-[#2d2a26] hover:bg-[#2d2a26] hover:text-white transition-all transform active:scale-90"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleAddToBasket}
+                  className="w-full bg-[#eca840] text-white py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-2xl shadow-[#eca840]/30 hover:bg-[#d69635] hover:translate-y-[-4px] active:scale-95 transition-all flex items-center justify-center gap-4 group"
+                >
+                  <ShoppingCart className="w-5 h-5 flex-shrink-0" />
+                  <span>Add to Basket</span>
+                  <div className="w-8 h-[2px] bg-white/20 transform origin-left group-hover:scale-x-125 transition-transform"></div>
+                  <span className="tabular-nums tracking-tight text-sm">₱{((priceType === 'Solo' ? Number(selectionProduct.solo_price || 0) : Number(selectionProduct.package_price || 0)) * quantity).toLocaleString()}</span>
+                </button>
+
               </div>
             </div>
           </div>
@@ -174,57 +366,64 @@ export default function Shop({ products: initialProducts, categories: dbCategori
 
         <div className="container mx-auto px-6 md:px-12 py-12">
           <div className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">The Artisanal Gallery</h1>
-            <p className="text-gray-500 max-w-2xl">Curated flavors from our hearth to your home. Discover our range of hand-crafted delicacies.</p>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tighter">Shop</h1>
+            <p className="text-gray-500 max-w-2xl font-medium">Discover our range of hand-crafted delicacies.</p>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-12">
             <aside className="w-full lg:w-64 flex-shrink-0 space-y-10">
               <div>
-                <h3 className="flex items-center text-sm font-bold uppercase tracking-widest text-gray-900 mb-6"><Filter className="w-4 h-4 mr-2" /> Filters</h3>
-                <div className="space-y-6">
+                <h3 className="flex items-center text-xs font-black uppercase tracking-[0.2em] text-gray-900 mb-8 border-b border-gray-100 pb-4"><Filter className="w-4 h-4 mr-3" /> Filter Products</h3>
+                <div className="space-y-8">
                   <div>
-                    <h4 className="text-xs font-bold text-gray-400 uppercase mb-4">Categories</h4>
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Categories</h4>
                     <div className="space-y-3">
                       {categories.map(cat => (
                         <label key={cat} className="flex items-center group cursor-pointer">
                           <div className="relative flex items-center">
-                            <input type="checkbox" checked={selectedCategories.includes(cat)} onChange={() => toggleCategory(cat)} className="peer appearance-none w-5 h-5 border border-gray-300 rounded checked:bg-[#eca840] checked:border-[#eca840] transition-all" />
-                            <div className="absolute inset-0 flex items-center justify-center text-white opacity-0 peer-checked:opacity-100 font-bold text-[10px]">✓</div>
+                            <input type="checkbox" checked={selectedCategories.includes(cat)} onChange={() => toggleCategory(cat)} className="peer appearance-none w-5 h-5 border-2 border-gray-100 rounded-lg checked:bg-[#2d2a26] checked:border-[#2d2a26] transition-all" />
+                            <div className="absolute inset-0 flex items-center justify-center text-white opacity-0 peer-checked:opacity-100 font-bold text-[8px]">✓</div>
                           </div>
-                          <span className="ml-3 text-sm text-gray-600 group-hover:text-gray-900 transition-colors font-medium">{cat}</span>
+                          <span className="ml-3 text-[11px] text-gray-400 group-hover:text-[#2d2a26] transition-colors font-black uppercase tracking-wider">{cat}</span>
                         </label>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-gray-400 uppercase mb-4">Price Range</h4>
-                    <div className="px-2">
-                      <input type="range" min="0" max="2000" value={priceRange} onChange={(e) => setPriceRange(parseInt(e.target.value))} className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#eca840]" />
-                      <div className="flex justify-between text-[10px] font-bold text-gray-400 mt-3"><span>₱0</span><span>₱{priceRange}+</span></div>
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Availability</h4>
+                    <div className="space-y-2">
+                      {[
+                        { label: 'All Items', value: null },
+                        { label: 'In Stock', value: 'in_stock' },
+                        { label: 'Pre-Order', value: 'pre_order' },
+                        { label: 'Sold Out', value: 'sold_out' }
+                      ].map((item) => (
+                        <button
+                          key={item.label}
+                          onClick={() => setSelectedStatus(item.value)}
+                          className={`w-full flex items-center justify-between px-5 py-4 rounded-xl border-2 transition-all duration-500 group ${
+                            selectedStatus === item.value 
+                              ? 'bg-[#2d2a26] border-[#2d2a26] text-white shadow-xl shadow-black/10' 
+                              : 'bg-white border-gray-50 text-gray-400 hover:border-[#eca840]/30 hover:bg-[#fcfaf7]'
+                          }`}
+                        >
+                          <span className={`text-[9px] font-[1000] uppercase tracking-[0.2em] transition-colors ${selectedStatus === item.value ? 'text-white' : 'text-gray-400 group-hover:text-[#2d2a26]'}`}>
+                            {item.label}
+                          </span>
+                          <div className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${
+                            selectedStatus === item.value 
+                              ? 'bg-[#eca840] scale-125' 
+                              : 'bg-gray-100 group-hover:bg-[#eca840]/40'
+                          }`}></div>
+                        </button>
+                      ))}
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-gray-400 uppercase mb-4">Status</h4>
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        onClick={() => setSelectedStatus(selectedStatus === 'in_stock' ? null : 'in_stock')}
-                        className={`${selectedStatus === 'in_stock' ? 'bg-[#eca840] text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'} text-[10px] font-bold px-3 py-1.5 rounded-full transition-all`}
-                      >
-                        In Stock
-                      </button>
-                      <button
-                        onClick={() => setSelectedStatus(selectedStatus === 'pre_order' ? null : 'pre_order')}
-                        className={`${selectedStatus === 'pre_order' ? 'bg-[#eca840] text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'} text-[10px] font-bold px-3 py-1.5 rounded-full transition-all`}
-                      >
-                        Pre-order
-                      </button>
-                      <button
-                        onClick={() => setSelectedStatus(selectedStatus === 'sold_out' ? null : 'sold_out')}
-                        className={`${selectedStatus === 'sold_out' ? 'bg-[#eca840] text-white' : 'bg-white border border-gray-200 text-gray-500 hover:bg-gray-50'} text-[10px] font-bold px-3 py-1.5 rounded-full transition-all`}
-                      >
-                        Sold Out
-                      </button>
+                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Max Price</h4>
+                    <div className="px-2">
+                      <input type="range" min="0" max="5000" step="50" value={priceRange} onChange={(e) => setPriceRange(parseInt(e.target.value))} className="w-full h-1.5 bg-gray-100 rounded-full appearance-none cursor-pointer accent-[#eca840]" />
+                      <div className="flex justify-between text-[9px] font-black text-gray-400 mt-4 uppercase tracking-widest"><span>₱0</span><span className="text-[#eca840]">₱{priceRange.toLocaleString()}</span></div>
                     </div>
                   </div>
                 </div>
@@ -232,51 +431,52 @@ export default function Shop({ products: initialProducts, categories: dbCategori
             </aside>
 
             <div className="flex-1">
-              <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-10 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                <div className="relative w-full md:w-96">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-12 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                <div className="relative w-full md:w-96 group">
+                  <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-[#eca840] transition-colors" />
                   <input
                     type="text"
-                    placeholder="Search treats..."
+                    placeholder="Search for products..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-[#faf9f6] border border-gray-200 rounded-xl py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#eca840]/20 transition-all font-medium"
+                    className="w-full bg-[#faf9f6]/50 border-2 border-transparent rounded-2xl py-3 pl-12 pr-6 text-[10px] font-black tracking-widest uppercase focus:outline-none focus:border-[#eca840]/10 focus:bg-white transition-all placeholder-gray-300"
                   />
                 </div>
-                <div className="flex items-center gap-6 text-sm">
-                  <span className="text-gray-400 text-xs font-medium">Showing {products.length} results</span>
+                <div className="flex items-center gap-8 text-[10px] font-black uppercase tracking-widest">
+                  <span className="text-gray-300">{products.length} PRODUCTS</span>
+                  <div className="h-4 w-px bg-gray-100"></div>
                   <div className="flex items-center">
-                    <span className="text-gray-400 mr-2 text-xs">Sort by:</span>
-                    <select className="bg-transparent font-bold text-[#eca840] focus:outline-none cursor-pointer">
-                      <option>Latest Arrivals</option>
-                      <option>Price: Low to High</option>
-                      <option>Price: High to Low</option>
+                    <span className="text-gray-300 mr-3">Sort by:</span>
+                    <select className="bg-transparent text-[#2d2a26] focus:outline-none cursor-pointer">
+                      <option>LATEST ARRIVALS</option>
+                      <option>PRICE: LOW-HIGH</option>
+                      <option>PRICE: HIGH-LOW</option>
                     </select>
                   </div>
                 </div>
               </div>
 
               {products.length === 0 ? (
-                <div className="py-20 text-center">
-                  <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300">
+                <div className="py-32 text-center bg-white rounded-[3rem] border-2 border-dashed border-gray-100">
+                  <div className="w-24 h-24 bg-[#faf9f6] rounded-full flex items-center justify-center mx-auto mb-8 text-gray-200">
                     <Search className="w-10 h-10" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900">No treats found</h3>
-                  <p className="text-gray-500 mt-2">Try adjusting your filters or search query.</p>
-                  <button onClick={() => { setSelectedCategories([]); setSearchQuery(""); setPriceRange(2000); setSelectedStatus(null); }} className="mt-6 text-[#eca840] font-bold text-sm underline underline-offset-4">Reset all filters</button>
+                  <h3 className="text-2xl font-black text-[#2d2a26] tracking-tighter">No products found</h3>
+                  <p className="text-gray-400 mt-3 text-xs font-bold uppercase tracking-widest">Adjust your filters to see more results</p>
+                  <button onClick={() => { setSelectedCategories([]); setSearchQuery(""); setPriceRange(5000); setSelectedStatus(null); }} className="mt-10 bg-[#2d2a26] text-white px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#eca840] transition-colors shadow-xl shadow-black/10">Clear All Filters</button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {currentProducts.map(product => <ShopProductCard key={product.id} product={product} onAddToCart={() => handleAddToCart(product)} />)}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {currentProducts.map(product => <ShopProductCard key={product.id} product={product} onOpenSelection={() => handleOpenSelection(product)} />)}
                 </div>
               )}
 
               {totalPages > 1 && (
-                <div className="mt-16 flex justify-center items-center gap-4">
+                <div className="mt-20 flex justify-center items-center gap-4">
                   <button
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                    className="w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:border-[#eca840] hover:text-[#eca840] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm bg-white"
+                    className="w-14 h-14 rounded-2xl border-2 border-gray-50 flex items-center justify-center text-gray-300 hover:border-[#2d2a26] hover:text-[#2d2a26] transition-all disabled:opacity-20 shadow-sm bg-white"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
@@ -285,16 +485,16 @@ export default function Shop({ products: initialProducts, categories: dbCategori
                     <button
                       key={i}
                       onClick={() => setCurrentPage(i + 1)}
-                      className={`w-12 h-12 rounded-full font-bold text-sm transition-all duration-300 ${currentPage === i + 1 ? 'bg-[#eca840] text-white shadow-lg shadow-[#eca840]/30 scale-110' : 'bg-white border border-gray-100 text-gray-400 hover:border-[#eca840] hover:text-[#eca840]'}`}
+                      className={`w-14 h-14 rounded-2xl font-black text-[11px] tracking-tight transition-all duration-300 ${currentPage === i + 1 ? 'bg-[#2d2a26] text-white shadow-2xl shadow-black/40 scale-110' : 'bg-white border-2 border-gray-50 text-gray-300 hover:border-[#eca840] hover:text-[#eca840]'}`}
                     >
-                      {i + 1}
+                      {String(i + 1).padStart(2, '0')}
                     </button>
                   ))}
 
                   <button
                     disabled={currentPage === totalPages}
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                    className="w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:border-[#eca840] hover:text-[#eca840] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm bg-white"
+                    className="w-14 h-14 rounded-2xl border-2 border-gray-50 flex items-center justify-center text-gray-300 hover:border-[#2d2a26] hover:text-[#2d2a26] transition-all disabled:opacity-20 shadow-sm bg-white"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
@@ -310,43 +510,90 @@ export default function Shop({ products: initialProducts, categories: dbCategori
   );
 }
 
-function ShopProductCard({ product, onAddToCart }: { product: Product, onAddToCart: () => void }) {
-  const isSoldOut = product.status === 'sold_out';
+function ShopProductCard({ product, onOpenSelection }: { product: Product, onOpenSelection: () => void }) {
+  const isSoldOut = product.stock <= 0;
   const [isWishlisted, setIsWishlisted] = useState(false);
 
+  const getProductImage = (p: Product, type?: 'Solo' | 'Package') => {
+    if (type === 'Solo' && p.solo_image) return p.solo_image;
+    if (type === 'Package' && p.package_image) return p.package_image;
+    return p.image || p.img || p.solo_image || p.package_image || p.thumbnail || '/images/placeholder.png';
+  };
+
   return (
-    <div className={`bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 flex flex-col group transition-all duration-500 ${isSoldOut ? 'opacity-70' : 'hover:shadow-2xl hover:-translate-y-1'}`}>
-      <div className="relative aspect-square overflow-hidden bg-gray-50">
-        <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-        <div className="absolute top-6 left-6 flex flex-col gap-2">
-          {product.is_top_rated && <span className="bg-[#eca840] text-white text-[9px] font-black px-4 py-2 rounded-xl shadow-lg border border-[#eca840]">Top Rated</span>}
+    <div className={`bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 flex flex-col group transition-all duration-700 ${isSoldOut ? 'opacity-80' : 'hover:shadow-[0_45px_90px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-3'}`}>
+      <div className="relative aspect-[4/5] overflow-hidden bg-[#faf9f6] m-3 rounded-[2rem]">
+        <img src={getProductImage(product, 'Solo')} alt={product.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+
+
+        {/* Badges */}
+        <div className="absolute top-5 left-5 flex flex-col gap-2">
+          {product.is_top_rated && <span className="bg-white/95 backdrop-blur-md text-[#2d2a26] text-[8px] font-black px-4 py-2 rounded-xl shadow-lg border border-white tracking-[0.2em] uppercase">Top Rated</span>}
+          {product.is_new && <span className="bg-[#eca840] text-white text-[8px] font-black px-4 py-2 rounded-xl shadow-lg border border-[#eca840] tracking-[0.2em] uppercase">New Arrival</span>}
+          {product.status === 'pre_order' && <span className="bg-blue-600 text-white text-[8px] font-black px-4 py-2 rounded-xl shadow-lg border border-blue-600 tracking-[0.2em] uppercase">Pre-Order</span>}
         </div>
+
         <button
-          onClick={() => setIsWishlisted(!isWishlisted)}
-          className={`absolute top-6 right-6 w-11 h-11 ${isWishlisted ? 'bg-red-50 text-red-500' : 'bg-white/90 text-gray-400'} backdrop-blur-md rounded-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm`}
+          onClick={(e) => { e.stopPropagation(); setIsWishlisted(!isWishlisted); }}
+          className={`absolute top-5 right-5 w-11 h-11 ${isWishlisted ? 'bg-red-50 text-red-500' : 'bg-white/95 text-gray-300'} backdrop-blur-md rounded-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm border border-white`}
         >
           <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
         </button>
-        {isSoldOut && <div className="absolute inset-0 bg-black/5 backdrop-blur-[2px] flex items-center justify-center"><span className="bg-white/90 text-black text-[10px] font-extrabold px-6 py-2 rounded-lg shadow-xl">Sold Out</span></div>}
+
+        {isSoldOut && (
+          <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px] flex items-center justify-center">
+            <span className="bg-gray-900 text-white text-[9px] font-black px-8 py-3 rounded-full shadow-2xl tracking-[0.3em] uppercase rotate-[-5deg]">Sold Out</span>
+          </div>
+        )}
       </div>
-      <div className="p-10 flex-1 flex flex-col">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-black text-gray-900 group-hover:text-[#eca840] transition-colors tracking-tight leading-tight">{product.name}</h3>
-          <div className="flex items-center text-[#eca840] text-[11px] font-black"><Star className="w-3 h-3 fill-current mr-1.5" /> {product.rating}</div>
+
+      <div className="px-8 pb-10 pt-4 flex-1 flex flex-col">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[9px] font-black text-gray-300 uppercase tracking-[0.2em] leading-none bg-[#faf9f6] px-3 py-1.5 rounded-lg">
+            {product.category?.name || product.category || 'PRODUCT'}
+          </span>
+          <div className="flex items-center text-[#eca840] text-[10px] font-black"><Star className="w-3 h-3 fill-current mr-1.5" /> {product.rating || '4.9'}</div>
         </div>
-        <p className="text-sm text-gray-400 mb-8 line-clamp-1 font-medium">{product.description}</p>
-        <div className="mt-auto flex items-center justify-between">
-          <span className="text-2xl font-black text-gray-900">₱{parseFloat(String(product.price)).toLocaleString()}</span>
-          {isSoldOut ? (
-            <button disabled className="bg-gray-100 text-gray-400 text-xs font-bold px-6 py-3 rounded-2xl">Sold Out</button>
-          ) : (
-            <button
-              onClick={onAddToCart}
-              className="bg-[#eca840] text-white font-black py-4 px-8 rounded-2xl text-[11px] flex items-center gap-3 hover:bg-[#d69635] shadow-xl shadow-[#eca840]/20 transition-all active:scale-95 uppercase tracking-widest"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              Add
-            </button>
+
+        <h3 className="text-2xl font-black text-[#2d2a26] group-hover:text-[#eca840] transition-colors tracking-tighter leading-tight mb-3">{product.name}</h3>
+        <p className="text-[11px] text-gray-400 mb-8 line-clamp-2 font-bold leading-relaxed">{product.description}</p>
+
+        <div className="mt-auto">
+          <div className="flex items-end justify-between mb-8 pb-8 border-b border-gray-50">
+            <div className="flex flex-col">
+              <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest mb-1">Price</span>
+              <span className="text-2xl font-black text-[#2d2a26] tracking-tighter">₱{parseFloat(String(product.solo_price)).toLocaleString()}</span>
+            </div>
+            <div className="flex flex-col items-end">
+              <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest mb-1">Stock Level</span>
+              <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border ${product.stock < 10 ? 'text-red-500 bg-red-50 border-red-100' : 'text-[#2d2a26] bg-white border-gray-100'}`}>
+                {product.stock} Units
+              </span>
+            </div>
+          </div>
+
+          {!isSoldOut && (
+            <>
+              <SignedIn>
+                <button
+                  onClick={onOpenSelection}
+                  className="w-full bg-[#eca840] text-white font-black py-5 rounded-2xl text-[10px] flex items-center justify-center gap-4 hover:bg-[#d69635] shadow-2xl shadow-[#eca840]/20 transition-all active:scale-95 uppercase tracking-[0.3em] group"
+                >
+                  <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  Order Item
+                </button>
+              </SignedIn>
+              <SignedOut>
+                <SignInButton mode="modal" afterSignInUrl="/buyer/shop">
+                  <button
+                    className="w-full bg-[#eca840] text-white font-black py-5 rounded-2xl text-[10px] flex items-center justify-center gap-4 hover:bg-[#d69635] shadow-2xl shadow-[#eca840]/20 transition-all active:scale-95 uppercase tracking-[0.3em] group"
+                  >
+                    <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    Sign In to Buy
+                  </button>
+                </SignInButton>
+              </SignedOut>
+            </>
           )}
         </div>
       </div>

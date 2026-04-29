@@ -44,35 +44,41 @@ class SellerDashboardController extends Controller
 
         // 2. Daily (Last 7 Days)
         $dailyTrend = [];
+        $last7Days = Order::where('created_at', '>=', now()->subDays(6)->startOfDay())->get();
         for ($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i);
+            $dateStr = now()->subDays($i)->toDateString();
+            $dayOrders = $last7Days->filter(fn($o) => $o->created_at->toDateString() === $dateStr);
             $dailyTrend[] = [
-                'label' => $date->format('D'),
-                'orders' => Order::whereDate('created_at', $date->toDateString())->count(),
-                'revenue' => (float)Order::whereDate('created_at', $date->toDateString())->sum('total_amount'),
+                'label' => now()->subDays($i)->format('D'),
+                'orders' => $dayOrders->count(),
+                'revenue' => (float)$dayOrders->sum('total_amount'),
             ];
         }
 
         // 3. Weekly (Last 4 Weeks)
         $weeklyTrend = [];
+        $last4Weeks = Order::where('created_at', '>=', now()->subWeeks(3)->startOfWeek())->get();
         for ($i = 3; $i >= 0; $i--) {
             $start = now()->subWeeks($i)->startOfWeek();
             $end = now()->subWeeks($i)->endOfWeek();
+            $weekOrders = $last4Weeks->filter(fn($o) => $o->created_at->between($start, $end));
             $weeklyTrend[] = [
                 'label' => 'Week ' . (4 - $i),
-                'orders' => Order::whereBetween('created_at', [$start, $end])->count(),
-                'revenue' => (float)Order::whereBetween('created_at', [$start, $end])->sum('total_amount'),
+                'orders' => $weekOrders->count(),
+                'revenue' => (float)$weekOrders->sum('total_amount'),
             ];
         }
 
         // 4. Monthly (Last 6 Months)
         $monthlyTrend = [];
+        $last6Months = Order::where('created_at', '>=', now()->subMonths(5)->startOfMonth())->get();
         for ($i = 5; $i >= 0; $i--) {
             $date = now()->subMonths($i);
+            $monthOrders = $last6Months->filter(fn($o) => $o->created_at->month === $date->month && $o->created_at->year === $date->year);
             $monthlyTrend[] = [
                 'label' => $date->format('M'),
-                'orders' => Order::whereYear('created_at', $date->year)->whereMonth('created_at', $date->month)->count(),
-                'revenue' => (float)Order::whereYear('created_at', $date->year)->whereMonth('created_at', $date->month)->sum('total_amount'),
+                'orders' => $monthOrders->count(),
+                'revenue' => (float)$monthOrders->sum('total_amount'),
             ];
         }
 

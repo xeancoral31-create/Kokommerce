@@ -1,6 +1,19 @@
 import React from 'react';
 import SellerLayout from '../../Components/SellerLayout';
 import { Head, Link } from '@inertiajs/inertia-react';
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from 'recharts';
+
 
 interface AnalyticsProps {
   metrics: {
@@ -42,6 +55,8 @@ export default function SellerAnalytics({ metrics, revenue_overview, category_pe
     document.body.removeChild(link);
   };
 
+  const COLORS = ['#f5a623', '#5c4033', '#000000', '#ede7e3', '#9ca3af', '#4b5563'];
+
   return (
     <SellerLayout>
       <Head title="Sales Analytics" />
@@ -74,7 +89,7 @@ export default function SellerAnalytics({ metrics, revenue_overview, category_pe
           label="Total Revenue" 
           value={`₱${(metrics?.total_revenue || 0).toLocaleString()}`} 
           subtext={`Today: ₱${(metrics?.today_revenue || 0).toLocaleString()}`}
-          subIcon="trending_up"
+          subIcon="trend"
           icon="revenue" 
         />
         <MetricCard 
@@ -97,28 +112,57 @@ export default function SellerAnalytics({ metrics, revenue_overview, category_pe
               </div>
            </div>
            
-            <div className="flex items-end justify-between h-64 gap-4 px-2">
-               {(() => {
-                 const revenues = revenue_overview?.map(r => Number(r.revenue) || 0);
-                 const maxRevenue = Math.max(...revenues, 1);
-                 const currentMonth = new Date().toLocaleString('default', { month: 'short' });
-                 return revenue_overview?.map((item, idx) => {
-                   const pct = Math.max((revenues[idx] / maxRevenue) * 100, 8);
-                   const isCurrent = item.month === currentMonth;
-                   return (
-                     <div key={item.month} className="flex-1 flex flex-col items-center gap-3 group relative">
-                        <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[9px] font-black px-2 py-1 rounded-lg whitespace-nowrap transition-all pointer-events-none z-10">
-                          ₱{(revenues[idx] || 0).toLocaleString()}
-                        </div>
-                        <div
-                         style={{ height: `${pct}%` }}
-                         className={`w-full rounded-2xl transition-all duration-700 cursor-pointer ${isCurrent ? 'bg-[#f5a623] shadow-lg shadow-[#f5a623]/30' : 'bg-[#fff1de] group-hover:bg-[#ffd99a]'}`}
-                        ></div>
-                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${isCurrent ? 'text-[#f5a623]' : 'text-gray-400'}`}>{item.month.toUpperCase()}</span>
-                     </div>
-                   );
-                 });
-               })()}
+            <div className="h-[400px] w-full">
+               <ResponsiveContainer width="100%" height="100%">
+                 <AreaChart data={revenue_overview} margin={{ top: 20, right: 30, bottom: 20, left: 10 }}>
+                   <defs>
+                     <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                       <stop offset="5%" stopColor="#f5a623" stopOpacity={0.1}/>
+                       <stop offset="95%" stopColor="#f5a623" stopOpacity={0}/>
+                     </linearGradient>
+                   </defs>
+                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                   <XAxis 
+                     dataKey="month" 
+                     axisLine={false} 
+                     tickLine={false} 
+                     tick={{ fill: '#9ca3af', fontSize: 11, fontWeight: 700 }}
+                     dy={10}
+                     tickFormatter={(value) => value.toUpperCase()}
+                   />
+                   <YAxis 
+                     axisLine={false} 
+                     tickLine={false} 
+                     tick={{ fill: '#9ca3af', fontSize: 11, fontWeight: 700 }}
+                     tickFormatter={(value) => `₱${Number(value).toLocaleString()}`}
+                   />
+                   <RechartsTooltip 
+                     contentStyle={{ 
+                       borderRadius: '24px', 
+                       border: 'none', 
+                       boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)', 
+                       padding: '20px', 
+                       fontWeight: 'black',
+                       background: 'rgba(255, 255, 255, 0.98)',
+                       backdropFilter: 'blur(8px)'
+                     }}
+                     formatter={(value: any) => [`₱${Number(value).toLocaleString()}`, 'Monthly Revenue']}
+                     labelStyle={{ color: '#9ca3af', fontSize: '10px', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '2px' }}
+                     cursor={{ stroke: '#f5a623', strokeWidth: 2, strokeDasharray: '6 6' }}
+                   />
+                   <Area 
+                     type="monotone" 
+                     dataKey="revenue" 
+                     stroke="#f5a623" 
+                     strokeWidth={5}
+                     fillOpacity={1}
+                     fill="url(#colorRevenue)"
+                     dot={{ r: 6, fill: '#fff', strokeWidth: 3, stroke: '#f5a623' }}
+                     activeDot={{ r: 8, fill: '#f5a623', strokeWidth: 0, stroke: '#fff', style: { filter: 'drop-shadow(0 4px 12px rgba(245, 166, 35, 0.6))' } }}
+                     animationDuration={1500}
+                   />
+                 </AreaChart>
+               </ResponsiveContainer>
             </div>
         </div>
 
@@ -126,38 +170,47 @@ export default function SellerAnalytics({ metrics, revenue_overview, category_pe
         <div className="bg-white rounded-[2.5rem] p-12 border border-gray-100 shadow-sm flex flex-col items-center">
            <h3 className="text-2xl font-black text-gray-900 mb-12 w-full">Category Performance</h3>
            
-           <div className="relative w-64 h-64 mb-12">
-              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                 {category_performance?.map((cat, i) => {
-                    const offset = category_performance.slice(0, i).reduce((acc, curr) => acc + (curr.percentage * 2.512), 0);
-                    const colors = ['#f5a623', '#5c4033', '#000000', '#ede7e3'];
-                    return (
-                       <circle 
-                         key={cat.name}
-                         cx="50" cy="50" r="40" 
-                         stroke={colors[i] || '#ede7e3'} 
-                         strokeWidth="12" fill="transparent" 
-                         strokeDasharray="251.2" 
-                         strokeDashoffset={251.2 - (cat.percentage * 2.512)}
-                         transform={`rotate(${offset * (360/251.2)} 50 50)`}
-                       ></circle>
-                    );
-                 })}
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total</span>
-                 <span className="text-3xl font-black text-gray-900">100%</span>
-              </div>
-           </div>
+            <div className="relative w-full h-[300px] mb-12">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={category_performance}
+                      innerRadius={90}
+                      outerRadius={120}
+                      paddingAngle={8}
+                      dataKey="percentage"
+                      stroke="none"
+                      animationBegin={200}
+                      animationDuration={1800}
+                    >
+                      {category_performance?.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <RechartsTooltip 
+                      contentStyle={{ 
+                        borderRadius: '20px', 
+                        border: 'none', 
+                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', 
+                        fontWeight: 'black',
+                        padding: '15px'
+                      }}
+                      formatter={(value: any) => [`${value}%`, 'Market Share']}
+                      itemStyle={{ color: '#111827' }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">Share</span>
+                   <span className="text-4xl font-black text-gray-900">100%</span>
+                </div>
+            </div>
 
            <div className="w-full space-y-6">
               {category_performance?.map((cat, i) => (
                 <div key={cat.name} className="flex justify-between items-center">
                    <div className="flex items-center gap-3">
-                      {(() => {
-                          const colors = ['bg-[#f5a623]', 'bg-[#5c4033]', 'bg-black', 'bg-[#ede7e3]'];
-                          return <div className={`w-3 h-3 rounded-full ${colors[i] || 'bg-[#ede7e3]'}`}></div>;
-                      })()}
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
                       <span className="text-sm font-bold text-gray-700">{cat.name}</span>
                    </div>
                    <span className="text-sm font-black text-gray-900">{cat.percentage}%</span>

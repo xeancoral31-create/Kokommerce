@@ -1,23 +1,9 @@
 import React from "react";
-
-const Star = ({ className }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-);
-
-const ShoppingCart = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-);
-
-const Clock = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-);
-
-const Truck = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg>
-);
-
+import { usePage } from '@inertiajs/inertia-react';
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import CountdownTimer from '../Components/CountdownTimer';
+import { Truck } from 'lucide-react';
 
 interface Promotion {
   id: number;
@@ -27,6 +13,7 @@ interface Promotion {
   type: 'percentage' | 'fixed';
   discount_value: number;
   image: string | null;
+  end_date: string | null;
   product?: {
     name: string;
     price: number;
@@ -35,109 +22,219 @@ interface Promotion {
 }
 
 export default function Offer({ promotions }: { promotions: Promotion[] }) {
-  return (
-    <div className="flex flex-col min-h-screen bg-[#faf9f6] pt-20">
-      <Navbar />
-      <main className="flex-grow">
+  const [expiredIds, setExpiredIds] = React.useState<Record<number, boolean>>(() => {
+    const initial: Record<number, boolean> = {};
+    promotions.forEach(p => {
+       if (p.end_date && new Date(p.end_date) < new Date()) {
+         initial[p.id] = true;
+       }
+    });
+    return initial;
+  });
 
-      <div className="container mx-auto px-6 md:px-12 py-12">
-        
-        {/* Seasonal Special Hero - Latest Promotion */}
-        {promotions.length > 0 && (
-          <section className="mb-16">
-            <div className="rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-sm">
-              <div className="bg-[#2a2626] text-white p-10 md:p-16 w-full md:w-3/5 flex flex-col justify-center items-start">
-                <span className="bg-[#eca840] text-white text-[10px] font-bold px-3 py-1.5 rounded-full mb-6 uppercase tracking-wider">
-                  Featured Promotion
-                </span>
-                <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                  {promotions[0].title}
-                </h1>
-                <p className="text-gray-300 mb-8 max-w-sm leading-relaxed">
-                  {promotions[0].description}
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="px-6 py-3 bg-[#eca840]/20 border border-[#eca840] rounded-xl text-[#eca840] font-black tracking-widest uppercase">
-                    Code: {promotions[0].code}
+  const handleExpire = (id: number) => {
+    setExpiredIds(prev => ({ ...prev, [id]: true }));
+  };
+
+  const getPrice = (promo: Promotion) => {
+    if (!promo.product) return 0;
+    if (promo.type === 'percentage') {
+      return promo.product.price * (1 - promo.discount_value / 100);
+    }
+    return promo.product.price - promo.discount_value;
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen bg-[#faf9f6]/80 pt-20">
+      <Navbar />
+      <div className="fixed inset-0 bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')] opacity-20 pointer-events-none z-0"></div>
+      
+      <main className="flex-grow relative z-10">
+        <div className="container mx-auto px-6 md:px-12 py-12">
+          
+          {/* Seasonal Special Hero - Latest Promotion */}
+          {promotions.length > 0 && (
+            <section className="mb-24">
+              <div className="rounded-[4rem] overflow-hidden flex flex-col md:flex-row shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] border border-white/50 bg-white min-h-[600px]">
+                <div className="bg-[#1c1917] text-white p-12 md:p-24 w-full md:w-3/5 flex flex-col justify-center items-start relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-96 h-96 bg-[#eca840]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+                  
+                  <span className="bg-[#eca840] text-white text-[10px] font-black px-6 py-2.5 rounded-2xl mb-12 uppercase tracking-[0.4em] shadow-2xl shadow-orange-950/20">
+                    Grand Invitation
+                  </span>
+                  
+                  <h1 className="text-6xl md:text-8xl font-[1000] mb-8 leading-[0.85] tracking-tighter italic text-[#eca840]">
+                    {promotions[0].title}
+                  </h1>
+                  
+                  <p className="text-gray-400 mb-14 max-w-md leading-relaxed text-lg font-medium opacity-80">
+                    {promotions[0].description}
+                  </p>
+                  
+                  <div className="flex flex-col gap-12 w-full">
+                    {promotions[0].product && (
+                      <div className="flex items-center gap-8 p-8 rounded-[2.5rem] bg-white/[0.03] border border-white/[0.08] backdrop-blur-md group/prod cursor-default">
+                        <div className="w-20 h-20 rounded-3xl overflow-hidden shadow-2xl border border-white/10 shrink-0 group-hover/prod:scale-110 transition-transform duration-700">
+                          <img src={promotions[0].product.image} alt="" className="w-full h-full object-cover" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[10px] font-black text-[#eca840]/60 uppercase tracking-[0.4em] mb-2">Curated Piece</span>
+                          <h4 className="text-xl font-black text-white leading-tight">{promotions[0].product.name}</h4>
+                          <div className="flex items-baseline gap-3 mt-3">
+                             <span className="text-3xl font-black text-white tracking-tighter">₱{getPrice(promotions[0]).toLocaleString()}</span>
+                             <span className="text-sm font-bold text-white/20 line-through">₱{Number(promotions[0].product.price).toLocaleString()}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex justify-center w-full">
+                      <div className="group relative">
+                        <div className="absolute -inset-8 bg-[#eca840]/10 rounded-full blur-3xl opacity-50 group-hover:opacity-100 transition duration-1000"></div>
+                        <div className="relative px-20 py-10 bg-[#151311] border border-white/5 rounded-[2.5rem] flex flex-col items-center shadow-2xl">
+                          <span className="text-[10px] tracking-[0.5em] text-white/30 mb-4 font-black uppercase">Invitation Code</span>
+                          <span className="text-[#eca840] font-[1000] tracking-[0.6em] uppercase text-3xl">
+                            {promotions[0].code}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-12 border-t border-white/[0.05] w-full">
+                      <CountdownTimer 
+                        endDate={promotions[0].end_date} 
+                        onExpire={() => handleExpire(promotions[0].id)}
+                        className="flex flex-col items-center md:items-start"
+                        labelClassName="text-[10px] font-black text-[#eca840]/40 uppercase tracking-[0.5em] mb-4"
+                        timeClassName="text-4xl font-[1000] text-white tabular-nums tracking-widest drop-shadow-2xl"
+                      />
+                    </div>
                   </div>
-                  <button className="bg-[#eca840] hover:bg-[#d69635] text-white font-bold py-3 px-8 rounded-xl transition-colors">
-                    Claim Offer
-                  </button>
                 </div>
-              </div>
-              <div className="bg-[#fcf8f0] w-full md:w-2/5 p-10 flex items-center justify-center relative min-h-[300px]">
-                <div className="relative w-full h-full min-h-[250px]">
+
+                <div className="bg-[#fdfbf7] w-full md:w-2/5 flex items-center justify-center relative p-16 overflow-hidden">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(236,168,64,0.05),transparent)] pointer-events-none"></div>
                   <img 
-                    src={promotions[0].image || (promotions[0].product?.image) || "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?q=80&w=800&auto=format&fit=crop"} 
+                    src={promotions[0].image || (promotions[0].product?.image) || "/images/placeholder-artisanal.png"} 
                     alt={promotions[0].title} 
-                    className="w-full h-full object-contain"
+                    className="relative w-full h-full max-h-[500px] object-contain drop-shadow-[0_50px_80px_rgba(0,0,0,0.12)] hover:scale-105 transition-transform duration-1000"
                   />
                 </div>
               </div>
+            </section>
+          )}
+
+          {/* Additional Offers Section */}
+          <section className="mb-32">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+              <div className="relative">
+                <span className="text-[#eca840] text-[10px] font-black uppercase tracking-[0.5em] block mb-5">Private Archive</span>
+                <h2 className="text-5xl md:text-7xl font-[1000] text-[#1c1917] tracking-tighter leading-none italic">
+                  Active Bounties
+                </h2>
+              </div>
+              <p className="text-stone-400 max-w-xs text-xs font-bold leading-relaxed tracking-widest uppercase opacity-60 text-right">
+                Limited temporal opportunities curated for refined tastes.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+              {promotions.slice(1).map((promo) => {
+                const isExpired = expiredIds[promo.id];
+                return (
+                  <div 
+                    key={promo.id} 
+                    className="group flex flex-col bg-white rounded-[3.5rem] border border-stone-100/60 overflow-hidden hover:shadow-[0_60px_100px_-30px_rgba(0,0,0,0.08)] transition-all duration-700 hover:-translate-y-4"
+                  >
+                    <div className="relative h-80 overflow-hidden bg-[#fcfaf7]">
+                      <img 
+                        src={promo.image || (promo.product?.image) || "/images/placeholder-artisanal.png"} 
+                        alt={promo.title} 
+                        className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110" 
+                      />
+                      <div className="absolute top-8 left-8 z-20">
+                        <span className={`px-5 py-2.5 rounded-2xl text-[9px] font-black uppercase tracking-widest shadow-xl backdrop-blur-md ${isExpired ? 'bg-red-500 text-white' : 'bg-[#1c1917]/90 text-white'}`}>
+                          {isExpired ? 'Expired' : (promo.type === 'percentage' ? `${promo.discount_value}% Off` : `₱${promo.discount_value} Savings`)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-12 flex flex-col flex-grow relative">
+                      <h3 className="text-3xl font-[1000] text-[#1c1917] mb-4 tracking-tighter leading-tight italic group-hover:text-[#eca840] transition-colors duration-500 pr-10">
+                        {promo.title}
+                      </h3>
+                      <p className="text-stone-400 text-sm mb-12 line-clamp-2 font-medium leading-relaxed">
+                        {promo.description}
+                      </p>
+
+                      <div className="mt-auto space-y-10">
+                        <div className="border-t border-stone-50 pt-10 flex flex-col">
+                          <span className="text-[9px] font-black text-[#eca840]/60 uppercase tracking-[0.4em] mb-3">Refined Value</span>
+                          <div className="flex items-baseline gap-3">
+                            <span className="text-4xl font-[1000] text-[#1c1917] tracking-tighter italic">
+                              ₱{getPrice(promo).toLocaleString()}
+                            </span>
+                            {promo.product && (
+                              <span className="text-xs font-bold text-stone-300 line-through">₱{promo.product.price.toLocaleString()}</span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-6">
+                          <div className="flex justify-center">
+                            <div className="bg-stone-50 px-8 py-5 rounded-3xl border border-stone-100 text-[14px] font-black text-[#1c1917] tracking-[0.4em] uppercase shadow-inner">
+                              {promo.code}
+                            </div>
+                          </div>
+
+                          <div className="bg-[#fcfaf7] p-6 rounded-[2.5rem] border border-stone-100/50">
+                            <CountdownTimer 
+                              endDate={promo.end_date} 
+                              onExpire={() => handleExpire(promo.id)}
+                              className="flex flex-col items-center"
+                              labelClassName="text-[8px] font-black text-[#eca840]/50 uppercase tracking-[0.5em] mb-2"
+                              timeClassName={`text-lg font-black tabular-nums tracking-widest ${isExpired ? 'text-red-400' : 'text-[#1c1917]'}`}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </section>
-        )}
 
-        {/* Artisanal Collections & Promotions */}
-        <section className="mb-16">
-          <div className="flex items-center justify-between mb-8 border-b border-gray-200 pb-4">
-            <h2 className="text-2xl font-bold text-gray-900">Current Promotions</h2>
-            <div className="text-sm font-bold text-[#eca840]">Limited Time Offers</div>
+          {/* Delivery banner */}
+          <div className="bg-[#1c1917] rounded-[3.5rem] p-10 md:p-16 flex flex-col md:flex-row items-center justify-between shadow-2xl relative overflow-hidden group">
+            <div className="absolute inset-0 bg-[#eca840]/5 translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-in-out"></div>
+            <div className="flex items-center mb-8 md:mb-0 relative z-10">
+               <div className="w-16 h-16 bg-[#eca840]/10 rounded-full flex items-center justify-center text-[#eca840] shadow-2xl mr-8 flex-shrink-0 border border-white/5">
+                  <Truck className="w-7 h-7" />
+               </div>
+               <div>
+                  <h4 className="text-2xl font-black text-white tracking-tight mb-2">Artisanal Direct Shipping</h4>
+                  <p className="text-white/40 text-sm font-medium tracking-wide">All curated collections ship via our specialized temperature-controlled vault.</p>
+               </div>
+            </div>
+            <p className="text-3xl font-[1000] text-[#eca840] italic tracking-tighter relative z-10">#KokommerceVault</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {promotions.slice(1).map((promo) => (
-              <div key={promo.id} className="bg-white rounded-3xl border border-gray-100 flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
-                <div className="relative h-64 overflow-hidden">
-                  <img 
-                    src={promo.image || (promo.product?.image) || "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600"} 
-                    alt={promo.title} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                  />
-                  <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">
-                    {promo.type === 'percentage' ? `${promo.discount_value}% OFF` : `₱${promo.discount_value} OFF`}
-                  </div>
-                </div>
-                <div className="p-8 flex-1 flex flex-col">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold text-gray-900">{promo.title}</h3>
-                    <span className="text-[10px] font-black text-[#eca840] border border-[#eca840]/20 px-2 py-1 rounded-md">{promo.code}</span>
-                  </div>
-                  <p className="text-gray-500 text-xs mb-8 leading-relaxed line-clamp-2">
-                    {promo.description}
-                  </p>
-                  <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
-                    <div>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Target Product</p>
-                      <p className="text-sm font-bold text-gray-800">{promo.product?.name || 'Store Wide'}</p>
-                    </div>
-                    <button className="px-6 py-2.5 bg-[#f5a623] hover:bg-black text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                      Apply
-                    </button>
-                  </div>
-                </div>
+          {promotions.length === 0 && (
+            <div className="py-40 text-center">
+              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl border border-stone-50">
+                <Truck className="w-10 h-10 text-stone-200" />
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Delivery banner */}
-        <div className="bg-[#fdf8ee] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between border border-[#fae5c3]">
-          <div className="flex items-center mb-4 md:mb-0">
-             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#eca840] shadow-sm mr-4 flex-shrink-0">
-                <Truck className="w-6 h-6" />
-             </div>
-             <div>
-                <h4 className="font-bold text-gray-900">Free Delivery on Promotions</h4>
-                <p className="text-xs text-gray-600">All orders containing a 'Seasonal Special' ship free this month.</p>
-             </div>
-          </div>
-          <p className="text-xl font-bold text-[#eca840] italic">#KokommerceAtHome</p>
+              <h3 className="text-4xl font-[1000] text-[#1c1917] tracking-tighter italic">Restocking Bounties</h3>
+              <p className="text-stone-400 font-medium mt-6 max-w-xs mx-auto leading-relaxed tracking-wider">
+                Our master artisans are preparing new exclusive opportunities. Please return to the vault soon.
+              </p>
+            </div>
+          )}
         </div>
-      </div>
       </main>
+      
       <Footer />
     </div>
   );
 }
-

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Buyer;
+use App\Models\Promotion;
+use App\Models\Category;
 use Inertia\Inertia;
 
 class BuyerController extends Controller
@@ -23,12 +25,12 @@ class BuyerController extends Controller
                     $bq->where('email', $user->email);
                 });
             })->distinct()->take(4)->get() : [],
-            'promotions' => \App\Models\Promotion::where('status', 'active')->latest()->take(3)->get(),
+            'promotions' => Promotion::where('status', 'active')->latest()->take(3)->get(),
             'stats' => [
                 'recent_orders_count' => $user ? Order::whereHas('buyer', function($q) use ($user) {
                     $q->where('email', $user->email);
                 })->where('status', 'pending')->count() : 0,
-                'available_offers' => \App\Models\Promotion::where('status', 'active')->count(),
+                'available_offers' => Promotion::where('status', 'active')->count(),
             ]
         ]);
     }
@@ -37,14 +39,28 @@ class BuyerController extends Controller
     {
         return Inertia::render('Buyer/BuyerShop', [
             'products' => Product::with('category')->get(),
-            'categories' => \App\Models\Category::all()
+            'categories' => Category::all()
         ]);
     }
 
     public function offer()
     {
+        $user = auth()->user();
+        $promotions = Promotion::with('product')->where('status', 'active')->get();
+
+        if ($user) {
+            $buyer = Buyer::where('email', $user->email)->first();
+            if ($buyer) {
+                $promotions->each(function ($promo) use ($buyer) {
+                    $promo->is_used = Order::where('buyer_id', $buyer->id)
+                        ->where('promotion_id', $promo->id)
+                        ->exists();
+                });
+            }
+        }
+
         return Inertia::render('Buyer/BuyerOffer', [
-            'promotions' => \App\Models\Promotion::with('product')->where('status', 'active')->get()
+            'promotions' => $promotions
         ]);
     }
 
@@ -52,11 +68,17 @@ class BuyerController extends Controller
     public function history()
     {
         $user = auth()->user();
-        $orders = $user 
-            ? Order::whereHas('buyer', function($q) use ($user) {
+        $guestEmail = session('guest_email');
+
+        $orders = Order::whereHas('buyer', function($q) use ($user, $guestEmail) {
+            if ($user) {
                 $q->where('email', $user->email);
-            })->with(['orderItems.product'])->latest()->get()
-            : [];
+            } elseif ($guestEmail) {
+                $q->where('email', $guestEmail);
+            } else {
+                $q->where('id', 0); // No matches
+            }
+        })->with(['orderItems.product'])->latest()->get();
 
         return Inertia::render('Buyer/OrderHistory', [
             'orders' => $orders
@@ -72,8 +94,23 @@ class BuyerController extends Controller
 
     public function cart()
     {
+        $user = auth()->user();
+        $promotions = Promotion::where('status', 'active')->with('product')->get();
+
+        if ($user) {
+            $buyer = Buyer::where('email', $user->email)->first();
+            if ($buyer) {
+                $promotions->each(function ($promo) use ($buyer) {
+                    $promo->is_used = Order::where('buyer_id', $buyer->id)
+                        ->where('promotion_id', $promo->id)
+                        ->exists();
+                });
+            }
+        }
+
         return Inertia::render('Buyer/BuyerShoppingCart', [
-            'cart_items' => []
+            'cart_items' => [],
+            'active_promotions' => $promotions
         ]);
     }
 
@@ -89,8 +126,14 @@ class BuyerController extends Controller
     public function payment()
     {
         return Inertia::render('Buyer/OrderConfirmPay', [
-            'cart_items' => []
+            'cart_items' => [],
+            'stripe_key' => env('STRIPE_KEY', 'pk_test_2zuyBaQ6NePxHFMmmsQ94zxm')
         ]);
+    }
+
+    public function wishlist()
+    {
+        return Inertia::render('Buyer/Wishlist');
     }
 }
 

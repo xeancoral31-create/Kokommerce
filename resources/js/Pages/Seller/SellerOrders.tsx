@@ -20,6 +20,8 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
   const [isSearchFocused, setIsSearchFocused] = React.useState(false);
   const [sortDateDesc, setSortDateDesc] = React.useState(true);
   const [openDropdownId, setOpenDropdownId] = React.useState<number | null>(null);
+  const [selectedOrder, setSelectedOrder] = React.useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   // Functional Pagination Logic
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -75,6 +77,11 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
       preserveScroll: true,
       onSuccess: () => setOpenDropdownId(null)
     });
+  };
+
+  const openDetails = (order: any) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
   };
 
   return (
@@ -231,7 +238,7 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
           </div>
 
           {/* Precision Scroll Viewport */}
-          <div className="flex-1 overflow-x-auto min-h-[400px]">
+          <div className="flex-1 overflow-auto max-h-[620px] custom-scrollbar">
             <table className="w-full border-collapse">
                 <thead className="bg-[#fcfaf7] border-b border-gray-100 sticky top-0 z-20">
                   <tr>
@@ -245,7 +252,11 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
                 </thead>
                 <tbody className="divide-y divide-gray-50/50">
                    {paginatedOrders.length > 0 ? paginatedOrders.map((order, i) => (
-                     <tr key={order.id || i} className="group hover:bg-[#fdfaf5]/50 transition-all duration-300">
+                     <tr 
+                        key={order.id || i} 
+                        onClick={() => openDetails(order)}
+                        className="group hover:bg-[#fdfaf5]/50 transition-all duration-300 cursor-pointer"
+                     >
                        <td className="py-7 pl-10 pr-6">
                           <span className="text-sm font-black text-gray-900 group-hover:text-[#eca840] transition-colors tabular-nums">#{order.order_reference}</span>
                        </td>
@@ -353,6 +364,180 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
         </div>
       </div>
 
+      {/* Artisanal Order Details Theater (Modal) */}
+      {isModalOpen && selectedOrder && (
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 lg:p-10 animate-in fade-in duration-300">
+          <div className="absolute inset-0 bg-[#2d2a26]/80 backdrop-blur-md" onClick={() => setIsModalOpen(false)}></div>
+          
+          <div className="relative w-full max-w-4xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500 flex flex-col max-h-[90vh] border border-[#eca840]/20">
+            {/* Header */}
+            <div className="p-8 lg:p-10 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
+               <div>
+                  <h2 className="text-2xl lg:text-3xl font-black text-[#2d2a26] tracking-tight">Order Expedition</h2>
+                  <div className="flex items-center gap-3 mt-1">
+                     <span className="w-8 h-[2px] bg-[#eca840]"></span>
+                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Manifest for Reference {selectedOrder.order_reference}</p>
+                  </div>
+               </div>
+               <button 
+                onClick={() => setIsModalOpen(false)}
+                className="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-100 hover:bg-red-50 transition-all shadow-sm group"
+               >
+                 <svg className="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+               </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-8 lg:p-10 custom-scrollbar">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <div className="col-span-2 space-y-8">
+                  {/* Items List */}
+                  <div>
+                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Provisioned Creations</h3>
+                    <div className="space-y-4">
+                      {selectedOrder.order_items?.map((item: any, idx: number) => (
+                        <div key={item.id || idx} className="bg-[#fcfaf7]/50 rounded-3xl p-6 border border-gray-100 flex items-center justify-between group hover:border-[#eca840]/30 transition-all">
+                          <div className="flex items-center gap-5">
+                            <div className="w-16 h-16 rounded-2xl bg-white border border-gray-100 p-1 shadow-sm shrink-0 overflow-hidden group-hover:shadow-lg group-hover:-translate-y-1 transition-all">
+                              <img 
+                                src={item.product?.image || "https://images.unsplash.com/photo-1558961776-1073864c207f?w=200"} 
+                                alt={item.product?.name} 
+                                className="w-full h-full object-cover rounded-xl"
+                              />
+                            </div>
+                            <div>
+                              <p className="text-sm font-black text-gray-900">{item.product?.name || "Artisanal Good"}</p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="bg-[#eca840] text-white text-[9px] font-black uppercase tracking-tighter px-2 py-0.5 rounded-lg">
+                                    {item.quantity}x
+                                </span>
+                                <span className="text-[10px] font-black text-[#eca840] uppercase tracking-widest">
+                                    {item.variant || 'Standard'}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                             <p className="text-sm font-black text-gray-900">₱{parseFloat(item.subtotal || 0).toLocaleString()}</p>
+                             <p className="text-[9px] font-bold text-gray-300 uppercase">₱{parseFloat(item.price || 0).toLocaleString()} per unit</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Delivery Detail */}
+                  <div className="bg-[#2d2a26] rounded-[2rem] p-8 text-white relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#eca840]/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+                    <div className="relative z-10">
+                        <h3 className="text-[9px] font-black text-[#eca840] uppercase tracking-[0.2em] mb-4">Logistical Destination</h3>
+                        <p className="text-lg font-black text-white leading-relaxed italic">
+                            "{selectedOrder.delivery_address || 'Collection from Artisanal Vault'}"
+                        </p>
+                        <div className="flex items-center gap-4 mt-6 pt-6 border-t border-white/10 text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                          <span className="flex items-center gap-2">
+                             <svg className="w-3.5 h-3.5 text-[#eca840]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                             Recorded at {new Date(selectedOrder.created_at).toLocaleTimeString()}
+                          </span>
+                          <span className="flex items-center gap-2">
+                             <svg className="w-3.5 h-3.5 text-[#eca840]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                             {selectedOrder.payment_method?.toUpperCase() || 'COD'}
+                          </span>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-8">
+                   {/* Personal Profile */}
+                   <div className="bg-gray-50 border border-gray-100 rounded-[2rem] p-8 text-center">
+                      <div className="w-24 h-24 rounded-[2rem] bg-white border-2 border-[#eca840]/20 p-1 mx-auto mb-6 shadow-xl relative group">
+                          <img src={selectedOrder.buyer?.profile_image} alt="Buyer" className="w-full h-full object-cover rounded-[1.8rem]" />
+                          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#eca840] rounded-xl flex items-center justify-center text-white shadow-lg shadow-orange-500/30">
+                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                          </div>
+                      </div>
+                      <h4 className="text-lg font-black text-[#2d2a26]">{selectedOrder.buyer?.name}</h4>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">{selectedOrder.buyer?.email}</p>
+                      <div className="mt-8 pt-8 border-t border-gray-200/50 space-y-4">
+                         <div className="flex justify-between text-left">
+                            <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Global Order Rank</span>
+                            <span className="text-[10px] font-black text-[#eca840]">Priority Guild Member</span>
+                         </div>
+                         <div className="flex justify-between text-left">
+                            <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Total Acquisitions</span>
+                            <span className="text-xs font-black text-gray-900">₱{parseFloat(selectedOrder.total_amount || 0).toLocaleString()}</span>
+                         </div>
+                      </div>
+                   </div>
+
+                   {/* Financial Summary */}
+                   <div className="bg-[#fcfaf7] border border-[#eca840]/10 rounded-[2rem] p-8">
+                       <h3 className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Financial Ledger</h3>
+                       <div className="space-y-4">
+                          <div className="flex justify-between items-center text-xs font-black text-gray-500 uppercase tracking-widest">
+                             <span>Sub-Total</span>
+                             <span>₱{parseFloat(selectedOrder.subtotal || 0).toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between items-center text-xs font-black text-gray-500 uppercase tracking-widest font-outfit">
+                             <span>Logistics</span>
+                             <span className="text-[#eca840]">₱{parseFloat(selectedOrder.delivery_fee || 0).toLocaleString()}</span>
+                          </div>
+                          {parseFloat(selectedOrder.discount_amount || 0) > 0 && (
+                             <div className="flex justify-between items-center text-xs font-black text-emerald-500 uppercase tracking-widest">
+                                <span>Artisanal Offer</span>
+                                <span>-₱{parseFloat(selectedOrder.discount_amount).toLocaleString()}</span>
+                             </div>
+                          )}
+                          <div className="pt-6 border-t border-gray-200 mt-6 flex justify-between items-end">
+                             <div className="flex flex-col">
+                                <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Total Remittance</span>
+                                <span className="text-2xl font-black text-gray-900 tracking-tight">₱{parseFloat(selectedOrder.total_amount || 0).toLocaleString()}</span>
+                             </div>
+                             <div className="px-3 py-1 bg-[#1a1c23] text-[#eca840] text-[8px] font-black uppercase tracking-[0.2em] rounded-lg">PAID</div>
+                          </div>
+                       </div>
+                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer / Actions */}
+            <div className="p-8 lg:p-10 border-t border-gray-50 bg-gray-50/20 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="flex items-center gap-4">
+                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Fulfillment Progress:</p>
+                   <div className={`px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-sm border ${
+                      selectedOrder.status === 'Completed' ? 'bg-green-500/10 text-green-600 border-green-500/20' : 
+                      selectedOrder.status === 'Pending' ? 'bg-orange-500/10 text-orange-600 border-orange-500/20' :
+                      'bg-blue-500/10 text-blue-600 border-blue-500/20'
+                   }`}>
+                      {selectedOrder.status}
+                   </div>
+                </div>
+                <div className="flex gap-4 w-full md:w-auto">
+                    <button 
+                      onClick={() => setIsModalOpen(false)}
+                      className="flex-1 md:flex-none px-8 py-4 bg-white border border-gray-200 rounded-2xl text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-all active:scale-95 shadow-sm"
+                    >
+                      Archive View
+                    </button>
+                    {selectedOrder.status !== 'Completed' && (
+                        <button 
+                          onClick={() => {
+                            const statuses = ['Pending', 'Preparing', 'Out for Delivery', 'Completed'];
+                            const nextIdx = (statuses.indexOf(selectedOrder.status) + 1) % statuses.length;
+                            updateOrderStatus(selectedOrder.id, statuses[nextIdx]);
+                            setIsModalOpen(false);
+                          }}
+                          className="flex-1 md:flex-none px-10 py-4 bg-[#2d2a26] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#eca840] hover:shadow-xl hover:shadow-[#eca840]/20 transition-all border border-[#2d2a26] hover:border-[#eca840] active:scale-95"
+                        >
+                          Advance Fulfillment
+                        </button>
+                    )}
+                </div>
+            </div>
+          </div>
+        </div>
+      )}
     </SellerLayout>
   );
 }

@@ -18,6 +18,7 @@ export default function SellerUsers({ users, stats }: UsersProps) {
   const [activeMenu, setActiveMenu] = React.useState<number | null>(null);
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
   const [selectedRole, setSelectedRole] = React.useState('All Users');
+  const [searchQuery, setSearchQuery] = React.useState('');
   const [editingUser, setEditingUser] = React.useState<any>(null);
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
 
@@ -34,11 +35,17 @@ export default function SellerUsers({ users, stats }: UsersProps) {
   });
 
   const filteredUsers = React.useMemo(() => {
-    if (selectedRole === 'All Users') return users;
-    if (selectedRole === 'Seller/Admin') return users.filter(u => u.role === 'Seller');
-    if (selectedRole === 'Client') return users.filter(u => u.role === 'Buyer');
-    return users;
-  }, [users, selectedRole]);
+    let result = users;
+    if (selectedRole === 'Seller/Admin') result = result.filter(u => u.role === 'Seller');
+    else if (selectedRole === 'Client') result = result.filter(u => u.role === 'Buyer');
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(u =>
+        u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q)
+      );
+    }
+    return result;
+  }, [users, selectedRole, searchQuery]);
 
   const handleExport = () => {
     const csvContent = "data:text/csv;charset=utf-8," 
@@ -118,7 +125,24 @@ export default function SellerUsers({ users, stats }: UsersProps) {
       <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden mb-12">
          <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/10">
             <h3 className="text-xl font-black text-gray-900">Sellers & Clients</h3>
-            <div className="flex gap-3 relative">
+             <div className="flex items-center gap-3 relative">
+               {/* Live Search */}
+               <div className="relative hidden md:flex items-center">
+                  <svg className="absolute left-3 w-3.5 h-3.5 text-gray-300 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    placeholder="Search members..."
+                    className="pl-8 pr-8 py-2 text-[10px] font-bold text-gray-700 bg-gray-50 border border-gray-100 rounded-xl w-48 focus:outline-none focus:ring-2 focus:ring-[#eca840]/20 focus:border-[#eca840]/30 placeholder:text-gray-300 uppercase tracking-wider transition-all"
+                  />
+                  {searchQuery && (
+                    <button onClick={() => setSearchQuery('')} className="absolute right-2.5 text-gray-300 hover:text-gray-600 transition-colors">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                  )}
+               </div>
+
                <button 
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
                   className={`p-2.5 rounded-xl transition-all ${isFilterOpen ? 'bg-[#eca840] text-white' : 'text-gray-400 hover:bg-white hover:shadow-md border border-transparent hover:border-gray-100'}`}
