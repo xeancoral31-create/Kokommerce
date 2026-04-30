@@ -1,0 +1,29 @@
+# Git
+.git
+.gitignore
+
+# Node
+node_modules
+
+# Laravel local files
+.env
+.env.backup
+storage/app/public
+storage/framework/cache
+storage/framework/sessions
+storage/framework/views
+storage/logs/*.log
+
+# Dev tools
+.idea
+.vscode
+*.test.js
+tests/
+
+# Build artifacts (built fresh in Docker)
+/public/hot
+
+# Misc
+npm-debug.log
+yarn-error.log
+README.md

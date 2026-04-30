@@ -14,7 +14,9 @@ class AddPackageUnitToProductsTable extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('package_unit')->nullable()->after('package_price');
+            if (!Schema::hasColumn('products', 'package_unit')) {
+                $table->string('package_unit')->nullable()->after('package_price');
+            }
         });
     }
 
