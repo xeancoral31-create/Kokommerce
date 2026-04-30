@@ -84,6 +84,8 @@ COPY --from=php-builder /app/vendor ./vendor
 EXPOSE 8080
 
 # Run migrations, link storage, then start server
-CMD sh -c "php artisan migrate --force && \
+CMD sh -c "mkdir -p storage/framework/{sessions,views,cache,testing} storage/logs bootstrap/cache && \
+           chmod -R 777 storage bootstrap/cache && \
+           php artisan migrate --force && \
            php artisan storage:link --force 2>/dev/null || true && \
            php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"
