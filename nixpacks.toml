@@ -10,7 +10,7 @@
 [phases.install]
     cmds = [
         'composer install --optimize-autoloader --no-dev --no-interaction --prefer-dist',
-        'npm install'
+        'npm ci --omit=dev'
     ]
 
 [phases.build]
