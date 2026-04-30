@@ -14,6 +14,15 @@ yarn-error.log
 /.idea
 /.vscode
 
+# Large media files - serve from storage or CDN instead
+/public/video/
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Compiled node_modules chunks (built by webpack/mix, not needed in git)
+/public/js/node_modules_*
 
 #Ignore vscode AI rules
 .github\instructions\codacy.instructions.md
