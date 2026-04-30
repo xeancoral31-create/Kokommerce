@@ -109,7 +109,7 @@ export default function OrderHistory({ orders, flash }: OrderHistoryProps) {
                                     <td className="px-6 py-4 font-bold text-gray-900">₱{parseFloat(order.total_amount).toLocaleString()}</td>
                                     <td className="px-6 py-4">
                                         <span className={`px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider border inline-block ${
-                                            order.status === 'delivered' ? 'bg-green-500/10 text-green-600 border-green-500/20' :
+                                            order.status.toLowerCase() === 'delivered' || order.status.toLowerCase() === 'completed' ? 'bg-green-500/10 text-green-600 border-green-500/20' :
                                             order.status.toLowerCase() === 'pending' ? 'bg-orange-500/10 text-orange-600 border-orange-500/20' :
                                             'bg-gray-500/10 text-gray-600 border-gray-500/20'
                                         }`}>

@@ -115,10 +115,10 @@ export default function BuyerHome({ user_name, featured_products, new_arrivals, 
                             <p className="text-white/40 text-[9px] font-black uppercase tracking-[0.3em] mb-3 group-hover/stat:text-[#d4af37] transition-colors">Active Offers</p>
                             <p className="text-white text-4xl md:text-5xl font-light tracking-tighter">{stats.available_offers.toString().padStart(2, '0')}</p>
                         </div>
-                        <div className="backdrop-blur-3xl bg-[#141414]/40 border border-white/10 p-6 md:p-8 rounded-2xl flex flex-col items-start md:items-center justify-center flex-1 lg:flex-none min-w-[150px] group/stat hover:bg-[#d4af37]/10 hover:border-[#d4af37]/30 transition-all duration-500 shadow-2xl">
-                            <p className="text-white/40 text-[9px] font-black uppercase tracking-[0.3em] mb-3 group-hover/stat:text-[#d4af37] transition-colors">Pending Orders</p>
+                        <Link href="/buyer/history" className="backdrop-blur-3xl bg-[#141414]/40 border border-white/10 p-6 md:p-8 rounded-2xl flex flex-col items-start md:items-center justify-center flex-1 lg:flex-none min-w-[150px] group/stat hover:bg-[#d4af37]/10 hover:border-[#d4af37]/30 transition-all duration-500 shadow-2xl">
+                            <p className="text-white/40 text-[9px] font-black uppercase tracking-[0.3em] mb-3 group-hover/stat:text-[#d4af37] transition-colors">Completed Orders</p>
                             <p className="text-white text-4xl md:text-5xl font-light tracking-tighter">{stats.recent_orders_count.toString().padStart(2, '0')}</p>
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </section>

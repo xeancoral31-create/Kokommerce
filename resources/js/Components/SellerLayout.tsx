@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, usePage } from '@inertiajs/inertia-react';
 import { useUser, UserButton } from '@clerk/clerk-react';
 import Logo from './Logo';
+import { useTheme } from '../Context/ThemeContext';
 
 const icons = {
   dashboard: (
@@ -24,6 +25,7 @@ const icons = {
 };
 
 const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { theme, toggleTheme } = useTheme();
   const { url, props } = usePage();
   const { user, isLoaded } = useUser();
   const authUser = (props.auth_user as any) || null; // Laravel-authenticated user (reliable fallback)
@@ -79,7 +81,7 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   ];
 
   return (
-    <div className="seller-module min-h-screen bg-[#fcfaf7]">
+    <div className={`seller-module min-h-screen bg-[#fcfaf7] transition-all duration-500 ${theme === 'dark' ? 'dark bg-[#0f1115]' : ''}`}>
       {/* Mobile Sidebar Overlay */}
       <div
         className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`}
@@ -169,6 +171,23 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           </div>
 
           <div className="flex items-center gap-3 lg:gap-4 ml-auto">
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#eca840] hover:bg-white border border-transparent hover:border-gray-100 transition-all shadow-sm group"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark' ? (
+                <svg className="w-5 h-5 group-hover:rotate-45 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 9h-1m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 group-hover:-rotate-12 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              )}
+            </button>
+
             {/* Notification Bell */}
             <div className="relative">
               <button

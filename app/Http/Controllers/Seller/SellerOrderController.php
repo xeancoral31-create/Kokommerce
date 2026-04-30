@@ -61,8 +61,8 @@ class SellerOrderController extends Controller
                 'total_revenue' => (float)$totalRevenue,
                 'today_revenue' => (float) $todayRevenue,
                 'revenue_change' => $revenueChange,
-                'avg_prep_time' => $totalOrders > 0 ? ($avgPrepTimeValue >= 60 ? round($avgPrepTimeValue/60, 1) . 'h' : round($avgPrepTimeValue) . 'm') : 'No data yet',
-                'fulfillment_rate' => $totalOrders > 0 ? $fulfillmentRate . '%' : 'No data yet'
+                'avg_prep_time' => $countForPrep > 0 ? ($avgPrepTimeValue >= 60 ? round($avgPrepTimeValue/60, 1) . 'h' : round($avgPrepTimeValue) . 'm') : 'Awaiting Fulfillment',
+                'fulfillment_rate' => $totalOrders > 0 ? $fulfillmentRate . '%' : '0.0%'
             ]
         ]);
     }

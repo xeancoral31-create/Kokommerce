@@ -1765,9 +1765,6 @@ video {
 .max-h-\[600px\]{
   max-height: 600px;
 }
-.max-h-\[620px\]{
-  max-height: 620px;
-}
 .max-h-\[85vh\]{
   max-height: 85vh;
 }
@@ -2460,9 +2457,6 @@ video {
 .self-center{
   align-self: center;
 }
-.overflow-auto{
-  overflow: auto;
-}
 .overflow-hidden{
   overflow: hidden;
 }
@@ -2821,6 +2815,10 @@ video {
 .border-t-\[\#1a1a1a\]{
   --tw-border-opacity: 1;
   border-top-color: rgb(26 26 26 / var(--tw-border-opacity, 1));
+}
+.bg-\[\#0f1115\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 17 21 / var(--tw-bg-opacity, 1));
 }
 .bg-\[\#111\]{
   --tw-bg-opacity: 1;
@@ -5842,6 +5840,63 @@ body {
   background: #edf2f7;
 }
 
+.dark .seller-module {
+  background: #0f1115 !important;
+  color: #e2e8f0;
+}
+.dark .seller-sidebar {
+  background: rgba(24, 26, 31, 0.95);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.dark .seller-sidebar .sidebar-branding {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+.dark .seller-sidebar .sidebar-branding h1 {
+  color: white;
+}
+.dark .seller-sidebar .nav-item {
+  color: #94a3b8;
+}
+.dark .seller-sidebar .nav-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: #eca840;
+}
+.dark .seller-sidebar .nav-item.active {
+  background: white;
+  color: black;
+}
+.dark .seller-main {
+  background: #0f1115;
+}
+.dark .seller-main .seller-header {
+  background: rgba(24, 26, 31, 0.9);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.dark .seller-main .seller-header .header-search {
+  background: rgba(255, 255, 255, 0.03);
+}
+.dark .seller-main .seller-header .header-search input {
+  color: white;
+}
+.dark .stat-card, .dark .seller-table, .dark .bg-white {
+  background-color: #181a1f !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #e2e8f0 !important;
+}
+.dark .stat-card h1, .dark .stat-card h2, .dark .stat-card h3, .dark .stat-card h4, .dark .stat-card h5, .dark .stat-card .text-gray-900, .dark .seller-table h1, .dark .seller-table h2, .dark .seller-table h3, .dark .seller-table h4, .dark .seller-table h5, .dark .seller-table .text-gray-900, .dark .bg-white h1, .dark .bg-white h2, .dark .bg-white h3, .dark .bg-white h4, .dark .bg-white h5, .dark .bg-white .text-gray-900 {
+  color: white !important;
+}
+.dark .stat-card .text-gray-500, .dark .stat-card .text-gray-600, .dark .seller-table .text-gray-500, .dark .seller-table .text-gray-600, .dark .bg-white .text-gray-500, .dark .bg-white .text-gray-600 {
+  color: #94a3b8 !important;
+}
+.dark .seller-table th {
+  background: rgba(255, 255, 255, 0.02);
+  color: #94a3b8;
+}
+.dark .status-badge.active {
+  background: rgba(16, 185, 129, 0.15);
+}
+
 .seller-sidebar {
   width: 280px;
   background: rgba(255, 255, 255, 0.95);
@@ -6781,12 +6836,20 @@ body {
   --tw-translate-y: 0px;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+.group:hover .group-hover\:-rotate-12{
+  --tw-rotate: -12deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
 .group:hover .group-hover\:rotate-12{
   --tw-rotate: 12deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .group:hover .group-hover\:rotate-180{
   --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.group:hover .group-hover\:rotate-45{
+  --tw-rotate: 45deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .group:hover .group-hover\:rotate-90{

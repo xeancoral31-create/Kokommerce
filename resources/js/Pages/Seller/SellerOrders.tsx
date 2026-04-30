@@ -238,7 +238,7 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
           </div>
 
           {/* Precision Scroll Viewport */}
-          <div className="flex-1 overflow-auto max-h-[620px] custom-scrollbar">
+          <div className="flex-1">
             <table className="w-full border-collapse">
                 <thead className="bg-[#fcfaf7] border-b border-gray-100 sticky top-0 z-20">
                   <tr>

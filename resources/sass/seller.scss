@@ -11,6 +11,79 @@ $seller-text-main: #1a1a1a;
 $seller-text-muted: #6b7280;
 $seller-border: #f3f4f6;
 
+// Dark Mode Variables
+$dark-bg: #0f1115;
+$dark-card: #181a1f;
+$dark-border: rgba(255, 255, 255, 0.08);
+$dark-text: #e2e8f0;
+$dark-muted: #94a3b8;
+
+.dark {
+    .seller-module {
+        background: $dark-bg !important;
+        color: $dark-text;
+    }
+    
+    .seller-sidebar {
+        background: rgba($dark-card, 0.95);
+        border-color: $dark-border;
+        
+        .sidebar-branding {
+            border-bottom-color: $dark-border;
+            h1 { color: white; }
+        }
+        
+        .nav-item {
+            color: $dark-muted;
+            &:hover {
+                background: rgba(white, 0.03);
+                color: $seller-primary;
+            }
+            &.active {
+                background: white;
+                color: black;
+            }
+        }
+    }
+    
+    .seller-main {
+        background: $dark-bg;
+        
+        .seller-header {
+            background: rgba($dark-card, 0.9);
+            border-color: $dark-border;
+            
+            .header-search {
+                background: rgba(white, 0.03);
+                input { color: white; }
+            }
+        }
+    }
+    
+    .stat-card, .seller-table, .bg-white {
+        background-color: $dark-card !important;
+        border-color: $dark-border !important;
+        color: $dark-text !important;
+        
+        h1, h2, h3, h4, h5, .text-gray-900 {
+            color: white !important;
+        }
+        
+        .text-gray-500, .text-gray-600 {
+            color: $dark-muted !important;
+        }
+    }
+
+    .seller-table th {
+        background: rgba(white, 0.02);
+        color: $dark-muted;
+    }
+
+    .status-badge {
+        &.active { background: rgba(16, 185, 129, 0.15); }
+    }
+}
+
 .seller-sidebar {
     width: 280px;
     background: rgba(white, 0.95);

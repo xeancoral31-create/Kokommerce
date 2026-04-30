@@ -29,7 +29,7 @@ class BuyerController extends Controller
             'stats' => [
                 'recent_orders_count' => $user ? Order::whereHas('buyer', function($q) use ($user) {
                     $q->where('email', $user->email);
-                })->where('status', 'pending')->count() : 0,
+                })->where('status', 'Completed')->count() : 0,
                 'available_offers' => Promotion::where('status', 'active')->count(),
             ]
         ]);
