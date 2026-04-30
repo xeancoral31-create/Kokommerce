@@ -9794,9 +9794,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
-/* harmony import */ var _clerk_clerk_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @clerk/clerk-react */ "./node_modules/@clerk/clerk-react/dist/esm/index.js");
-/* harmony import */ var _Logo__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Logo */ "./resources/js/Components/Logo.tsx");
-/* harmony import */ var _Context_ThemeContext__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Context/ThemeContext */ "./resources/js/Context/ThemeContext.tsx");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+/* harmony import */ var _clerk_clerk_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @clerk/clerk-react */ "./node_modules/@clerk/clerk-react/dist/esm/index.js");
+/* harmony import */ var _Logo__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Logo */ "./resources/js/Components/Logo.tsx");
+/* harmony import */ var _Context_ThemeContext__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Context/ThemeContext */ "./resources/js/Context/ThemeContext.tsx");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
@@ -9813,6 +9814,7 @@ function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) 
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+
 
 
 
@@ -9901,7 +9903,7 @@ var icons = {
       strokeLinecap: "round",
       strokeLinejoin: "round",
       strokeWidth: 2,
-      d: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 0 012 2v14a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 0 01-2 2h-2a2 0 01-2-2z"
+      d: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 0 012 2v14a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 0 002-2m0 0V5a2 2 0 012-2h2a2 0 012 2v14a2 0 01-2 2h-2a2 0 01-2-2z"
     })
   }),
   users: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
@@ -9957,40 +9959,51 @@ var icons = {
 var SellerLayout = function SellerLayout(_ref) {
   var _notifications$recent, _notifications$recent2, _notifications$recent3, _notifications$recent4;
   var children = _ref.children;
-  var _useTheme = (0,_Context_ThemeContext__WEBPACK_IMPORTED_MODULE_5__.useTheme)(),
+  var _useTheme = (0,_Context_ThemeContext__WEBPACK_IMPORTED_MODULE_6__.useTheme)(),
     theme = _useTheme.theme,
     toggleTheme = _useTheme.toggleTheme;
   var _usePage = (0,_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_2__.usePage)(),
     url = _usePage.url,
     props = _usePage.props;
-  var _useUser = (0,_clerk_clerk_react__WEBPACK_IMPORTED_MODULE_3__.useUser)(),
+  var _useUser = (0,_clerk_clerk_react__WEBPACK_IMPORTED_MODULE_4__.useUser)(),
     user = _useUser.user,
     isLoaded = _useUser.isLoaded;
   var authUser = props.auth_user || null; // Laravel-authenticated user (reliable fallback)
-  var notifications = props.seller_notifications || {
-    low_stock: []
-  };
+  // Initialize notifications as state for optimistic updates
+  var _React$useState = react__WEBPACK_IMPORTED_MODULE_1__.useState(props.seller_notifications || {
+      low_stock: [],
+      recent: []
+    }),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    notifications = _React$useState2[0],
+    setNotifications = _React$useState2[1];
   var initialStore = props.store_profile || {
     name: 'Kokommerce Artisanal',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop',
     tagline: 'Handcrafted Joy In Every Bite'
   };
-  var _React$useState = react__WEBPACK_IMPORTED_MODULE_1__.useState(initialStore),
-    _React$useState2 = _slicedToArray(_React$useState, 2),
-    store = _React$useState2[0],
-    setStore = _React$useState2[1];
-  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_1__.useState(false),
+  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_1__.useState(initialStore),
     _React$useState4 = _slicedToArray(_React$useState3, 2),
-    showNotifications = _React$useState4[0],
-    setShowNotifications = _React$useState4[1];
+    store = _React$useState4[0],
+    setStore = _React$useState4[1];
   var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_1__.useState(false),
     _React$useState6 = _slicedToArray(_React$useState5, 2),
-    sidebarOpen = _React$useState6[0],
-    setSidebarOpen = _React$useState6[1];
-  var _React$useState7 = react__WEBPACK_IMPORTED_MODULE_1__.useState(null),
+    showNotifications = _React$useState6[0],
+    setShowNotifications = _React$useState6[1];
+  var _React$useState7 = react__WEBPACK_IMPORTED_MODULE_1__.useState(false),
     _React$useState8 = _slicedToArray(_React$useState7, 2),
-    selectedNotification = _React$useState8[0],
-    setSelectedNotification = _React$useState8[1];
+    sidebarOpen = _React$useState8[0],
+    setSidebarOpen = _React$useState8[1];
+  var _React$useState9 = react__WEBPACK_IMPORTED_MODULE_1__.useState(null),
+    _React$useState0 = _slicedToArray(_React$useState9, 2),
+    selectedNotification = _React$useState0[0],
+    setSelectedNotification = _React$useState0[1];
+  // Sync state if props change (e.g. on manual reload or other navigation)
+  react__WEBPACK_IMPORTED_MODULE_1__.useEffect(function () {
+    if (props.seller_notifications) {
+      setNotifications(props.seller_notifications);
+    }
+  }, [props.seller_notifications]);
   // Identity priority logic: Clerk first → Laravel auth_user → store defaults
   var clerkImage = isLoaded && user !== null && user !== void 0 && user.imageUrl ? user.imageUrl : null;
   var profileImage = clerkImage || (authUser === null || authUser === void 0 ? void 0 : authUser.image) || store.image || 'https://via.placeholder.com/100?text=Logo';
@@ -10076,7 +10089,7 @@ var SellerLayout = function SellerLayout(_ref) {
         className: "sidebar-branding mb-8 flex items-center gap-3 px-3 py-1",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "relative group cursor-pointer transition-all duration-500 hover:scale-105",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Logo__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Logo__WEBPACK_IMPORTED_MODULE_5__["default"], {
             size: 36
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -10270,42 +10283,20 @@ var SellerLayout = function SellerLayout(_ref) {
                     })]
                   }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
                     id: "mark-all-read-btn",
-                    onClick: function () {
-                      var _onClick = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(e) {
-                        var _document$querySelect, token, _t;
-                        return _regenerator().w(function (_context) {
-                          while (1) switch (_context.p = _context.n) {
-                            case 0:
-                              e.stopPropagation();
-                              _context.p = 1;
-                              token = (_document$querySelect = document.querySelector('meta[name="csrf-token"]')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.getAttribute('content');
-                              _context.n = 2;
-                              return fetch('/seller/notifications/read-all', {
-                                method: 'POST',
-                                headers: {
-                                  'Content-Type': 'application/json',
-                                  'X-CSRF-TOKEN': token || '',
-                                  'Accept': 'application/json'
-                                }
-                              });
-                            case 2:
-                              window.location.reload();
-                              _context.n = 4;
-                              break;
-                            case 3:
-                              _context.p = 3;
-                              _t = _context.v;
-                              console.error('Failed to mark all as read:', _t);
-                            case 4:
-                              return _context.a(2);
-                          }
-                        }, _callee, null, [[1, 3]]);
-                      }));
-                      function onClick(_x) {
-                        return _onClick.apply(this, arguments);
-                      }
-                      return onClick;
-                    }(),
+                    onClick: function onClick(e) {
+                      e.stopPropagation();
+                      _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__.Inertia.post(route('seller.notifications.read-all'), {}, {
+                        onSuccess: function onSuccess() {
+                          // Optimistically clear the recent notifications in local display
+                          setNotifications(function (prev) {
+                            return _objectSpread(_objectSpread({}, prev), {}, {
+                              recent: []
+                            });
+                          });
+                        },
+                        preserveScroll: true
+                      });
+                    },
                     className: "text-[9px] font-black text-[#eca840] uppercase tracking-widest px-3 py-1.5 rounded-lg bg-orange-50 hover:bg-[#eca840] hover:text-white transition-all duration-300 active:scale-95 border border-[#eca840]/20 hover:border-[#eca840]",
                     children: "Mark All Read"
                   })]
@@ -10341,6 +10332,21 @@ var SellerLayout = function SellerLayout(_ref) {
                       onClick: function onClick() {
                         setSelectedNotification(notif);
                         setShowNotifications(false);
+                        // Mark as read when clicked
+                        _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__.Inertia.post(route('seller.notifications.read', {
+                          id: notif.id
+                        }), {}, {
+                          onSuccess: function onSuccess() {
+                            setNotifications(function (prev) {
+                              return _objectSpread(_objectSpread({}, prev), {}, {
+                                recent: prev.recent.filter(function (n) {
+                                  return n.id !== notif.id;
+                                })
+                              });
+                            });
+                          },
+                          preserveScroll: true
+                        });
                       },
                       className: "w-full text-left p-4 bg-orange-50/50 rounded-2xl hover:bg-white border border-transparent hover:border-[#eca840]/20 transition-all cursor-pointer group",
                       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -10525,7 +10531,7 @@ var SellerLayout = function SellerLayout(_ref) {
               })]
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
               className: "absolute inset-0 opacity-0 z-10 cursor-pointer [&_button]:w-full [&_button]:h-full [&_button]:rounded-full",
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_clerk_clerk_react__WEBPACK_IMPORTED_MODULE_3__.UserButton, {
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_clerk_clerk_react__WEBPACK_IMPORTED_MODULE_4__.UserButton, {
                 afterSignOutUrl: "/",
                 appearance: {
                   elements: {
@@ -10695,14 +10701,14 @@ var SellerLayout = function SellerLayout(_ref) {
           className: "px-8 pb-8 flex gap-3",
           children: [selectedNotification.id && !String(selectedNotification.id).startsWith('low_stock_') && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
             onClick: function () {
-              var _onClick2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
-                var _document$querySelect2, token, _t2;
-                return _regenerator().w(function (_context2) {
-                  while (1) switch (_context2.p = _context2.n) {
+              var _onClick = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+                var _document$querySelect, token, _t;
+                return _regenerator().w(function (_context) {
+                  while (1) switch (_context.p = _context.n) {
                     case 0:
-                      _context2.p = 0;
-                      token = (_document$querySelect2 = document.querySelector('meta[name="csrf-token"]')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.getAttribute('content');
-                      _context2.n = 1;
+                      _context.p = 0;
+                      token = (_document$querySelect = document.querySelector('meta[name="csrf-token"]')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.getAttribute('content');
+                      _context.n = 1;
                       return fetch("/seller/notifications/".concat(selectedNotification.id, "/read"), {
                         method: 'POST',
                         headers: {
@@ -10714,19 +10720,19 @@ var SellerLayout = function SellerLayout(_ref) {
                     case 1:
                       setSelectedNotification(null);
                       window.location.reload();
-                      _context2.n = 3;
+                      _context.n = 3;
                       break;
                     case 2:
-                      _context2.p = 2;
-                      _t2 = _context2.v;
-                      console.error('Failed to mark as read:', _t2);
+                      _context.p = 2;
+                      _t = _context.v;
+                      console.error('Failed to mark as read:', _t);
                     case 3:
-                      return _context2.a(2);
+                      return _context.a(2);
                   }
-                }, _callee2, null, [[0, 2]]);
+                }, _callee, null, [[0, 2]]);
               }));
               function onClick() {
-                return _onClick2.apply(this, arguments);
+                return _onClick.apply(this, arguments);
               }
               return onClick;
             }(),
@@ -15163,7 +15169,8 @@ var CheckoutForm = function CheckoutForm(_ref) {
             _context2.n = 2;
             return axios__WEBPACK_IMPORTED_MODULE_9___default().post(route('payment.paymongo.source'), {
               amount: total,
-              type: ewalletProvider === 'maya' ? 'paymaya' : 'gcash'
+              type: ewalletProvider === 'maya' ? 'paymaya' : 'gcash',
+              items_data: itemsData
             });
           case 2:
             res = _context2.v;
@@ -17241,17 +17248,14 @@ function MockEwallet(_ref) {
   var source_id = _ref.source_id,
     amount = _ref.amount,
     provider = _ref.provider,
-    reference = _ref.reference;
+    reference = _ref.reference,
+    items = _ref.items;
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)('idle'),
     _useState2 = _slicedToArray(_useState, 2),
     status = _useState2[0],
     setStatus = _useState2[1];
   var isGcash = provider === 'gcash';
   var primaryColor = isGcash ? '#0066d6' : '#008a45';
-  var headerColor = isGcash ? '#005ab8' : '#007038';
-  var bgColor = isGcash ? '#f0f5ff' : '#f0fff6';
-  var borderColor = isGcash ? '#cce0ff' : '#bbf7d0';
-  var logoLabel = isGcash ? 'G' : 'maya';
   var providerLabel = isGcash ? 'GCash' : 'Maya';
   var handleConfirm = function handleConfirm() {
     setStatus('processing');
@@ -17259,212 +17263,251 @@ function MockEwallet(_ref) {
       return setStatus('success');
     }, 2000);
   };
+  var deliveryFee = 20;
+  var subtotal = items.reduce(function (acc, item) {
+    return acc + item.price * item.qty;
+  }, 0);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_2__.Head, {
-      title: "".concat(providerLabel, " \u2013 Secure Payment")
+      title: "Receipt - ".concat(providerLabel, " Secure Checkout")
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "min-h-screen flex flex-col items-center justify-center p-6",
+      className: "min-h-screen bg-[#121417] flex flex-col items-center justify-center p-4 md:p-8 selection:bg-[#d4af37]/30",
       style: {
-        background: primaryColor,
         fontFamily: "'Inter', sans-serif"
       },
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "w-full max-w-sm bg-white rounded-[2rem] overflow-hidden shadow-2xl",
-        style: {
-          boxShadow: '0 40px 80px rgba(0,0,0,0.3)'
-        },
+        className: "fixed inset-0 overflow-hidden pointer-events-none",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#d4af37]/5 blur-[120px] rounded-full"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full"
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "w-full max-w-lg relative",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "flex items-center gap-4 px-6 py-5",
-          style: {
-            background: headerColor
-          },
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-            className: "w-13 h-13 flex-shrink-0 rounded-2xl flex items-center justify-center bg-white",
-            style: {
-              width: 52,
-              height: 52,
-              fontSize: isGcash ? '1.4rem' : '0.7rem',
-              fontWeight: 900,
-              fontStyle: isGcash ? 'italic' : 'normal',
-              color: primaryColor,
-              letterSpacing: isGcash ? 0 : '-0.05em'
-            },
-            children: logoLabel
+          className: "flex items-center justify-between mb-8 px-2",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "flex items-center gap-3",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              className: "w-10 h-10 bg-[#d4af37] rounded-xl flex items-center justify-center shadow-lg shadow-orange-900/20",
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                className: "text-white font-black text-xs uppercase tracking-tighter",
+                children: "Koko"
+              })
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
+                className: "text-white font-black text-sm uppercase tracking-[0.2em]",
+                children: "Kokommerce"
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                className: "text-[#d4af37] text-[8px] font-bold uppercase tracking-widest italic",
+                children: "Artisanal Bakery Terminal"
+              })]
+            })]
           }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h1", {
-              className: "text-white font-extrabold text-lg tracking-tight leading-none",
-              children: [providerLabel, " Checkout"]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-              className: "text-white/60 text-xs font-medium mt-0.5",
-              children: "Secure Payment Gateway"
+            className: "text-right",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+              className: "text-gray-500 text-[9px] font-black uppercase tracking-widest block",
+              children: "Checkout Portal"
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+              className: "text-white text-[10px] font-bold flex items-center gap-1.5 justify-end",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                className: "w-1.5 h-1.5 rounded-full ".concat(isGcash ? 'bg-blue-500' : 'bg-emerald-500')
+              }), providerLabel, " Protected"]
             })]
           })]
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "px-6 py-6",
-          children: status !== 'success' ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          className: "bg-white rounded-[2.5rem] shadow-2xl overflow-hidden relative border border-white/10",
+          children: status !== 'success' ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "animate-in fade-in slide-in-from-bottom-4 duration-700",
             children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "flex items-center gap-3 bg-gray-50 rounded-2xl p-4 mb-5",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                className: "w-10 h-10 bg-[#1a1a1a] rounded-xl flex items-center justify-center flex-shrink-0",
-                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                  className: "text-[#d4af37] font-black text-[10px] uppercase tracking-wider",
-                  children: "Koko"
-                })
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                  className: "text-xs text-gray-400 font-medium",
-                  children: "Paying to"
-                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                  className: "text-sm font-black text-gray-900",
-                  children: "Kokommerce Bakery"
+              className: "p-8 pb-4 border-b border-gray-100 bg-gray-50/50",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "flex justify-between items-start mb-6",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
+                    className: "text-2xl font-black text-gray-900 tracking-tight leading-none mb-2 italic",
+                    children: ["Official ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                      className: "text-[#d4af37]",
+                      children: "Receipt."
+                    })]
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+                    className: "text-[10px] text-gray-400 font-bold uppercase tracking-widest",
+                    children: ["Reference: ", reference]
+                  })]
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "bg-white px-3 py-2 rounded-xl border border-gray-200 shadow-sm text-center min-w-[80px]",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                    className: "text-[8px] font-black text-gray-400 uppercase tracking-tighter mb-0.5",
+                    children: "Payment Via"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                    className: "text-[10px] font-black text-gray-900 uppercase tracking-widest",
+                    children: providerLabel
+                  })]
                 })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar",
+                children: items.map(function (item, idx) {
+                  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                    className: "flex items-center gap-4 group",
+                    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                      className: "w-12 h-12 rounded-xl bg-white border border-gray-100 overflow-hidden flex-shrink-0 shadow-sm group-hover:border-[#d4af37]/30 transition-colors",
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+                        src: item.img,
+                        alt: item.name,
+                        className: "w-full h-full object-cover"
+                      })
+                    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                      className: "flex-1 min-w-0",
+                      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h3", {
+                        className: "text-xs font-black text-gray-900 uppercase tracking-wide truncate",
+                        children: item.name
+                      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+                        className: "text-[10px] text-gray-400 font-medium",
+                        children: ["Qty: ", item.qty, " \xB7 ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                          className: "italic",
+                          children: ["\u20B1", item.price.toLocaleString()]
+                        })]
+                      })]
+                    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                      className: "text-right",
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+                        className: "text-sm font-black text-gray-900 tracking-tight",
+                        children: ["\u20B1", (item.price * item.qty).toLocaleString()]
+                      })
+                    })]
+                  }, idx);
+                })
               })]
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "text-center rounded-2xl p-5 mb-5 border-2",
-              style: {
-                background: bgColor,
-                borderColor: borderColor
-              },
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-                className: "text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-1",
-                children: "Amount Due"
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
-                className: "text-4xl font-black tracking-tight",
-                style: {
-                  color: primaryColor
-                },
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("sup", {
-                  className: "text-xl align-super",
-                  children: "\u20B1"
-                }), amount.toLocaleString('en-PH', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
+              className: "p-8 pt-6 space-y-3",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-gray-400",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                  children: "Subtotal Settlement"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                  className: "text-gray-900 font-black",
+                  children: ["\u20B1", subtotal.toLocaleString(), ".00"]
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-gray-400 pb-4 border-b border-gray-100",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                  children: "Logistics & Delivery"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                  className: "text-gray-900 font-black",
+                  children: ["\u20B1", deliveryFee.toLocaleString(), ".00"]
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "pt-2 flex justify-between items-center",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                    className: "text-[11px] font-black text-gray-900 uppercase tracking-[0.2em] mb-1",
+                    children: "Total Authorization"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+                    className: "text-[9px] text-[#d4af37] font-bold uppercase tracking-widest",
+                    children: "Safe Simulated Payment"
+                  })]
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+                  className: "text-4xl font-black text-gray-900 tracking-tighter italic",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("sup", {
+                    className: "text-lg align-super font-bold mr-1",
+                    children: "\u20B1"
+                  }), amount.toLocaleString('en-PH', {
+                    minimumFractionDigits: 2
+                  })]
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "mt-8 p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-2",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "flex justify-between text-[8px] font-black uppercase tracking-widest text-gray-400",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                    children: "System Source ID"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                    className: "font-mono text-gray-500",
+                    children: source_id
+                  })]
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                  className: "flex justify-between text-[8px] font-black uppercase tracking-widest text-gray-400",
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                    children: "Checkout Gateway"
+                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+                    className: "text-gray-500",
+                    children: [providerLabel, " E-Wallet"]
+                  })]
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "pt-6 space-y-4",
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                  onClick: handleConfirm,
+                  disabled: status === 'processing',
+                  className: "w-full py-5 rounded-2xl text-white font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3 transition-all active:scale-[0.98] shadow-xl ".concat(status === 'processing' ? 'bg-gray-400' : 'bg-gray-900 hover:bg-black shadow-gray-900/20'),
+                  children: status === 'processing' ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+                    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                      className: "w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
+                    }), "Committing..."]
+                  }) : "Finalize \u20B1".concat(amount.toLocaleString())
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                  onClick: function onClick() {
+                    return window.close();
+                  },
+                  className: "w-full py-4 text-gray-300 hover:text-gray-500 text-[9px] font-black uppercase tracking-widest transition-colors",
+                  children: "Abandon Transaction"
                 })]
               })]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-              className: "space-y-0 mb-4",
-              children: [{
-                label: 'Reference No.',
-                value: reference
-              }, {
-                label: 'Provider',
-                value: "".concat(providerLabel, " E-Wallet")
-              }, {
-                label: 'Source ID',
-                value: source_id,
-                mono: true
-              }].map(function (row, i, arr) {
-                return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-                  className: "flex justify-between items-center py-3 text-sm ".concat(i < arr.length - 1 ? 'border-b border-gray-100' : ''),
-                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                    className: "text-gray-400 font-medium",
-                    children: row.label
-                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                    className: "font-bold text-gray-900 ".concat(row.mono ? 'font-mono text-xs text-gray-500' : ''),
-                    style: {
-                      maxWidth: '55%',
-                      wordBreak: 'break-all',
-                      textAlign: 'right'
-                    },
-                    children: row.value
-                  })]
-                }, row.label);
-              })
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-              className: "flex justify-center mb-5",
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
-                className: "inline-flex items-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-700 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full",
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                  className: "w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"
-                }), "Test Mode \u2014 Simulated Payment"]
-              })
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-              onClick: handleConfirm,
-              disabled: status === 'processing',
-              className: "w-full py-4 rounded-2xl text-white font-extrabold text-sm flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-70",
-              style: {
-                background: primaryColor
-              },
-              children: status === 'processing' ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("svg", {
-                  className: "animate-spin w-4 h-4",
-                  fill: "none",
-                  viewBox: "0 0 24 24",
-                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("circle", {
-                    className: "opacity-25",
-                    cx: "12",
-                    cy: "12",
-                    r: "10",
-                    stroke: "currentColor",
-                    strokeWidth: "4"
-                  }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-                    className: "opacity-75",
-                    fill: "currentColor",
-                    d: "M4 12a8 8 0 018-8v8H4z"
-                  })]
-                }), "Processing..."]
-              }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-                children: ["Confirm Payment \u2014 \u20B1", amount.toLocaleString('en-PH', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                })]
-              })
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-              onClick: function onClick() {
-                return window.close();
-              },
-              className: "w-full py-3 mt-3 rounded-2xl border-2 border-gray-100 text-gray-400 font-bold text-sm hover:border-gray-200 hover:text-gray-500 transition-all",
-              children: "Cancel Payment"
             })]
           }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "flex flex-col items-center text-center py-8",
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-              className: "w-20 h-20 rounded-full flex items-center justify-center mb-5 border-4",
-              style: {
-                background: '#dcfce7',
-                borderColor: '#86efac',
-                animation: 'pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-              },
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-                className: "w-10 h-10",
+            className: "p-12 text-center animate-in zoom-in duration-500",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: "w-24 h-24 bg-emerald-50 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-inner relative group",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "absolute inset-0 bg-emerald-500/10 rounded-[2rem] animate-ping opacity-20"
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+                className: "w-12 h-12 text-emerald-500",
                 fill: "none",
                 viewBox: "0 0 24 24",
-                stroke: "#22c55e",
-                strokeWidth: "2.5",
+                stroke: "currentColor",
+                strokeWidth: 3.5,
                 children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
                   strokeLinecap: "round",
                   strokeLinejoin: "round",
                   d: "M5 13l4 4L19 7"
                 })
-              })
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
-              className: "text-xl font-black text-gray-900 mb-2",
-              children: "Payment Confirmed!"
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
-              className: "text-sm text-gray-500 leading-relaxed",
-              children: ["\u20B1", amount.toLocaleString('en-PH', {
-                minimumFractionDigits: 2
-              }), " paid to Kokommerce.", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("br", {}), "You may close this tab and return to the app."]
+              })]
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h2", {
+              className: "text-3xl font-black text-gray-900 tracking-tighter italic mb-4",
+              children: ["Settlement ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                className: "text-emerald-500",
+                children: "Confirmed."
+              })]
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+              className: "text-xs text-gray-500 font-medium leading-relaxed mb-8 max-w-[240px] mx-auto",
+              children: "Your artisanal order has been formally secured in the registry. You may now return to your dashboard."
             }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
               onClick: function onClick() {
                 return window.close();
               },
-              className: "mt-6 px-6 py-3 rounded-2xl text-white font-bold text-sm",
-              style: {
-                background: primaryColor
-              },
-              children: "Close Tab"
+              className: "px-10 py-4 bg-gray-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-black transition-all shadow-xl shadow-gray-900/20 active:scale-95",
+              children: "Exit Terminal"
             })]
           })
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
-          className: "text-center text-gray-300 text-[10px] font-medium pb-4",
-          children: ["Secured by ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("strong", {
-            className: "text-gray-400",
-            children: providerLabel
-          }), " \xB7 Test Environment"]
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: "mt-8 flex items-center justify-center gap-6 opacity-40",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+            className: "text-[8px] font-black text-white uppercase tracking-widest",
+            children: "Encryption v4.2"
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+            className: "w-1 h-1 rounded-full bg-[#d4af37]"
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+            className: "text-[8px] font-black text-white uppercase tracking-widest",
+            children: "Mock Environment"
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+            className: "w-1 h-1 rounded-full bg-[#d4af37]"
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+            className: "text-[8px] font-black text-white uppercase tracking-widest",
+            children: "Kokommerce Secure"
+          })]
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("style", {
-        children: "\n                    @keyframes pop {\n                        0% { transform: scale(0); }\n                        100% { transform: scale(1); }\n                    }\n                "
+        children: "\n                    .custom-scrollbar::-webkit-scrollbar {\n                        width: 4px;\n                    }\n                    .custom-scrollbar::-webkit-scrollbar-track {\n                        background: transparent;\n                    }\n                    .custom-scrollbar::-webkit-scrollbar-thumb {\n                        background: #f1f1f1;\n                        border-radius: 10px;\n                    }\n                    .custom-scrollbar::-webkit-scrollbar-thumb:hover {\n                        background: #d4af37;\n                    }\n                "
       })]
     })]
   });

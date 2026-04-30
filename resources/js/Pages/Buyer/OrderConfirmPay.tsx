@@ -110,6 +110,7 @@ const CheckoutForm = ({ total, subtotal, deliveryFee, deliveryAddress, itemsData
             const res = await axios.post(route('payment.paymongo.source'), {
                 amount: total,
                 type: ewalletProvider === 'maya' ? 'paymaya' : 'gcash',
+                items_data: itemsData
             });
             const { source_id, checkout_url } = res.data;
             setPaymongoSource({ source_id, checkout_url });

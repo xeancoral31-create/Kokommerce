@@ -83,7 +83,20 @@ class OrderController extends Controller
         $secretKey = (string) env('PAYMONGO_SECRET_KEY');
 
         if ($this->isPaymongoMockMode($secretKey)) {
-            return $this->mockPaymongoSourceResponse();
+            $mockId = 'mock_src_' . Str::random(24);
+            
+            // Store items in session for the mock receipt
+            session(["mock_order_{$mockId}" => [
+                'items' => $request->items_data ?? [],
+                'amount' => $request->amount,
+                'type' => $type
+            ]]);
+
+            return response()->json([
+                'source_id'    => $mockId,
+                'checkout_url' => route('payment.mock.checkout', ['source' => $mockId]),
+                'mock'         => true,
+            ]);
         }
 
         return $this->paymongoSource($secretKey, $amount, $type);
@@ -95,16 +108,6 @@ class OrderController extends Controller
             return false;
         }
         return empty($key) || Str::startsWith($key, 'sk_test_');
-    }
-
-    private function mockPaymongoSourceResponse(): JsonResponse
-    {
-        $mockId = 'mock_src_' . Str::random(24);
-        return response()->json([
-            'source_id'    => $mockId,
-            'checkout_url' => route('payment.mock.checkout', ['source' => $mockId]),
-            'mock'         => true,
-        ]);
     }
 
     private function paymongoSource(string $key, int $amount, string $type): JsonResponse
@@ -169,26 +172,24 @@ class OrderController extends Controller
     }
 
     /**
-     * Mock checkout page — opens in new tab from e-wallet modal.
-     * Shows a simulated payment success and auto-closes.
+     * Mock checkout page — rendered via Inertia for a professional UI.
      */
     public function mockCheckout(Request $request)
     {
-        $html = '<!DOCTYPE html><html><head><title>Payment Simulated</title>'
-            . '<style>body{font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#111;color:#fff;}'
-            . '.card{text-align:center;padding:3rem;border-radius:1.5rem;background:#1a1a1a;border:1px solid #333;max-width:400px;}'
-            . '.icon{font-size:4rem;margin-bottom:1rem;}'
-            . '.title{font-size:1.5rem;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem;color:#d4af37;}'
-            . '.sub{font-size:0.85rem;color:#888;margin-bottom:2rem;}'
-            . '.hint{font-size:0.75rem;color:#555;font-style:italic;}</style></head>'
-            . '<body><div class="card">'
-            . '<div class="icon">✅</div>'
-            . '<div class="title">Payment Simulated</div>'
-            . '<div class="sub">You can close this tab and return to the checkout window.<br>Click <strong>"Confirm Simulated Settlement"</strong> to complete your order.</div>'
-            . '<div class="hint">This page will close automatically in 3 seconds...</div>'
-            . '</div><script>setTimeout(()=>window.close(),3000);</script></body></html>';
+        $sourceId = $request->query('source');
+        $mockData = session("mock_order_{$sourceId}", [
+            'items' => [],
+            'amount' => 0,
+            'type' => 'gcash'
+        ]);
 
-        return response($html, 200)->header('Content-Type', 'text/html');
+        return \Inertia\Inertia::render('Payment/MockEwallet', [
+            'source_id' => $sourceId,
+            'amount' => (float) $mockData['amount'],
+            'provider' => $mockData['type'] === 'paymaya' ? 'maya' : 'gcash',
+            'reference' => 'KOKO-MOCK-' . strtoupper(Str::random(6)),
+            'items' => $mockData['items']
+        ]);
     }
 
     /**

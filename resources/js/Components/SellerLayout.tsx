@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link, usePage } from '@inertiajs/inertia-react';
+import { Inertia } from '@inertiajs/inertia';
 import { useUser, UserButton } from '@clerk/clerk-react';
 import Logo from './Logo';
 import { useTheme } from '../Context/ThemeContext';
+
+declare function route(name: string, params?: any): string;
 
 const icons = {
   dashboard: (
@@ -17,7 +20,7 @@ const icons = {
   orders: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>,
   categories: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>,
   offers: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>,
-  analytics: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 0 012 2v14a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 0 01-2 2h-2a2 0 01-2-2z" /></svg>,
+  analytics: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 0 012 2v14a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 0 002-2m0 0V5a2 2 0 012-2h2a2 0 012 2v14a2 0 01-2 2h-2a2 0 01-2-2z" /></svg>,
   users: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>,
   activity: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>,
   settings: <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 00 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
@@ -29,7 +32,10 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const { url, props } = usePage();
   const { user, isLoaded } = useUser();
   const authUser = (props.auth_user as any) || null; // Laravel-authenticated user (reliable fallback)
-  const notifications = (props.seller_notifications as any) || { low_stock: [] };
+  
+  // Initialize notifications as state for optimistic updates
+  const [notifications, setNotifications] = React.useState((props.seller_notifications as any) || { low_stock: [], recent: [] });
+
   const initialStore = (props.store_profile as any) || {
     name: 'Kokommerce Artisanal',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop',
@@ -39,6 +45,13 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [selectedNotification, setSelectedNotification] = React.useState<any>(null);
+
+  // Sync state if props change (e.g. on manual reload or other navigation)
+  React.useEffect(() => {
+    if (props.seller_notifications) {
+      setNotifications(props.seller_notifications as any);
+    }
+  }, [props.seller_notifications]);
 
   // Identity priority logic: Clerk first → Laravel auth_user → store defaults
   const clerkImage = isLoaded && user?.imageUrl ? user.imageUrl : null;
@@ -216,22 +229,15 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                       </div>
                       <button
                         id="mark-all-read-btn"
-                        onClick={async (e) => {
+                        onClick={(e) => {
                           e.stopPropagation();
-                          try {
-                            const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-                            await fetch('/seller/notifications/read-all', {
-                              method: 'POST',
-                              headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': token || '',
-                                'Accept': 'application/json',
-                              },
-                            });
-                            window.location.reload();
-                          } catch (err) {
-                            console.error('Failed to mark all as read:', err);
-                          }
+                          Inertia.post(route('seller.notifications.read-all'), {}, {
+                            onSuccess: () => {
+                              // Optimistically clear the recent notifications in local display
+                              setNotifications((prev: any) => ({ ...prev, recent: [] }));
+                            },
+                            preserveScroll: true
+                          });
                         }}
                         className="text-[9px] font-black text-[#eca840] uppercase tracking-widest px-3 py-1.5 rounded-lg bg-orange-50 hover:bg-[#eca840] hover:text-white transition-all duration-300 active:scale-95 border border-[#eca840]/20 hover:border-[#eca840]"
                       >
@@ -258,6 +264,16 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                             onClick={() => {
                               setSelectedNotification(notif);
                               setShowNotifications(false);
+                              // Mark as read when clicked
+                              Inertia.post(route('seller.notifications.read', { id: notif.id }), {}, {
+                                onSuccess: () => {
+                                  setNotifications((prev: any) => ({
+                                    ...prev,
+                                    recent: prev.recent.filter((n: any) => n.id !== notif.id)
+                                  }));
+                                },
+                                preserveScroll: true
+                              });
                             }}
                             className="w-full text-left p-4 bg-orange-50/50 rounded-2xl hover:bg-white border border-transparent hover:border-[#eca840]/20 transition-all cursor-pointer group"
                           >
