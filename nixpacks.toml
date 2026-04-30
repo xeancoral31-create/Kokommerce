@@ -2,17 +2,26 @@
     PHP_VERSION = '8.2'
     NIXPACKS_PHP_VERSION = '8.2'
     NODE_VERSION = '18'
-    NIXPACKS_PHP_ROOT = '/public'
+    NIXPACKS_PHP_ROOT = 'public'
 
 [phases.setup]
-    nixPkgs = ['php82', 'php82Packages.composer', 'nodejs_18']
+    nixPkgs = ['php82', 'php82Extensions.pdo', 'php82Extensions.pdo_mysql', 'php82Extensions.mbstring', 'php82Extensions.tokenizer', 'php82Extensions.xml', 'php82Extensions.ctype', 'php82Extensions.json', 'php82Extensions.bcmath', 'php82Extensions.fileinfo', 'php82Extensions.openssl', 'php82Extensions.curl', 'php82Packages.composer', 'nodejs_18']
 
 [phases.install]
-    cmds = ['composer install --optimize-autoloader --no-dev --no-interaction', 'npm install']
+    cmds = [
+        'composer install --optimize-autoloader --no-dev --no-interaction --prefer-dist',
+        'npm install'
+    ]
 
 [phases.build]
     dependsOn = ['install']
-    cmds = ['npm run prod', 'php artisan optimize', 'php artisan view:cache']
+    cmds = [
+        'npm run prod',
+        'php artisan config:cache',
+        'php artisan route:cache',
+        'php artisan view:cache',
+        'php artisan optimize'
+    ]
 
 [start]
-    cmd = 'php artisan serve --host=0.0.0.0 --port=$PORT'
+    cmd = 'php artisan migrate --force && php artisan storage:link --force && php artisan serve --host=0.0.0.0 --port=$PORT'
