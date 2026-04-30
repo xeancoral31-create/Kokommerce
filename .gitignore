@@ -15,11 +15,7 @@ yarn-error.log
 /.vscode
 
 # Large media files - serve from storage or CDN instead
-/public/video/
-*.mp4
-*.mov
-*.avi
-*.mkv
+# (public/video/ is tracked so Railway can serve it)
 
 # Compiled node_modules chunks (built by webpack/mix, not needed in git)
 /public/js/node_modules_*
