@@ -137,16 +137,16 @@ const ArtisanVaultCard = (props: any) => {
             type="button"
             onClick={() => handleImageChange(product.package_image || product.image)}
             className={`group/pkg flex flex-col items-center gap-4 p-5 rounded-[2.5rem] transition-all duration-700 border ${displayImage === (product.package_image || product.image)
-              ? 'bg-gray-900 border-gray-800 shadow-2xl scale-[1.02]'
+              ? 'bg-white border-[#eca840] shadow-2xl scale-[1.02]'
               : 'bg-white border-gray-50 hover:bg-gray-50 hover:border-gray-200'
               }`}
           >
-            <div className={`w-16 h-16 rounded-full overflow-hidden border-2 shadow-xl transition-all duration-700 ${displayImage === (product.package_image || product.image) ? 'border-white/30 scale-110 shadow-black/40' : 'border-gray-50 group-hover/pkg:scale-110'
+            <div className={`w-16 h-16 rounded-full overflow-hidden border-2 shadow-xl transition-all duration-700 ${displayImage === (product.package_image || product.image) ? 'border-[#eca840] scale-110 shadow-[#eca840]/20' : 'border-gray-50 group-hover/pkg:scale-110'
               }`}>
               <img src={product.package_image || product.image || '/images/placeholder.png'} className="w-full h-full object-cover" alt="" />
             </div>
             <div className="flex flex-col items-center gap-1.5">
-              <span className={`text-[13px] font-bold tabular-nums tracking-tight ${displayImage === (product.package_image || product.image) ? 'text-white' : 'text-gray-400'}`}>
+              <span className={`text-[13px] font-bold tabular-nums tracking-tight ${displayImage === (product.package_image || product.image) ? 'text-gray-900' : 'text-gray-400'}`}>
                 ₱{product.package_price ? parseFloat(product.package_price).toLocaleString() : '---'}
               </span>
               <span className={`text-[8px] font-black uppercase tracking-[0.2em] truncate max-w-[80px] ${displayImage === (product.package_image || product.image) ? 'text-[#eca840]' : 'text-gray-300'}`}>
@@ -259,8 +259,8 @@ const ArtisanVaultRow = (props: any) => {
               className={`w-full h-full object-cover transition-all duration-500 ${isChanging ? 'opacity-40 scale-105' : 'opacity-100 scale-100'} ${product.status === 'sold_out' ? 'grayscale opacity-50' : ''}`}
             />
             {product.status === 'sold_out' && (
-              <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-[1px] flex items-center justify-center p-2">
-                <span className="text-[7px] font-black text-white uppercase tracking-widest text-center leading-tight">Sold Out</span>
+              <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] flex items-center justify-center p-2">
+                <span className="text-[7px] font-black text-gray-900 uppercase tracking-widest text-center leading-tight">Sold Out</span>
               </div>
             )}
           </div>
@@ -332,18 +332,18 @@ const ArtisanVaultRow = (props: any) => {
             type="button"
             onClick={() => handleImageChange(product.package_image || product.image)}
             className={`flex items-center gap-4 transition-all duration-700 p-2.5 rounded-full pr-6 ${displayImage === (product.package_image || product.image)
-              ? 'bg-gray-900 shadow-xl scale-[1.02]'
+              ? 'bg-white border border-[#eca840]/30 shadow-2xl scale-[1.02]'
               : 'hover:bg-gray-50 group/pkg border border-transparent hover:border-gray-100'
               }`}
           >
             <div className={`w-12 h-12 rounded-full overflow-hidden border-2 shadow-md transition-all duration-700 ${displayImage === (product.package_image || product.image)
-              ? 'border-white/30 scale-110'
+              ? 'border-[#eca840] scale-110 shadow-[#eca840]/20'
               : 'border-gray-50 group-hover/pkg:scale-110'
               }`}>
               <img src={product.package_image || product.image || '/images/placeholder.png'} alt="Package" className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col items-start gap-0.5">
-              <span className={`text-[12px] font-bold tabular-nums tracking-tight transition-colors ${displayImage === (product.package_image || product.image) ? 'text-white' : 'text-gray-400'
+              <span className={`text-[12px] font-bold tabular-nums tracking-tight transition-colors ${displayImage === (product.package_image || product.image) ? 'text-gray-900' : 'text-gray-400'
                 }`}>₱{product.package_price ? parseFloat(product.package_price).toLocaleString() : '---'}</span>
               <span className={`text-[7px] font-black uppercase tracking-[0.2em] truncate max-w-[80px] ${displayImage === (product.package_image || product.image) ? 'text-[#eca840]' : 'text-gray-300'
                 }`}>
@@ -401,7 +401,7 @@ export default function SellerProducts({ products, archived_products, categories
     quantity: '1',
   });
 
-  const { data, setData, post, put, delete: destroy, reset, processing, errors } = useForm<{
+  const { data, setData, post, put, delete: destroy, reset, processing, errors, transform } = useForm<{
     name: string;
     category_id: string | number;
     description: string;
@@ -578,6 +578,23 @@ export default function SellerProducts({ products, archived_products, categories
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    transform((data: any) => ({
+      ...data,
+      _method: editingProduct ? 'PUT' : 'POST',
+      // Clean up data based on offering type to ensure backend integrity
+      ...(offeringType === 'solo' ? {
+        package_price: '',
+        package_unit: '',
+        package_qty: '',
+        package_image_file: null,
+      } : {}),
+      ...(offeringType === 'package' ? {
+        solo_price: '',
+        solo_unit: '',
+        solo_image_file: null,
+      } : {}),
+    }));
+
     const options = {
       forceFormData: true,
       preserveScroll: true,
@@ -591,31 +608,10 @@ export default function SellerProducts({ products, archived_products, categories
       }
     };
 
-    // Prepare data based on offering type
-    const submitData = { ...data };
-    if (offeringType === 'solo') {
-      submitData.package_price = '';
-      submitData.package_unit = '';
-      submitData.package_qty = '';
-      submitData.package_image_file = null;
-    } else if (offeringType === 'package') {
-      submitData.solo_price = '';
-      submitData.solo_unit = '';
-      submitData.solo_image_file = null;
-    }
-
     if (editingProduct) {
-      post(route('seller.products.update', editingProduct.id), {
-        ...submitData,
-        ...options,
-        onBefore: () => { setData('_method', 'PUT') }
-      });
+      post(route('seller.products.update', editingProduct.id), options);
     } else {
-      post(route('seller.products.store'), {
-        ...submitData,
-        ...options,
-        onBefore: () => { setData('_method', 'POST') }
-      });
+      post(route('seller.products.store'), options);
     }
   };
 
@@ -902,9 +898,9 @@ export default function SellerProducts({ products, archived_products, categories
             )}
 
             {activeFilter === 'Archive' && archived_products.length > 0 && (
-              <div className="lg:col-span-4 mb-6 flex justify-between items-center bg-[#1a1c23] p-6 rounded-[1.5rem] text-white shadow-xl">
+              <div className="lg:col-span-4 mb-6 flex justify-between items-center bg-white border border-gray-100 p-6 rounded-[1.5rem] shadow-xl">
                 <div className="flex items-center gap-4">
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">{selectedArchived.length} Ready for restoration</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">{selectedArchived.length} Ready for restoration</span>
                 </div>
                 <div className="flex gap-4">
                   <button
@@ -1022,18 +1018,18 @@ export default function SellerProducts({ products, archived_products, categories
       {/* Formal Product Architect Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 sm:p-6">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={() => setIsModalOpen(false)}></div>
-          <div className="relative w-full max-w-6xl bg-[#0f1115] rounded-[2.5rem] shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/5 overflow-hidden animate-in fade-in zoom-in-95 duration-500 flex flex-col max-h-[90vh]">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
+          <div className="relative w-full max-w-6xl bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-500 flex flex-col max-h-[90vh]">
             
             {/* Modal Header */}
-            <div className="px-10 py-8 border-b border-white/5 flex justify-between items-center bg-[#13151a] shrink-0">
+            <div className="px-10 py-8 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
               <div className="flex items-center gap-5">
                  <div className="w-14 h-14 rounded-2xl bg-[#eca840]/10 border border-[#eca840]/20 flex items-center justify-center text-[#eca840] shadow-[0_0_20px_rgba(236,168,64,0.1)]">
                    <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
                  </div>
                  <div>
                    <span className="text-[9px] font-black text-[#eca840] uppercase tracking-[0.4em] mb-1.5 block">Product Architect</span>
-                   <h2 className="text-2xl font-[1000] text-white tracking-tight uppercase">{editingProduct ? 'Refine Masterpiece' : 'Design New Masterpiece'}</h2>
+                   <h2 className="text-2xl font-[1000] text-gray-900 tracking-tight uppercase">{editingProduct ? 'Refine Masterpiece' : 'Design New Masterpiece'}</h2>
                  </div>
               </div>
               <button onClick={() => setIsModalOpen(false)} className="w-12 h-12 rounded-2xl flex items-center justify-center text-gray-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 border border-transparent transition-all">
@@ -1046,9 +1042,10 @@ export default function SellerProducts({ products, archived_products, categories
               <div className="p-10">
                 {/* Strategy Selection - Global Master Control */}
                 <div className="mb-12 flex justify-center">
-                  <div className="bg-[#13151a] p-2 rounded-[2.5rem] flex gap-2 border border-white/5 shadow-inner w-full max-w-2xl">
+                  <div className="bg-gray-50 p-2 rounded-[2.5rem] flex gap-2 border border-gray-100 shadow-inner w-full max-w-2xl">
                     {[
                       { id: 'solo' as const, label: 'Solo Focused', icon: '🍪' },
+                      { id: 'both' as const, label: 'Strategic Synergy', icon: '✨' },
                       { id: 'package' as const, label: 'Package Focused', icon: '📦' }
                     ].map((type) => (
                       <button
@@ -1061,10 +1058,10 @@ export default function SellerProducts({ products, archived_products, categories
                         className={`flex-1 py-5 px-6 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] transition-all flex flex-col md:flex-row items-center justify-center gap-3 border ${
                           offeringType === type.id 
                             ? 'bg-gradient-to-br from-[#eca840] to-[#d69635] text-white border-[#eca840] shadow-[0_10px_20px_-10px_rgba(236,168,64,0.5)] scale-[1.02]' 
-                            : 'bg-transparent text-gray-500 border-transparent hover:bg-white/5 hover:text-gray-300'
+                            : 'bg-transparent text-gray-500 border-transparent hover:bg-gray-100 hover:text-gray-700'
                         }`}
                       >
-                        <span className="text-2xl leading-none grayscale opacity-80 group-hover:grayscale-0">{type.icon}</span>
+                        <span className="text-2xl leading-none transition-transform group-hover:scale-110">{type.icon}</span>
                         {type.label}
                       </button>
                     ))}
@@ -1079,23 +1076,23 @@ export default function SellerProducts({ products, archived_products, categories
                     <div className="space-y-6">
                       <div className="flex items-center gap-4 mb-2">
                          <span className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.3em] bg-[#eca840]/10 px-3 py-1.5 rounded-full border border-[#eca840]/20">Phase 01</span>
-                         <h4 className="text-[11px] font-[1000] text-white uppercase tracking-[0.2em]">Global Identity</h4>
+                         <h4 className="text-[11px] font-[1000] text-gray-900 uppercase tracking-[0.2em]">Global Identity</h4>
                       </div>
 
-                      <div className="relative group/main p-6 bg-[#13151a] rounded-[3rem] border border-white/5 transition-all hover:border-white/10 hover:shadow-2xl">
+                      <div className="relative group/main p-6 bg-gray-50 rounded-[3rem] border border-gray-100 transition-all hover:border-gray-200 hover:shadow-xl">
                         <div className="flex flex-col gap-8">
                           <div className="flex gap-6 items-center">
-                            <div className="w-32 h-32 rounded-[2rem] overflow-hidden bg-[#0f1115] border border-white/10 shadow-inner flex shrink-0 items-center justify-center relative group-hover/main:border-[#eca840]/30 transition-all duration-500">
+                            <div className="w-32 h-32 rounded-[2rem] overflow-hidden bg-white border border-gray-100 shadow-sm flex shrink-0 items-center justify-center relative group-hover/main:border-[#eca840]/30 transition-all duration-500">
                               {modalPreview ? (
                                 <img src={modalPreview} className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-1000" alt="Masterpiece" />
                               ) : (
                                 <div className="flex flex-col items-center gap-3">
-                                  <svg className="w-8 h-8 text-white/10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                  <svg className="w-8 h-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                 </div>
                               )}
-                              <label className="absolute inset-0 bg-black/60 opacity-0 group-hover/main:opacity-100 transition-all duration-500 flex items-center justify-center cursor-pointer backdrop-blur-[4px]">
+                              <label className="absolute inset-0 bg-white/60 opacity-0 group-hover/main:opacity-100 transition-all duration-500 flex items-center justify-center cursor-pointer backdrop-blur-[4px]">
                                 <div className="flex flex-col items-center gap-2">
-                                  <div className="w-10 h-10 rounded-full bg-[#eca840] flex items-center justify-center text-white shadow-2xl">
+                                  <div className="w-10 h-10 rounded-full bg-[#eca840] flex items-center justify-center text-white shadow-xl">
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                                   </div>
                                 </div>
@@ -1110,9 +1107,10 @@ export default function SellerProducts({ products, archived_products, categories
                                   type="text"
                                   value={data.name}
                                   onChange={e => setData('name', e.target.value)}
-                                  className="w-full bg-[#0f1115] border border-white/5 rounded-2xl px-5 py-4 text-sm font-bold text-white focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-inner placeholder:text-gray-700"
+                                  className="w-full bg-white border border-gray-100 rounded-2xl px-5 py-4 text-sm font-bold text-gray-900 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-sm placeholder:text-gray-300"
                                   placeholder="Signature Masterpiece..."
                                 />
+                                {errors.name && <p className="text-[9px] font-bold text-red-500 uppercase tracking-widest mt-2 ml-1">{errors.name}</p>}
                               </div>
                               <div className="space-y-2">
                                 <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1">Collection</label>
@@ -1120,15 +1118,16 @@ export default function SellerProducts({ products, archived_products, categories
                                   <select
                                     value={data.category_id}
                                     onChange={e => setData('category_id', e.target.value)}
-                                    className="w-full bg-[#0f1115] border border-white/5 rounded-2xl px-5 py-4 text-xs font-bold text-white focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all appearance-none cursor-pointer uppercase tracking-widest shadow-inner"
+                                    className="w-full bg-white border border-gray-100 rounded-2xl px-5 py-4 text-xs font-bold text-gray-900 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all appearance-none cursor-pointer uppercase tracking-widest shadow-sm"
                                   >
-                                    <option value="" className="bg-[#13151a]">Select Category...</option>
-                                    {categories.map(cat => <option key={cat.id} value={cat.id} className="bg-[#13151a]">{cat.name}</option>)}
+                                    <option value="" className="bg-white">Select Category...</option>
+                                    {categories.map(cat => <option key={cat.id} value={cat.id} className="bg-white">{cat.name}</option>)}
                                   </select>
-                                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-600">
+                                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
                                   </div>
                                 </div>
+                                {errors.category_id && <p className="text-[9px] font-bold text-red-500 uppercase tracking-widest mt-2 ml-1">{errors.category_id}</p>}
                               </div>
                             </div>
                           </div>
@@ -1139,15 +1138,15 @@ export default function SellerProducts({ products, archived_products, categories
                     {/* Narrative Canvas */}
                     <div className="space-y-6 flex flex-col">
                       <div className="flex items-center gap-4 mb-2">
-                         <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em] bg-indigo-500/10 px-3 py-1.5 rounded-full border border-indigo-500/20">Phase 01B</span>
-                         <h4 className="text-[11px] font-[1000] text-white uppercase tracking-[0.2em]">Narrative Canvas</h4>
+                         <span className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.3em] bg-indigo-500/10 px-3 py-1.5 rounded-full border border-indigo-500/20">Phase 01B</span>
+                         <h4 className="text-[11px] font-[1000] text-gray-900 uppercase tracking-[0.2em]">Narrative Canvas</h4>
                       </div>
-                      <div className="flex-1 bg-[#13151a] rounded-[3rem] border border-white/5 p-6 flex flex-col transition-all hover:border-white/10 hover:shadow-2xl">
+                      <div className="flex-1 bg-gray-50 rounded-[3rem] border border-gray-100 p-6 flex flex-col transition-all hover:border-gray-200 hover:shadow-xl">
                          <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1 mb-3 block">Product Description & Specs</label>
                          <textarea
                            value={data.description}
                            onChange={e => setData('description', e.target.value)}
-                           className="w-full flex-1 bg-[#0f1115] border border-white/5 rounded-[2rem] p-6 text-sm font-medium text-gray-300 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/30 transition-all shadow-inner placeholder:text-gray-700 resize-none min-h-[160px] custom-scrollbar"
+                           className="w-full flex-1 bg-white border border-gray-100 rounded-[2rem] p-6 text-sm font-medium text-gray-700 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/30 transition-all shadow-sm placeholder:text-gray-300 resize-none min-h-[160px] custom-scrollbar"
                            placeholder="Articulate the vision, ingredients, and artisanal process behind this masterpiece..."
                          ></textarea>
                       </div>
@@ -1156,16 +1155,16 @@ export default function SellerProducts({ products, archived_products, categories
 
                   {/* Phase 2: Solo Offering Architecture */}
                   {(offeringType === 'solo' || offeringType === 'both') && (
-                    <div className="space-y-8 bg-[#13151a] p-10 rounded-[3.5rem] border border-white/5 relative overflow-hidden group/solo shadow-xl animate-in fade-in slide-in-from-right-8 duration-1000">
+                    <div className="space-y-8 bg-gray-50 p-10 rounded-[3.5rem] border border-gray-100 relative overflow-hidden group/solo shadow-xl animate-in fade-in slide-in-from-right-8 duration-1000">
                       <div className="absolute top-0 right-0 w-64 h-64 bg-[#eca840]/5 rounded-full blur-[80px] -mr-32 -mt-32"></div>
                       
-                      <div className="flex justify-between items-center relative z-10 border-b border-white/5 pb-6">
+                      <div className="flex justify-between items-center relative z-10 border-b border-gray-100 pb-6">
                         <div className="flex items-center gap-5">
                           <div className="w-14 h-14 rounded-[1.5rem] bg-[#eca840]/10 flex items-center justify-center border border-[#eca840]/20 shadow-inner text-[#eca840]">
                             <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.703 2.703 0 01-3 0 2.703 2.703 0 01-3 0 2.703 2.703 0 01-3 0 2.701 2.701 0 01-1.5-.454M9 16v2m3-6v6m3-8v8m2-8a2 2 0 11-4 0 2 2 0 014 0zM9 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                           </div>
                           <div>
-                            <h3 className="text-sm font-[1000] text-white uppercase tracking-[0.4em]">Solo configuration</h3>
+                            <h3 className="text-sm font-[1000] text-gray-900 uppercase tracking-[0.4em]">Solo configuration</h3>
                             <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">Individual unit pricing & appropriate labeling</p>
                           </div>
                         </div>
@@ -1176,8 +1175,8 @@ export default function SellerProducts({ products, archived_products, categories
                         {/* Solo Image Module */}
                         <div className="space-y-5">
                           <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 block">distinct solo view</label>
-                          <div className={`relative group p-2.5 rounded-[2.5rem] border-2 transition-all duration-700 ${soloPreview ? 'border-[#eca840]/30 bg-[#0f1115] shadow-2xl shadow-[#eca840]/10 ring-4 ring-[#eca840]/5' : 'border-dashed border-white/5 bg-[#0f1115]/50'}`}>
-                            <div className="w-full aspect-square rounded-[2rem] overflow-hidden bg-[#13151a] border border-white/5 flex items-center justify-center relative shadow-inner">
+                          <div className={`relative group p-2.5 rounded-[2.5rem] border-2 transition-all duration-700 ${soloPreview ? 'border-[#eca840]/30 bg-white shadow-2xl shadow-[#eca840]/10 ring-4 ring-[#eca840]/5' : 'border-dashed border-gray-100 bg-gray-100/50'}`}>
+                            <div className="w-full aspect-square rounded-[2rem] overflow-hidden bg-gray-50 border border-gray-100 flex items-center justify-center relative shadow-inner">
                               {soloPreview ? (
                                 <img src={soloPreview} className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-1000" alt="Solo" />
                               ) : (
@@ -1188,7 +1187,7 @@ export default function SellerProducts({ products, archived_products, categories
                                   <span className="text-[9px] font-black text-gray-600 uppercase tracking-[0.3em]">Upload solo variant</span>
                                 </div>
                               )}
-                              <label className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center cursor-pointer backdrop-blur-[6px]">
+                              <label className="absolute inset-0 bg-white/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center cursor-pointer backdrop-blur-[6px]">
                                 <div className="flex flex-col items-center gap-3">
                                   <div className="w-12 h-12 rounded-full bg-[#eca840] flex items-center justify-center text-white shadow-2xl">
                                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
@@ -1222,11 +1221,12 @@ export default function SellerProducts({ products, archived_products, categories
                                 type="number"
                                 value={data.solo_price}
                                 onChange={e => setData('solo_price', e.target.value)}
-                                className="w-full bg-[#0f1115] border border-white/5 rounded-[2rem] pl-12 pr-20 py-6 text-2xl font-black tabular-nums text-white focus:bg-[#13151a] focus:ring-[10px] focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-inner placeholder:text-gray-700"
+                                className="w-full bg-white border border-gray-100 rounded-[2rem] pl-12 pr-20 py-6 text-2xl font-black tabular-nums text-gray-900 focus:bg-gray-50 focus:ring-[10px] focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-inner placeholder:text-gray-300"
                                 placeholder="0.00"
                               />
-                              <div className="absolute right-6 top-1/2 -translate-y-1/2 px-4 py-2 bg-[#1a1c23] rounded-xl text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] shadow-sm border border-white/5">PH Pesos</div>
+                              <div className="absolute right-6 top-1/2 -translate-y-1/2 px-4 py-2 bg-gray-50 rounded-xl text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] shadow-sm border border-gray-100">PH Pesos</div>
                             </div>
+                            {errors.solo_price && <p className="text-[9px] font-bold text-red-500 uppercase tracking-widest mt-2 ml-1">{errors.solo_price}</p>}
                           </div>
 
                           <div className="space-y-6">
@@ -1268,8 +1268,8 @@ export default function SellerProducts({ products, archived_products, categories
                                    onClick={() => setData('solo_unit', unit.id)}
                                    className={`flex flex-col items-start gap-2 p-5 rounded-[2rem] border-2 transition-all duration-500 relative group/unit ${
                                      data.solo_unit === unit.id 
-                                       ? 'bg-[#1a1c23] border-[#eca840] shadow-2xl shadow-[#eca840]/20 ring-4 ring-[#eca840]/10' 
-                                       : 'bg-[#0f1115] border-white/5 hover:border-white/10 hover:bg-[#13151a]'
+                                       ? 'bg-white border-[#eca840] shadow-2xl shadow-[#eca840]/20 ring-4 ring-[#eca840]/10' 
+                                       : 'bg-white border-gray-100 hover:border-gray-200 hover:bg-gray-50'
                                    }`}
                                  >
                                    <div className="flex items-center justify-between w-full mb-1">
@@ -1279,7 +1279,7 @@ export default function SellerProducts({ products, archived_products, categories
                                       )}
                                    </div>
                                    <div className="flex flex-col items-start">
-                                      <span className={`text-[11px] font-[1000] uppercase tracking-[0.1em] transition-colors ${data.solo_unit === unit.id ? 'text-white' : 'text-gray-400'}`}>
+                                      <span className={`text-[11px] font-[1000] uppercase tracking-[0.1em] transition-colors ${data.solo_unit === unit.id ? 'text-gray-900' : 'text-gray-400'}`}>
                                         {unit.label}
                                       </span>
                                       <span className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">{unit.sub}</span>
@@ -1297,7 +1297,7 @@ export default function SellerProducts({ products, archived_products, categories
                                    </div>
                                    <div className="flex flex-col gap-1.5">
                                      <span className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.2em]">Master Architect's Insight</span>
-                                     <p className="text-[10px] font-bold text-gray-300 uppercase leading-[1.6] tracking-[0.05em]">
+                                     <p className="text-[10px] font-bold text-gray-500 uppercase leading-[1.6] tracking-[0.05em]">
                                        {isDelicacy 
                                          ? "For bespoke delicacies, 'Set of 3' is the mandatory standard to preserve the artisanal presentation."
                                          : "Items priced between ₱5–₱15 are automatically provisioned as a 4x Collective Batch for logistical integrity."
@@ -1315,39 +1315,39 @@ export default function SellerProducts({ products, archived_products, categories
 
                   {/* Phase 3: Package Offering Architecture */}
                   {(offeringType === 'package' || offeringType === 'both') && (
-                    <div className="space-y-8 bg-[#1a1c23] p-10 rounded-[3.5rem] border border-white/5 relative overflow-hidden group/package shadow-2xl animate-in fade-in slide-in-from-left-8 duration-1000">
+                    <div className="space-y-8 bg-gray-50 p-10 rounded-[3.5rem] border border-gray-100 relative overflow-hidden group/package shadow-2xl animate-in fade-in slide-in-from-left-8 duration-1000">
                       <div className="absolute top-0 right-0 w-80 h-80 bg-orange-500/10 rounded-full blur-[100px] -mr-40 -mt-40"></div>
                       
-                      <div className="flex justify-between items-center relative z-10 border-b border-white/5 pb-8">
+                      <div className="flex justify-between items-center relative z-10 border-b border-gray-100 pb-8">
                         <div className="flex items-center gap-5">
-                          <div className="w-14 h-14 rounded-[1.5rem] bg-white/5 border border-white/10 flex items-center justify-center shadow-inner text-[#eca840]">
+                          <div className="w-14 h-14 rounded-[1.5rem] bg-white border border-gray-100 flex items-center justify-center shadow-inner text-[#eca840]">
                             <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                           </div>
                           <div>
-                            <h3 className="text-sm font-[1000] text-white uppercase tracking-[0.4em]">Package configuration</h3>
+                            <h3 className="text-sm font-[1000] text-gray-900 uppercase tracking-[0.4em]">Package configuration</h3>
                             <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">Collective bundles & premium packaging rates</p>
                           </div>
                         </div>
-                        <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.3em] bg-white/5 px-5 py-2.5 rounded-full border border-white/10 shadow-lg">Config Phase 03</span>
+                        <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.3em] bg-white px-5 py-2.5 rounded-full border border-gray-100 shadow-lg">Config Phase 03</span>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start relative z-10">
                         {/* Package Image Module */}
                         <div className="space-y-5">
-                          <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 block text-white/40">distinct package view</label>
-                          <div className={`relative group p-2.5 rounded-[2.5rem] border-2 transition-all duration-700 ${packagePreview ? 'border-[#eca840]/40 bg-white/5 shadow-2xl shadow-black/60 ring-8 ring-white/5' : 'border-dashed border-white/5 bg-white/2'}`}>
-                            <div className="w-full aspect-square rounded-[2rem] overflow-hidden bg-black/40 border border-white/5 flex items-center justify-center relative shadow-inner">
+                          <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 block">distinct package view</label>
+                          <div className={`relative group p-2.5 rounded-[2.5rem] border-2 transition-all duration-700 ${packagePreview ? 'border-[#eca840]/40 bg-white shadow-2xl shadow-black/5 ring-8 ring-gray-50' : 'border-dashed border-gray-100 bg-gray-50'}`}>
+                            <div className="w-full aspect-square rounded-[2rem] overflow-hidden bg-gray-100 border border-gray-100 flex items-center justify-center relative shadow-inner">
                               {packagePreview ? (
                                 <img src={packagePreview} className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-1000" alt="Package" />
                               ) : (
                                 <div className="flex flex-col items-center gap-4">
-                                  <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center shadow-2xl text-white/10">
+                                  <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center shadow-2xl text-gray-200">
                                     <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                   </div>
-                                  <span className="text-[9px] font-black text-white/20 uppercase tracking-[0.3em]">Upload pack variant</span>
+                                  <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em]">Upload pack variant</span>
                                 </div>
                               )}
-                              <label className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center cursor-pointer backdrop-blur-[8px]">
+                              <label className="absolute inset-0 bg-white/70 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center cursor-pointer backdrop-blur-[8px]">
                                 <div className="flex flex-col items-center gap-3">
                                   <div className="w-12 h-12 rounded-full bg-[#eca840] flex items-center justify-center text-white shadow-2xl">
                                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
@@ -1363,38 +1363,39 @@ export default function SellerProducts({ products, archived_products, categories
                         {/* Package Pricing & Spec Module */}
                         <div className="space-y-8 py-2">
                           <div className="space-y-4">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-2 text-white/40">Collective master rate</label>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-2">Collective master rate</label>
                             <div className="relative group">
-                              <div className="absolute left-6 top-1/2 -translate-y-1/2 text-xl font-black text-white/30 group-focus-within:text-[#eca840] transition-colors">₱</div>
+                              <div className="absolute left-6 top-1/2 -translate-y-1/2 text-xl font-black text-gray-400 group-focus-within:text-[#eca840] transition-colors">₱</div>
                               <input
                                 type="number"
                                 value={data.package_price}
                                 onChange={e => setData('package_price', e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 rounded-[2rem] pl-12 pr-20 py-6 text-2xl font-black tabular-nums text-white focus:bg-white/10 focus:ring-8 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-2xl placeholder:text-gray-700"
+                                className="w-full bg-white border border-gray-100 rounded-[2rem] pl-12 pr-20 py-6 text-2xl font-black tabular-nums text-gray-900 focus:bg-gray-50 focus:ring-8 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-2xl placeholder:text-gray-300"
                                 placeholder="0.00"
                               />
-                              <div className="absolute right-6 top-1/2 -translate-y-1/2 px-4 py-2 bg-black/40 rounded-xl text-[9px] font-black text-white/40 uppercase tracking-[0.2em] shadow-lg border border-white/5">PH Pesos</div>
+                              <div className="absolute right-6 top-1/2 -translate-y-1/2 px-4 py-2 bg-gray-50 rounded-xl text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] shadow-lg border border-gray-100">PH Pesos</div>
                             </div>
+                            {errors.package_price && <p className="text-[9px] font-bold text-red-500 uppercase tracking-widest mt-2 ml-1">{errors.package_price}</p>}
                           </div>
 
-                          <div className="space-y-8 bg-black/40 p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
+                          <div className="space-y-8 bg-gray-100/50 p-8 rounded-[2.5rem] border border-gray-100 shadow-2xl">
                              <div className="space-y-4">
-                                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 text-white/30">Package master format</label>
+                                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Package master format</label>
                                 <div className="relative">
                                   <select
                                     value={data.package_unit}
                                     onChange={e => setData('package_unit', e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-[11px] font-black uppercase tracking-[0.2em] text-gray-200 focus:ring-8 focus:ring-[#eca840]/10 appearance-none cursor-pointer hover:bg-white/10 transition-all shadow-inner"
+                                    className="w-full bg-white border border-gray-100 rounded-2xl px-6 py-5 text-[11px] font-black uppercase tracking-[0.2em] text-gray-700 focus:ring-8 focus:ring-[#eca840]/10 appearance-none cursor-pointer hover:bg-gray-50 transition-all shadow-inner"
                                   >
-                                    <option value="" className="bg-[#1a1a1a]">Choose Format...</option>
-                                    <option value="pcs" className="bg-[#1a1a1a]">Pieces (Pcs)</option>
-                                    <option value="bilao" className="bg-[#1a1a1a]">Whole Bilao</option>
-                                    <option value="tray" className="bg-[#1a1a1a]">Formal Tray</option>
-                                    <option value="whole_tray" className="bg-[#1a1a1a]">Whole Masterpiece</option>
-                                    <option value="jar" className="bg-[#1a1a1a]">Artisanal Jar</option>
-                                    <option value="pack" className="bg-[#1a1a1a]">Standard Pack</option>
-                                    <option value="set" className="bg-[#1a1a1a]">Selection Set</option>
-                                    <option value="large_tub" className="bg-[#1a1a1a]">Signature Tub</option>
+                                    <option value="" className="bg-white">Choose Format...</option>
+                                    <option value="pcs" className="bg-white">Pieces (Pcs)</option>
+                                    <option value="bilao" className="bg-white">Whole Bilao</option>
+                                    <option value="tray" className="bg-white">Formal Tray</option>
+                                    <option value="whole_tray" className="bg-white">Whole Masterpiece</option>
+                                    <option value="jar" className="bg-white">Artisanal Jar</option>
+                                    <option value="pack" className="bg-white">Standard Pack</option>
+                                    <option value="set" className="bg-white">Selection Set</option>
+                                    <option value="large_tub" className="bg-white">Signature Tub</option>
                                   </select>
                                   <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-[#eca840]">
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
@@ -1405,7 +1406,7 @@ export default function SellerProducts({ products, archived_products, categories
                              {!['bilao', 'tray', 'large_tub', 'whole_tray'].includes(data.package_unit) && (
                               <div className="space-y-4 pt-2 animate-in slide-in-from-right-8 duration-700">
                                 <div className="flex justify-between items-center px-1">
-                                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest text-white/30">Quantity Per Collective</label>
+                                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Quantity Per Collective</label>
                                   <span className="text-[7px] font-black text-[#eca840] uppercase tracking-[0.3em] bg-[#eca840]/10 px-3 py-1 rounded-full border border-[#eca840]/20">Required spec</span>
                                 </div>
                                 <div className="relative group">
@@ -1413,17 +1414,18 @@ export default function SellerProducts({ products, archived_products, categories
                                     type="number"
                                     value={data.package_qty}
                                     onChange={e => setData('package_qty', e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-lg font-black text-white focus:ring-8 focus:ring-[#eca840]/10 focus:bg-white/10 transition-all shadow-inner placeholder:text-gray-700"
+                                    className="w-full bg-white border border-gray-100 rounded-2xl px-6 py-5 text-lg font-black text-gray-900 focus:ring-8 focus:ring-[#eca840]/10 focus:bg-gray-50 transition-all shadow-inner placeholder:text-gray-300"
                                     placeholder="12"
                                   />
-                                  <div className="absolute right-6 top-1/2 -translate-y-1/2 text-[9px] font-black text-white/20 uppercase tracking-[0.3em]">Units</div>
+                                  <div className="absolute right-6 top-1/2 -translate-y-1/2 text-[9px] font-black text-gray-400 uppercase tracking-[0.3em]">Units</div>
                                 </div>
+                                {errors.package_qty && <p className="text-[9px] font-bold text-red-500 uppercase tracking-widest mt-2 ml-1">{errors.package_qty}</p>}
                               </div>
                              )}
 
-                             <div className="p-6 mt-4 bg-white/2 rounded-2xl border border-white/5 space-y-6 shadow-3xl">
+                             <div className="p-6 mt-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-6 shadow-3xl">
                                 <div className="flex items-center justify-between">
-                                   <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest text-white/30">Master Yield preview</span>
+                                   <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Master Yield preview</span>
                                    <div className="px-3 py-1 bg-[#eca840]/10 rounded-full border border-[#eca840]/20">
                                       <span className="text-[7px] font-black text-[#eca840] uppercase tracking-widest">Pricing Logic</span>
                                    </div>
@@ -1431,7 +1433,7 @@ export default function SellerProducts({ products, archived_products, categories
                                 <div className="flex items-end justify-between">
                                    <div className="space-y-1.5">
                                       <span className="text-[8px] font-[1000] text-gray-500 uppercase tracking-widest">Effective Unit Price</span>
-                                      <div className="text-2xl font-black text-white tracking-tight tabular-nums">
+                                      <div className="text-2xl font-black text-gray-900 tracking-tight tabular-nums">
                                         ₱{data.package_price && data.package_qty ? (Number(data.package_price) / Number(data.package_qty)).toFixed(2) : '0.00'}
                                       </div>
                                    </div>
@@ -1450,11 +1452,11 @@ export default function SellerProducts({ products, archived_products, categories
                   )}
 
                   {/* Phase 4: Master Inventory Stewardship */}
-                  <div className="space-y-10 pt-10 border-t border-white/5 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                  <div className="space-y-10 pt-10 border-t border-gray-100 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                     <div className="flex items-center justify-between">
                        <div className="flex items-center gap-4">
                          <div className="w-2.5 h-2.5 rounded-full bg-[#eca840] shadow-[0_0_15px_rgba(236,168,64,0.6)]"></div>
-                         <h4 className="text-[12px] font-[1000] text-white uppercase tracking-[0.3em]">Inventory & Stewardship</h4>
+                         <h4 className="text-[12px] font-[1000] text-gray-900 uppercase tracking-[0.3em]">Inventory & Stewardship</h4>
                        </div>
                        <div className="flex items-center gap-3">
                           <span className="text-[8px] font-black text-[#eca840] uppercase tracking-widest bg-[#eca840]/10 px-3 py-1.5 rounded-full border border-[#eca840]/20">Real-time Vault Sync</span>
@@ -1471,10 +1473,11 @@ export default function SellerProducts({ products, archived_products, categories
                             type="number"
                             value={data.stock}
                             onChange={e => setData('stock', e.target.value)}
-                            className="w-full bg-[#13151a] border border-white/5 rounded-[2.5rem] pl-28 pr-10 py-7 text-3xl font-black tabular-nums text-white focus:bg-[#0f1115] focus:ring-[15px] focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-inner placeholder:text-gray-700"
+                            className="w-full bg-white border border-gray-100 rounded-[2.5rem] pl-28 pr-10 py-7 text-3xl font-black tabular-nums text-gray-900 focus:bg-gray-50 focus:ring-[15px] focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-inner placeholder:text-gray-300"
                             placeholder="0"
                           />
                         </div>
+                        {errors.stock && <p className="text-[9px] font-bold text-red-500 uppercase tracking-widest mt-2 ml-1">{errors.stock}</p>}
                         <p className="text-[8px] font-bold text-gray-500 uppercase tracking-widest ml-4">Total MASTER quantity available across all variants</p>
                       </div>
                       <div className="space-y-4">
@@ -1483,11 +1486,11 @@ export default function SellerProducts({ products, archived_products, categories
                           <select
                             value={data.status}
                             onChange={e => setData('status', e.target.value)}
-                            className="w-full bg-[#13151a] border border-white/5 rounded-[2.5rem] pl-10 pr-16 py-7 text-[12px] font-black uppercase tracking-[0.25em] text-[#eca840] focus:bg-[#0f1115] focus:ring-[15px] focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all appearance-none cursor-pointer shadow-inner"
+                            className="w-full bg-white border border-gray-100 rounded-[2.5rem] pl-10 pr-16 py-7 text-[12px] font-black uppercase tracking-[0.25em] text-[#eca840] focus:bg-gray-50 focus:ring-[15px] focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all appearance-none cursor-pointer shadow-inner"
                           >
-                            <option value="in_stock" className="bg-[#1a1c23]">Vault Open / In Stock</option>
-                            <option value="pre_order" className="bg-[#1a1c23]">Queue Entry / Pre-Order</option>
-                            <option value="sold_out" className="bg-[#1a1c23]">Vault Sealed / Sold Out</option>
+                            <option value="in_stock" className="bg-white">Vault Open / In Stock</option>
+                            <option value="pre_order" className="bg-white">Queue Entry / Pre-Order</option>
+                            <option value="sold_out" className="bg-white">Vault Sealed / Sold Out</option>
                           </select>
                           <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none text-[#eca840] group-hover:scale-110 transition-transform">
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4 4 4-4" /></svg>
@@ -1538,8 +1541,9 @@ export default function SellerProducts({ products, archived_products, categories
                     placeholder="0"
                     autoFocus
                   />
-                  <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xs font-black text-gray-300 uppercase tracking-widest">Units</span>
+                  <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xs font-black text-gray-400 uppercase tracking-widest">Units</span>
                 </div>
+                {restockForm.errors.quantity && <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest mt-2">{restockForm.errors.quantity}</p>}
 
                 <div className="flex gap-4 mt-8">
                   <button
