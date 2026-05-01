@@ -1021,26 +1021,32 @@ export default function SellerProducts({ products, archived_products, categories
 
       {/* Formal Product Architect Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setIsModalOpen(false)}></div>
-          <div className="relative w-full max-w-lg bg-white rounded-[2rem] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* Scrollable Architectural Container */}
-            <div className="max-h-[85vh] overflow-y-auto formal-scrollbar">
-              <div className="p-10">
-                <div className="flex justify-between items-start mb-6 pb-4 border-b border-gray-50">
-                  <div>
-                    <span className="text-[9px] font-bold text-[#eca840] uppercase tracking-[0.3em] mb-1 block">Product Architect</span>
-                    <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">{editingProduct ? 'Refine Masterpiece' : 'Design New Masterpiece'}</h2>
-                  </div>
-                  <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
-                  </button>
-                </div>
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 sm:p-6">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={() => setIsModalOpen(false)}></div>
+          <div className="relative w-full max-w-6xl bg-[#0f1115] rounded-[2.5rem] shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/5 overflow-hidden animate-in fade-in zoom-in-95 duration-500 flex flex-col max-h-[90vh]">
+            
+            {/* Modal Header */}
+            <div className="px-10 py-8 border-b border-white/5 flex justify-between items-center bg-[#13151a] shrink-0">
+              <div className="flex items-center gap-5">
+                 <div className="w-14 h-14 rounded-2xl bg-[#eca840]/10 border border-[#eca840]/20 flex items-center justify-center text-[#eca840] shadow-[0_0_20px_rgba(236,168,64,0.1)]">
+                   <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                 </div>
+                 <div>
+                   <span className="text-[9px] font-black text-[#eca840] uppercase tracking-[0.4em] mb-1.5 block">Product Architect</span>
+                   <h2 className="text-2xl font-[1000] text-white tracking-tight uppercase">{editingProduct ? 'Refine Masterpiece' : 'Design New Masterpiece'}</h2>
+                 </div>
+              </div>
+              <button onClick={() => setIsModalOpen(false)} className="w-12 h-12 rounded-2xl flex items-center justify-center text-gray-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 border border-transparent transition-all">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
 
+            {/* Scrollable Architectural Container */}
+            <div className="overflow-y-auto custom-scrollbar flex-1">
+              <div className="p-10">
                 {/* Strategy Selection - Global Master Control */}
-                <div className="mb-10 space-y-4">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block text-center">Offering Strategy Selection</label>
-                  <div className="bg-[#fcfaf7] p-2 rounded-[2rem] flex gap-2 border border-gray-100 shadow-inner">
+                <div className="mb-12 flex justify-center">
+                  <div className="bg-[#13151a] p-2 rounded-[2.5rem] flex gap-2 border border-white/5 shadow-inner w-full max-w-2xl">
                     {[
                       { id: 'solo' as const, label: 'Solo Focused', icon: '🍪' },
                       { id: 'package' as const, label: 'Package Focused', icon: '📦' }
@@ -1052,122 +1058,139 @@ export default function SellerProducts({ products, archived_products, categories
                           setOfferingType(type.id);
                           setData('offering_type', type.id);
                         }}
-                        className={`flex-1 py-4 px-4 rounded-[1.5rem] text-[9px] font-black uppercase tracking-[0.15em] transition-all flex flex-col items-center justify-center gap-2 border ${
+                        className={`flex-1 py-5 px-6 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] transition-all flex flex-col md:flex-row items-center justify-center gap-3 border ${
                           offeringType === type.id 
-                            ? 'bg-gray-900 text-[#eca840] border-gray-800 shadow-xl scale-[1.02]' 
-                            : 'bg-white text-gray-400 border-gray-50 hover:border-gray-100 hover:text-gray-600'
+                            ? 'bg-gradient-to-br from-[#eca840] to-[#d69635] text-white border-[#eca840] shadow-[0_10px_20px_-10px_rgba(236,168,64,0.5)] scale-[1.02]' 
+                            : 'bg-transparent text-gray-500 border-transparent hover:bg-white/5 hover:text-gray-300'
                         }`}
                       >
-                        <span className="text-xl leading-none">{type.icon}</span>
+                        <span className="text-2xl leading-none grayscale opacity-80 group-hover:grayscale-0">{type.icon}</span>
                         {type.label}
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-10">
-                  {/* Phase 1: Core Vault Identity */}
-                  <div className="space-y-6 animate-in fade-in duration-700">
-                    <div className="flex items-center justify-between mb-4">
-                       <div className="flex items-center gap-3">
-                         <div className="w-1.5 h-1.5 rounded-full bg-[#eca840] shadow-[0_0_8px_rgba(236,168,64,0.4)]"></div>
-                         <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-[0.2em]">Masterpiece focal point</h4>
-                       </div>
-                       <span className="text-[7px] font-black text-gray-300 uppercase tracking-widest">Global Identity</span>
-                    </div>
+                <form onSubmit={handleSubmit} className="space-y-12 max-w-5xl mx-auto">
+                  
+                  {/* Grid Layout for Core and Narrative */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    {/* Phase 1: Core Vault Identity */}
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-4 mb-2">
+                         <span className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.3em] bg-[#eca840]/10 px-3 py-1.5 rounded-full border border-[#eca840]/20">Phase 01</span>
+                         <h4 className="text-[11px] font-[1000] text-white uppercase tracking-[0.2em]">Global Identity</h4>
+                      </div>
 
-                    <div className="relative group/main p-5 bg-[#fcfaf7] rounded-[3rem] border border-gray-100 transition-all hover:bg-white hover:shadow-2xl hover:shadow-orange-100/20">
-                      <div className="flex items-center gap-8">
-                        <div className="w-36 h-36 rounded-[2.5rem] overflow-hidden bg-white border border-gray-100 shadow-xl flex items-center justify-center relative group-hover/main:border-[#eca840]/30 transition-all duration-500">
-                          {modalPreview ? (
-                            <img src={modalPreview} className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-1000" alt="Masterpiece" />
-                          ) : (
-                            <div className="flex flex-col items-center gap-3">
-                              <svg className="w-10 h-10 text-gray-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                              <span className="text-[8px] font-black text-gray-200 uppercase tracking-[0.2em]">Select Master</span>
+                      <div className="relative group/main p-6 bg-[#13151a] rounded-[3rem] border border-white/5 transition-all hover:border-white/10 hover:shadow-2xl">
+                        <div className="flex flex-col gap-8">
+                          <div className="flex gap-6 items-center">
+                            <div className="w-32 h-32 rounded-[2rem] overflow-hidden bg-[#0f1115] border border-white/10 shadow-inner flex shrink-0 items-center justify-center relative group-hover/main:border-[#eca840]/30 transition-all duration-500">
+                              {modalPreview ? (
+                                <img src={modalPreview} className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-1000" alt="Masterpiece" />
+                              ) : (
+                                <div className="flex flex-col items-center gap-3">
+                                  <svg className="w-8 h-8 text-white/10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                </div>
+                              )}
+                              <label className="absolute inset-0 bg-black/60 opacity-0 group-hover/main:opacity-100 transition-all duration-500 flex items-center justify-center cursor-pointer backdrop-blur-[4px]">
+                                <div className="flex flex-col items-center gap-2">
+                                  <div className="w-10 h-10 rounded-full bg-[#eca840] flex items-center justify-center text-white shadow-2xl">
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                                  </div>
+                                </div>
+                                <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
+                              </label>
                             </div>
-                          )}
-                          <label className="absolute inset-0 bg-black/50 opacity-0 group-hover/main:opacity-100 transition-all duration-500 flex items-center justify-center cursor-pointer backdrop-blur-[4px]">
-                            <div className="flex flex-col items-center gap-2">
-                              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#eca840] shadow-2xl">
-                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                            
+                            <div className="flex-1 space-y-5">
+                              <div className="space-y-2">
+                                <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1">Canonical Name</label>
+                                <input
+                                  type="text"
+                                  value={data.name}
+                                  onChange={e => setData('name', e.target.value)}
+                                  className="w-full bg-[#0f1115] border border-white/5 rounded-2xl px-5 py-4 text-sm font-bold text-white focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-inner placeholder:text-gray-700"
+                                  placeholder="Signature Masterpiece..."
+                                />
                               </div>
-                              <span className="text-[8px] font-black text-white uppercase tracking-[0.3em]">Redefine focal</span>
-                            </div>
-                            <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
-                          </label>
-                        </div>
-                        <div className="flex-1">
-                          <div className="space-y-4">
-                            <div className="space-y-2">
-                              <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Canonical Name</label>
-                              <input
-                                type="text"
-                                value={data.name}
-                                onChange={e => setData('name', e.target.value)}
-                                className="w-full bg-white border border-gray-100 rounded-xl px-5 py-3.5 text-xs font-black text-gray-900 focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/20 transition-all shadow-sm"
-                                placeholder="Signature Masterpiece..."
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Collection</label>
-                              <div className="relative">
-                                <select
-                                  value={data.category_id}
-                                  onChange={e => setData('category_id', e.target.value)}
-                                  className="w-full bg-white border border-gray-100 rounded-xl px-5 py-3.5 text-xs font-black text-gray-900 focus:ring-4 focus:ring-[#eca840]/10 transition-all appearance-none cursor-pointer uppercase tracking-widest"
-                                >
-                                  <option value="">Select Category...</option>
-                                  {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
-                                </select>
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#eca840]">
-                                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                              <div className="space-y-2">
+                                <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1">Collection</label>
+                                <div className="relative">
+                                  <select
+                                    value={data.category_id}
+                                    onChange={e => setData('category_id', e.target.value)}
+                                    className="w-full bg-[#0f1115] border border-white/5 rounded-2xl px-5 py-4 text-xs font-bold text-white focus:ring-4 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all appearance-none cursor-pointer uppercase tracking-widest shadow-inner"
+                                  >
+                                    <option value="" className="bg-[#13151a]">Select Category...</option>
+                                    {categories.map(cat => <option key={cat.id} value={cat.id} className="bg-[#13151a]">{cat.name}</option>)}
+                                  </select>
+                                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-600">
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Narrative Canvas */}
+                    <div className="space-y-6 flex flex-col">
+                      <div className="flex items-center gap-4 mb-2">
+                         <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em] bg-indigo-500/10 px-3 py-1.5 rounded-full border border-indigo-500/20">Phase 01B</span>
+                         <h4 className="text-[11px] font-[1000] text-white uppercase tracking-[0.2em]">Narrative Canvas</h4>
+                      </div>
+                      <div className="flex-1 bg-[#13151a] rounded-[3rem] border border-white/5 p-6 flex flex-col transition-all hover:border-white/10 hover:shadow-2xl">
+                         <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1 mb-3 block">Product Description & Specs</label>
+                         <textarea
+                           value={data.description}
+                           onChange={e => setData('description', e.target.value)}
+                           className="w-full flex-1 bg-[#0f1115] border border-white/5 rounded-[2rem] p-6 text-sm font-medium text-gray-300 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/30 transition-all shadow-inner placeholder:text-gray-700 resize-none min-h-[160px] custom-scrollbar"
+                           placeholder="Articulate the vision, ingredients, and artisanal process behind this masterpiece..."
+                         ></textarea>
                       </div>
                     </div>
                   </div>
 
                   {/* Phase 2: Solo Offering Architecture */}
                   {(offeringType === 'solo' || offeringType === 'both') && (
-                    <div className="space-y-8 bg-white p-10 rounded-[3.5rem] border border-gray-100 relative overflow-hidden group/solo shadow-xl animate-in fade-in slide-in-from-right-8 duration-1000">
-                      <div className="absolute top-0 right-0 w-64 h-64 bg-orange-100/10 rounded-full blur-[80px] -mr-32 -mt-32"></div>
+                    <div className="space-y-8 bg-[#13151a] p-10 rounded-[3.5rem] border border-white/5 relative overflow-hidden group/solo shadow-xl animate-in fade-in slide-in-from-right-8 duration-1000">
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-[#eca840]/5 rounded-full blur-[80px] -mr-32 -mt-32"></div>
                       
-                      <div className="flex justify-between items-center relative z-10 border-b border-gray-50 pb-6">
+                      <div className="flex justify-between items-center relative z-10 border-b border-white/5 pb-6">
                         <div className="flex items-center gap-5">
-                          <div className="w-14 h-14 rounded-[1.5rem] bg-orange-50/50 flex items-center justify-center border border-orange-100 shadow-inner text-[#eca840]">
+                          <div className="w-14 h-14 rounded-[1.5rem] bg-[#eca840]/10 flex items-center justify-center border border-[#eca840]/20 shadow-inner text-[#eca840]">
                             <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.703 2.703 0 01-3 0 2.703 2.703 0 01-3 0 2.703 2.703 0 01-3 0 2.701 2.701 0 01-1.5-.454M9 16v2m3-6v6m3-8v8m2-8a2 2 0 11-4 0 2 2 0 014 0zM9 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                           </div>
                           <div>
-                            <h3 className="text-sm font-[1000] text-gray-900 uppercase tracking-[0.4em]">Solo configuration</h3>
-                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-1">Individual unit pricing & appropriate labeling</p>
+                            <h3 className="text-sm font-[1000] text-white uppercase tracking-[0.4em]">Solo configuration</h3>
+                            <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">Individual unit pricing & appropriate labeling</p>
                           </div>
                         </div>
-                        <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.3em] bg-white px-5 py-2.5 rounded-full border border-orange-100 shadow-sm">Config Phase 02</span>
+                        <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.3em] bg-[#eca840]/10 px-5 py-2.5 rounded-full border border-[#eca840]/20 shadow-sm">Config Phase 02</span>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start relative z-10">
                         {/* Solo Image Module */}
                         <div className="space-y-5">
-                          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 block">distinct solo view</label>
-                          <div className={`relative group p-2.5 rounded-[2.5rem] border-2 transition-all duration-700 ${soloPreview ? 'border-orange-200 bg-white shadow-2xl shadow-orange-100/30 ring-4 ring-orange-50' : 'border-dashed border-gray-100 bg-gray-50/30'}`}>
-                            <div className="w-full aspect-square rounded-[2rem] overflow-hidden bg-[#fcfaf7] border border-gray-50 flex items-center justify-center relative shadow-inner">
+                          <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 block">distinct solo view</label>
+                          <div className={`relative group p-2.5 rounded-[2.5rem] border-2 transition-all duration-700 ${soloPreview ? 'border-[#eca840]/30 bg-[#0f1115] shadow-2xl shadow-[#eca840]/10 ring-4 ring-[#eca840]/5' : 'border-dashed border-white/5 bg-[#0f1115]/50'}`}>
+                            <div className="w-full aspect-square rounded-[2rem] overflow-hidden bg-[#13151a] border border-white/5 flex items-center justify-center relative shadow-inner">
                               {soloPreview ? (
                                 <img src={soloPreview} className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-1000" alt="Solo" />
                               ) : (
                                 <div className="flex flex-col items-center gap-4">
-                                  <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg text-gray-100">
+                                  <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center shadow-lg text-gray-500">
                                     <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                   </div>
-                                  <span className="text-[9px] font-black text-gray-200 uppercase tracking-[0.3em]">Upload solo variant</span>
+                                  <span className="text-[9px] font-black text-gray-600 uppercase tracking-[0.3em]">Upload solo variant</span>
                                 </div>
                               )}
                               <label className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center cursor-pointer backdrop-blur-[6px]">
                                 <div className="flex flex-col items-center gap-3">
-                                  <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#eca840] shadow-2xl">
+                                  <div className="w-12 h-12 rounded-full bg-[#eca840] flex items-center justify-center text-white shadow-2xl">
                                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                                   </div>
                                   <span className="text-[9px] font-black text-white uppercase tracking-[0.3em]">Replace solo</span>
@@ -1182,11 +1205,11 @@ export default function SellerProducts({ products, archived_products, categories
                         <div className="space-y-10 py-2">
                           <div className="space-y-4">
                             <div className="flex justify-between items-center px-2">
-                              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Solo master rate</label>
+                              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Solo master rate</label>
                               <div className="flex gap-2">
-                                {isDelicacy && <span className="text-[8px] font-black text-[#eca840] uppercase tracking-widest bg-orange-50 px-2.5 py-1 rounded-full border border-orange-100/50 shadow-sm">Delicacy detected</span>}
+                                {isDelicacy && <span className="text-[8px] font-black text-[#eca840] uppercase tracking-widest bg-[#eca840]/10 px-2.5 py-1 rounded-full border border-[#eca840]/20 shadow-sm">Delicacy detected</span>}
                                 {Number(data.solo_price) >= 5 && Number(data.solo_price) <= 15 && (
-                                  <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.2em] bg-white px-3 py-1.5 rounded-lg border border-[#eca840]/30 shadow-xl animate-pulse flex items-center gap-2">
+                                  <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.2em] bg-[#eca840]/10 px-3 py-1.5 rounded-lg border border-[#eca840]/30 shadow-xl animate-pulse flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#eca840]"></span>
                                     4x Batch Protocol Active
                                   </span>
@@ -1194,20 +1217,20 @@ export default function SellerProducts({ products, archived_products, categories
                               </div>
                             </div>
                             <div className="relative group">
-                              <div className="absolute left-6 top-1/2 -translate-y-1/2 text-xl font-black text-gray-300 group-focus-within:text-[#eca840] transition-colors">₱</div>
+                              <div className="absolute left-6 top-1/2 -translate-y-1/2 text-xl font-black text-gray-600 group-focus-within:text-[#eca840] transition-colors">₱</div>
                               <input
                                 type="number"
                                 value={data.solo_price}
                                 onChange={e => setData('solo_price', e.target.value)}
-                                className="w-full bg-[#fcfaf7] border border-gray-100 rounded-[2rem] pl-12 pr-20 py-6 text-2xl font-black tabular-nums text-gray-900 focus:bg-white focus:ring-[10px] focus:ring-[#eca840]/5 focus:border-[#eca840]/30 transition-all shadow-inner"
+                                className="w-full bg-[#0f1115] border border-white/5 rounded-[2rem] pl-12 pr-20 py-6 text-2xl font-black tabular-nums text-white focus:bg-[#13151a] focus:ring-[10px] focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-inner placeholder:text-gray-700"
                                 placeholder="0.00"
                               />
-                              <div className="absolute right-6 top-1/2 -translate-y-1/2 px-4 py-2 bg-white rounded-xl text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] shadow-sm border border-gray-100">PH Pesos</div>
+                              <div className="absolute right-6 top-1/2 -translate-y-1/2 px-4 py-2 bg-[#1a1c23] rounded-xl text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] shadow-sm border border-white/5">PH Pesos</div>
                             </div>
                           </div>
 
                           <div className="space-y-6">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Appropriate Unit architecture</label>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-2">Appropriate Unit architecture</label>
                              <div className="grid grid-cols-2 gap-4">
                                 {[
                                   { 
@@ -1245,21 +1268,21 @@ export default function SellerProducts({ products, archived_products, categories
                                    onClick={() => setData('solo_unit', unit.id)}
                                    className={`flex flex-col items-start gap-2 p-5 rounded-[2rem] border-2 transition-all duration-500 relative group/unit ${
                                      data.solo_unit === unit.id 
-                                       ? 'bg-white border-[#eca840] shadow-2xl shadow-orange-100/40 ring-4 ring-orange-50' 
-                                       : 'bg-white border-gray-100 hover:border-gray-200 hover:bg-gray-50/50'
+                                       ? 'bg-[#1a1c23] border-[#eca840] shadow-2xl shadow-[#eca840]/20 ring-4 ring-[#eca840]/10' 
+                                       : 'bg-[#0f1115] border-white/5 hover:border-white/10 hover:bg-[#13151a]'
                                    }`}
                                  >
                                    <div className="flex items-center justify-between w-full mb-1">
-                                      <span className="text-2xl grayscale group-hover/unit:grayscale-0 transition-all duration-500">{unit.icon}</span>
+                                      <span className="text-2xl grayscale opacity-70 group-hover/unit:grayscale-0 group-hover/unit:opacity-100 transition-all duration-500">{unit.icon}</span>
                                       {data.solo_unit === unit.id && (
                                          <div className="w-2.5 h-2.5 rounded-full bg-[#eca840] shadow-[0_0_12px_rgba(236,168,64,0.6)]"></div>
                                       )}
                                    </div>
                                    <div className="flex flex-col items-start">
-                                      <span className={`text-[11px] font-[1000] uppercase tracking-[0.1em] transition-colors ${data.solo_unit === unit.id ? 'text-gray-900' : 'text-gray-500'}`}>
+                                      <span className={`text-[11px] font-[1000] uppercase tracking-[0.1em] transition-colors ${data.solo_unit === unit.id ? 'text-white' : 'text-gray-400'}`}>
                                         {unit.label}
                                       </span>
-                                      <span className="text-[8px] font-bold text-gray-300 uppercase tracking-widest">{unit.sub}</span>
+                                      <span className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">{unit.sub}</span>
                                    </div>
                                  </button>
                                ))}
@@ -1267,14 +1290,14 @@ export default function SellerProducts({ products, archived_products, categories
                             
                             {/* Insight Notification */}
                             {(isDelicacy || (Number(data.solo_price) >= 5 && Number(data.solo_price) <= 15)) && (
-                              <div className="p-6 bg-[#eca840]/5 rounded-[2.5rem] border border-[#eca840]/20 animate-in slide-in-from-top-4 duration-700 shadow-sm">
+                              <div className="p-6 bg-[#eca840]/10 rounded-[2.5rem] border border-[#eca840]/20 animate-in slide-in-from-top-4 duration-700 shadow-sm">
                                  <div className="flex items-start gap-4">
-                                   <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#eca840] shadow-sm shrink-0 border border-orange-100">
+                                   <div className="w-10 h-10 rounded-full bg-[#eca840]/20 flex items-center justify-center text-[#eca840] shadow-sm shrink-0 border border-[#eca840]/30">
                                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                    </div>
                                    <div className="flex flex-col gap-1.5">
                                      <span className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.2em]">Master Architect's Insight</span>
-                                     <p className="text-[10px] font-bold text-gray-500 uppercase leading-[1.6] tracking-[0.05em]">
+                                     <p className="text-[10px] font-bold text-gray-300 uppercase leading-[1.6] tracking-[0.05em]">
                                        {isDelicacy 
                                          ? "For bespoke delicacies, 'Set of 3' is the mandatory standard to preserve the artisanal presentation."
                                          : "Items priced between ₱5–₱15 are automatically provisioned as a 4x Collective Batch for logistical integrity."
@@ -1292,8 +1315,8 @@ export default function SellerProducts({ products, archived_products, categories
 
                   {/* Phase 3: Package Offering Architecture */}
                   {(offeringType === 'package' || offeringType === 'both') && (
-                    <div className="space-y-8 bg-gray-900 p-10 rounded-[3.5rem] border border-gray-800 relative overflow-hidden group/package shadow-2xl animate-in fade-in slide-in-from-left-8 duration-1000">
-                      <div className="absolute top-0 right-0 w-80 h-80 bg-orange-500/5 rounded-full blur-[100px] -mr-40 -mt-40"></div>
+                    <div className="space-y-8 bg-[#1a1c23] p-10 rounded-[3.5rem] border border-white/5 relative overflow-hidden group/package shadow-2xl animate-in fade-in slide-in-from-left-8 duration-1000">
+                      <div className="absolute top-0 right-0 w-80 h-80 bg-orange-500/10 rounded-full blur-[100px] -mr-40 -mt-40"></div>
                       
                       <div className="flex justify-between items-center relative z-10 border-b border-white/5 pb-8">
                         <div className="flex items-center gap-5">
@@ -1302,7 +1325,7 @@ export default function SellerProducts({ products, archived_products, categories
                           </div>
                           <div>
                             <h3 className="text-sm font-[1000] text-white uppercase tracking-[0.4em]">Package configuration</h3>
-                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-1">Collective bundles & premium packaging rates</p>
+                            <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">Collective bundles & premium packaging rates</p>
                           </div>
                         </div>
                         <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.3em] bg-white/5 px-5 py-2.5 rounded-full border border-white/10 shadow-lg">Config Phase 03</span>
@@ -1312,7 +1335,7 @@ export default function SellerProducts({ products, archived_products, categories
                         {/* Package Image Module */}
                         <div className="space-y-5">
                           <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 block text-white/40">distinct package view</label>
-                          <div className={`relative group p-2.5 rounded-[2.5rem] border-2 transition-all duration-700 ${packagePreview ? 'border-[#eca840]/40 bg-white/5 shadow-2xl shadow-black/60 ring-8 ring-white/2' : 'border-dashed border-white/5 bg-white/2'}`}>
+                          <div className={`relative group p-2.5 rounded-[2.5rem] border-2 transition-all duration-700 ${packagePreview ? 'border-[#eca840]/40 bg-white/5 shadow-2xl shadow-black/60 ring-8 ring-white/5' : 'border-dashed border-white/5 bg-white/2'}`}>
                             <div className="w-full aspect-square rounded-[2rem] overflow-hidden bg-black/40 border border-white/5 flex items-center justify-center relative shadow-inner">
                               {packagePreview ? (
                                 <img src={packagePreview} className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-1000" alt="Package" />
@@ -1347,7 +1370,7 @@ export default function SellerProducts({ products, archived_products, categories
                                 type="number"
                                 value={data.package_price}
                                 onChange={e => setData('package_price', e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 rounded-[2rem] pl-12 pr-20 py-6 text-2xl font-black tabular-nums text-white focus:bg-white/10 focus:ring-8 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-2xl"
+                                className="w-full bg-white/5 border border-white/10 rounded-[2rem] pl-12 pr-20 py-6 text-2xl font-black tabular-nums text-white focus:bg-white/10 focus:ring-8 focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-2xl placeholder:text-gray-700"
                                 placeholder="0.00"
                               />
                               <div className="absolute right-6 top-1/2 -translate-y-1/2 px-4 py-2 bg-black/40 rounded-xl text-[9px] font-black text-white/40 uppercase tracking-[0.2em] shadow-lg border border-white/5">PH Pesos</div>
@@ -1390,7 +1413,7 @@ export default function SellerProducts({ products, archived_products, categories
                                     type="number"
                                     value={data.package_qty}
                                     onChange={e => setData('package_qty', e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-lg font-black text-white focus:ring-8 focus:ring-[#eca840]/10 focus:bg-white/10 transition-all shadow-inner"
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-lg font-black text-white focus:ring-8 focus:ring-[#eca840]/10 focus:bg-white/10 transition-all shadow-inner placeholder:text-gray-700"
                                     placeholder="12"
                                   />
                                   <div className="absolute right-6 top-1/2 -translate-y-1/2 text-[9px] font-black text-white/20 uppercase tracking-[0.3em]">Units</div>
@@ -1427,19 +1450,19 @@ export default function SellerProducts({ products, archived_products, categories
                   )}
 
                   {/* Phase 4: Master Inventory Stewardship */}
-                  <div className="space-y-10 pt-10 border-t border-gray-100 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                  <div className="space-y-10 pt-10 border-t border-white/5 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                     <div className="flex items-center justify-between">
                        <div className="flex items-center gap-4">
                          <div className="w-2.5 h-2.5 rounded-full bg-[#eca840] shadow-[0_0_15px_rgba(236,168,64,0.6)]"></div>
-                         <h4 className="text-[12px] font-[1000] text-gray-900 uppercase tracking-[0.3em]">Inventory & Stewardship</h4>
+                         <h4 className="text-[12px] font-[1000] text-white uppercase tracking-[0.3em]">Inventory & Stewardship</h4>
                        </div>
                        <div className="flex items-center gap-3">
-                          <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100/50">Real-time Vault Sync</span>
-                          <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest">Global Ops</span>
+                          <span className="text-[8px] font-black text-[#eca840] uppercase tracking-widest bg-[#eca840]/10 px-3 py-1.5 rounded-full border border-[#eca840]/20">Real-time Vault Sync</span>
+                          <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">Global Ops</span>
                        </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-12">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                       <div className="space-y-4">
                         <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-2">Total Vault availability</label>
                         <div className="relative group">
@@ -1448,11 +1471,11 @@ export default function SellerProducts({ products, archived_products, categories
                             type="number"
                             value={data.stock}
                             onChange={e => setData('stock', e.target.value)}
-                            className="w-full bg-[#fcfaf7] border border-transparent rounded-[2.5rem] pl-28 pr-10 py-7 text-3xl font-black tabular-nums text-gray-900 focus:bg-white focus:ring-[15px] focus:ring-[#eca840]/5 focus:border-[#eca840]/30 transition-all shadow-inner"
+                            className="w-full bg-[#13151a] border border-white/5 rounded-[2.5rem] pl-28 pr-10 py-7 text-3xl font-black tabular-nums text-white focus:bg-[#0f1115] focus:ring-[15px] focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all shadow-inner placeholder:text-gray-700"
                             placeholder="0"
                           />
                         </div>
-                        <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest ml-4">Total MASTER quantity available across all variants</p>
+                        <p className="text-[8px] font-bold text-gray-500 uppercase tracking-widest ml-4">Total MASTER quantity available across all variants</p>
                       </div>
                       <div className="space-y-4">
                         <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-2">Listing Visibility status</label>
@@ -1460,11 +1483,11 @@ export default function SellerProducts({ products, archived_products, categories
                           <select
                             value={data.status}
                             onChange={e => setData('status', e.target.value)}
-                            className="w-full bg-[#fcfaf7] border border-transparent rounded-[2.5rem] pl-10 pr-16 py-7 text-[12px] font-black uppercase tracking-[0.25em] text-[#eca840] focus:bg-white focus:ring-[15px] focus:ring-[#eca840]/5 focus:border-[#eca840]/20 transition-all appearance-none cursor-pointer shadow-inner"
+                            className="w-full bg-[#13151a] border border-white/5 rounded-[2.5rem] pl-10 pr-16 py-7 text-[12px] font-black uppercase tracking-[0.25em] text-[#eca840] focus:bg-[#0f1115] focus:ring-[15px] focus:ring-[#eca840]/10 focus:border-[#eca840]/30 transition-all appearance-none cursor-pointer shadow-inner"
                           >
-                            <option value="in_stock">Vault Open / In Stock</option>
-                            <option value="pre_order">Queue Entry / Pre-Order</option>
-                            <option value="sold_out">Vault Sealed / Sold Out</option>
+                            <option value="in_stock" className="bg-[#1a1c23]">Vault Open / In Stock</option>
+                            <option value="pre_order" className="bg-[#1a1c23]">Queue Entry / Pre-Order</option>
+                            <option value="sold_out" className="bg-[#1a1c23]">Vault Sealed / Sold Out</option>
                           </select>
                           <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none text-[#eca840] group-hover:scale-110 transition-transform">
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4 4 4-4" /></svg>
@@ -1475,13 +1498,13 @@ export default function SellerProducts({ products, archived_products, categories
                   </div>
 
 
-                  <div className="pt-12">
+                  <div className="pt-12 pb-6">
                     <button
                       type="submit"
                       disabled={processing}
-                      className="group relative w-full py-8 bg-gray-900 text-white rounded-[2.5rem] font-bold text-[12px] uppercase tracking-[0.6em] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.4)] transition-all hover:bg-[#2d2a26] hover:-translate-y-2 active:translate-y-0 disabled:opacity-50 overflow-hidden"
+                      className="group relative w-full py-8 bg-[#eca840] text-gray-900 rounded-[2.5rem] font-black text-[14px] uppercase tracking-[0.6em] shadow-[0_20px_50px_-10px_rgba(236,168,64,0.4)] transition-all hover:bg-[#d69635] hover:-translate-y-2 active:translate-y-0 disabled:opacity-50 overflow-hidden"
                     >
-                      <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-[#eca840]/10 to-transparent -translate-x-full group-hover:animate-shimmer transition-all"></div>
+                      <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:animate-shimmer transition-all"></div>
                       <span className="relative z-10">{processing ? 'Engraving Data...' : (editingProduct ? 'Finalize Masterpiece' : 'Commit to vault')}</span>
                     </button>
                   </div>
@@ -1491,7 +1514,6 @@ export default function SellerProducts({ products, archived_products, categories
           </div>
         </div>
       )}
-
 
       {/* Restock Modal */}
       {isRestockModalOpen && (
