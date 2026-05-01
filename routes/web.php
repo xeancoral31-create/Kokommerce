@@ -40,7 +40,9 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return Inertia::render('About');
 });
-
+Route::get('/account', function () {
+    return redirect()->route('seller.settings');
+})->name('account');
 
 
 Route::get('/shop', function () {
@@ -78,6 +80,7 @@ Route::prefix('buyer')->group(function () {
     Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
     Route::get('/wishlist', [BuyerController::class, 'wishlist'])->name('buyer.wishlist');
+    Route::get('/account', [BuyerController::class, 'account'])->name('buyer.account');
 });
 
 Route::get('/wishlist', function() {

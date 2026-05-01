@@ -87,8 +87,21 @@ class BuyerController extends Controller
 
     public function account()
     {
-        return Inertia::render('Buyer/BuyerAccountPage', [
-            'buyer' => Buyer::first()
+        $user = auth()->user();
+        $buyer = null;
+        
+        if ($user) {
+            $buyer = Buyer::where('email', $user->email)->first();
+        }
+        
+        if (!$buyer) {
+            $buyer = Buyer::first(); // Fallback for local development or guest view
+        }
+
+        return Inertia::render('Buyer/BuyerAccount', [
+            'buyer' => $buyer,
+            'orders_count' => $buyer ? $buyer->orders()->count() : 0,
+            'offers_count' => Promotion::where('status', 'active')->count(),
         ]);
     }
 

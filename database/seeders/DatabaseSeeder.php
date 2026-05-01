@@ -13,9 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            ProductSeeder::class,
-            OrderSeeder::class,
-        ]);
+        // Add core seeders here if needed
     }
 }

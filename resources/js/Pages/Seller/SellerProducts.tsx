@@ -1262,12 +1262,6 @@ export default function SellerProducts({ products, archived_products, categories
                                       </span>
                                       <span className="text-[8px] font-bold text-gray-300 uppercase tracking-widest">{unit.sub}</span>
                                    </div>
-                                   
-                                   {unit.rec && (
-                                     <div className="absolute -top-3 -right-2 px-3 py-1 bg-[#1a1c23] rounded-full border border-gray-800 shadow-xl z-20">
-                                        <span className="text-[6px] font-black text-[#eca840] uppercase tracking-widest">Recommended Fit</span>
-                                     </div>
-                                   )}
                                  </button>
                                ))}
                             </div>

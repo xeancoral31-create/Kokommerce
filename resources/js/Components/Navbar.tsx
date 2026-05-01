@@ -47,6 +47,18 @@ const LocationPinIcon = () => (
     </svg>
 );
 
+const AccountIcon = () => (
+    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path 
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09A1.65 1.65 0 0 0 20.91 10H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" 
+            strokeWidth="1.45" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+        />
+        <circle cx="12" cy="12" r="3" strokeWidth="1.75" />
+    </svg>
+);
+
 export default function Navbar() {
     const { url } = usePage();
     const { isLoaded, isSignedIn, user } = useUser();
@@ -298,10 +310,12 @@ export default function Navbar() {
                                 )}
                             </Link>
 
+                            {/* Notifications */}
                             <button 
                                 onClick={() => setShowNotifications(true)}
-                                className="relative flex items-center group focus:outline-none"
+                                className="icon-nav-button relative flex items-center group focus:outline-none"
                                 aria-label="Notifications"
+                                title="Notifications"
                             >
                                 <span className="text-gray-400 group-hover:text-[#eca840] transition-colors"><BellIcon /></span>
                                 {unreadCount > 0 && (
@@ -313,10 +327,12 @@ export default function Navbar() {
                                 )}
                             </button>
 
+                            {/* Shopping Bag */}
                             <button 
                                 onClick={() => setShowSideCart(true)}
-                                className="relative flex items-center group focus:outline-none"
+                                className="icon-nav-button relative flex items-center group focus:outline-none"
                                 aria-label="Open Your Bag"
+                                title="Your Bag"
                             >
                                 <span className="text-gray-400 group-hover:text-[#eca840] transition-colors"><ShoppingBagIcon /></span>
                                 {cartCount > 0 && (
@@ -327,6 +343,19 @@ export default function Navbar() {
                                     </span>
                                 )}
                             </button>
+
+                            {/* Account Link (Far Right Anchor) */}
+                            <Link 
+                                href="/buyer/account" 
+                                className={`icon-nav-button relative flex items-center group focus:outline-none ${url === '/buyer/account' ? 'text-[#eca840]' : 'text-gray-400'}`}
+                                aria-label="Account"
+                                title="Account"
+                                data-discover="true"
+                            >
+                                <span className="group-hover:text-[#eca840] transition-colors">
+                                    <AccountIcon />
+                                </span>
+                            </Link>
 
                             <div className="flex items-center gap-4">
                                 {/* Returning Seller Dashboard Signal */}
