@@ -1,6 +1,7 @@
 import React from 'react';
 import BuyerLayout from '../../Components/BuyerLayout';
 import { Head, usePage } from '@inertiajs/inertia-react';
+import { Inertia } from '@inertiajs/inertia';
 import { useUser } from '@clerk/clerk-react';
 import { useWishlist } from '../../Context/WishlistContext';
 import L from 'leaflet';
@@ -35,7 +36,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
     // Location Detection States
     const [isDetecting, setIsDetecting] = React.useState(false);
     const [detectedCoords, setDetectedCoords] = React.useState<{lat: number, lng: number} | null>(null);
-    const [primaryAddress, setPrimaryAddress] = React.useState('123 Gourmet Lane, Artisanal District, PH'); // Default from UI
+    const [primaryAddress, setPrimaryAddress] = React.useState(buyer?.address || '123 Gourmet Lane, Artisanal District, PH'); // Default from UI
     const [isLocationVerified, setIsLocationVerified] = React.useState(false);
 
     // Leaflet Map Refs
@@ -44,9 +45,9 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
     const markerRef = React.useRef<L.Marker | null>(null);
 
     // Profile States for Sync
-    const [fullName, setFullName] = React.useState(displayName);
-    const [email, setEmail] = React.useState(displayEmail);
-    const [phone, setPhone] = React.useState('+63 912 345 6789');
+    const [fullName, setFullName] = React.useState(buyer?.name || displayName);
+    const [email, setEmail] = React.useState(buyer?.email || displayEmail);
+    const [phone, setPhone] = React.useState(buyer?.phone || '+63 912 345 6789');
 
     // Sync states when Clerk or User data changes
     React.useEffect(() => {
@@ -172,11 +173,21 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
 
     const handleUpdateProfile = (e: React.FormEvent) => {
         e.preventDefault();
-        setShowSuccess(true);
-        setTimeout(() => {
-            setShowSuccess(false);
-            setActiveTab('overview');
-        }, 1500);
+        Inertia.put('/buyer/account', {
+            name: fullName,
+            email: email,
+            phone: phone,
+            address: primaryAddress
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setShowSuccess(true);
+                setTimeout(() => {
+                    setShowSuccess(false);
+                    setActiveTab('overview');
+                }, 1500);
+            }
+        });
     };
 
     const handleTerminateAccount = () => {

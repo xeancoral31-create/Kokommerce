@@ -105,6 +105,38 @@ class BuyerController extends Controller
         ]);
     }
 
+    public function updateAccount(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'address' => 'nullable|string|max:500',
+        ]);
+
+        $user = auth()->user();
+        $buyer = null;
+
+        if ($user) {
+            $buyer = Buyer::where('email', $user->email)->first();
+        }
+
+        if (!$buyer) {
+            $buyer = Buyer::first();
+        }
+
+        if ($buyer) {
+            $buyer->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Profile updated successfully.');
+    }
+
     public function cart()
     {
         $user = auth()->user();

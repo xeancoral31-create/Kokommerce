@@ -395,7 +395,7 @@ export default function SellerProducts({ products, archived_products, categories
   const [viewMode, setViewMode] = React.useState<'Grid' | 'List'>('Grid');
   const [currentPage, setCurrentPage] = React.useState(1);
   const itemsPerPage = 8;
-  const [offeringType, setOfferingType] = React.useState<'solo' | 'package' | 'both'>('both');
+  const [offeringType, setOfferingType] = React.useState<'solo' | 'package' | 'both'>('solo');
 
   const restockForm = useForm({
     quantity: '1',
@@ -437,7 +437,7 @@ export default function SellerProducts({ products, archived_products, categories
     package_image: '',
     package_image_file: null as File | null,
     status: 'in_stock',
-    offering_type: 'both',
+    offering_type: 'solo',
     _method: 'POST'
   });
 
@@ -499,14 +499,14 @@ export default function SellerProducts({ products, archived_products, categories
     });
     setSoloPreview(null);
     setPackagePreview(null);
-    setOfferingType('both');
+    setOfferingType('solo');
     setIsModalOpen(true);
   };
 
   const openEditModal = (product: any) => {
     setEditingProduct(product);
     setModalPreview(product.image);
-    let initialType: 'solo' | 'package' | 'both' = 'both';
+    let initialType: 'solo' | 'package' | 'both' = 'solo';
     if (product.solo_price && product.package_price) initialType = 'both';
     else if (product.solo_price) initialType = 'solo';
     else if (product.package_price) initialType = 'package';
@@ -1043,8 +1043,7 @@ export default function SellerProducts({ products, archived_products, categories
                   <div className="bg-[#fcfaf7] p-2 rounded-[2rem] flex gap-2 border border-gray-100 shadow-inner">
                     {[
                       { id: 'solo' as const, label: 'Solo Focused', icon: '🍪' },
-                      { id: 'package' as const, label: 'Package Focused', icon: '📦' },
-                      { id: 'both' as const, label: 'Dual Offering', icon: '✨' }
+                      { id: 'package' as const, label: 'Package Focused', icon: '📦' }
                     ].map((type) => (
                       <button
                         key={type.id}

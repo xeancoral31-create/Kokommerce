@@ -81,6 +81,7 @@ Route::prefix('buyer')->group(function () {
     Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
     Route::get('/wishlist', [BuyerController::class, 'wishlist'])->name('buyer.wishlist');
     Route::get('/account', [BuyerController::class, 'account'])->name('buyer.account');
+    Route::put('/account', [BuyerController::class, 'updateAccount'])->name('buyer.account.update');
 });
 
 Route::get('/wishlist', function() {
