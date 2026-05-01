@@ -4,6 +4,8 @@ import { Head, usePage } from '@inertiajs/inertia-react';
 import { useUser } from '@clerk/clerk-react';
 import { useWishlist } from '../../Context/WishlistContext';
 import L from 'leaflet';
+// @ts-ignore
+import 'leaflet/dist/leaflet.css';
 
 interface BuyerAccountProps {
     buyer: any;
@@ -133,14 +135,14 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                             const localParts = parts.filter((p: string) => p !== city && p !== state && p !== zip && p !== "Philippines");
                             const uniqueLocalParts = Array.from(new Set([localParts[0], localParts[1]])).filter(Boolean);
                             if (uniqueLocalParts.length > 0) {
-                                detailedLandmark = uniqueLocalParts.join(', ');
+                                detailedLandmark = uniqueLocalParts.join(' / ');
                                 if (detailedLandmark.includes("BXU Resettlement Project")) {
                                     detailedLandmark = detailedLandmark.replace("Ambago", "Upper Doongan");
                                 }
                             }
                         }
                         
-                        const formulatedAddr = `${detailedLandmark}, ${city}, ${state} ${zip}`;
+                        const formulatedAddr = `${detailedLandmark}, ${city}, ${state}, ${zip}`;
                         setPrimaryAddress(formulatedAddr);
                         setIsLocationVerified(true);
                         setShowSuccess(true);
@@ -528,9 +530,8 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                             </div>
                                                         </div>
                                                         <div className="relative group">
-                                                            <input 
-                                                                type="text" 
-                                                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5 rounded-2xl px-7 py-5 focus:ring-2 focus:ring-[#eca840]/20 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium text-sm group-hover:bg-white dark:group-hover:bg-black/40 pr-12" 
+                                                            <textarea 
+                                                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5 rounded-2xl px-7 py-5 focus:ring-2 focus:ring-[#eca840]/20 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium text-sm group-hover:bg-white dark:group-hover:bg-black/40 pr-14 resize-none min-h-[100px]" 
                                                                 value={primaryAddress}
                                                                 onChange={(e) => setPrimaryAddress(e.target.value)}
                                                                 placeholder="Enter primary delivery address..."
@@ -538,9 +539,11 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                             <button 
                                                                 type="button"
                                                                 onClick={handleDetectLocation}
-                                                                className="absolute right-5 top-1/2 -translate-y-1/2 text-[#eca840] hover:scale-110 transition-transform"
+                                                                disabled={isDetecting}
+                                                                className={`absolute right-5 top-1/2 -translate-y-1/2 text-[#eca840] hover:scale-110 transition-transform ${isDetecting ? 'opacity-50 animate-pulse' : ''}`}
+                                                                title="Detect Location"
                                                             >
-                                                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                                                             </button>
                                                         </div>
                                                     </div>
