@@ -1384,7 +1384,14 @@ export default function SellerProducts({ products, archived_products, categories
                                 <div className="relative">
                                   <select
                                     value={data.package_unit}
-                                    onChange={e => setData('package_unit', e.target.value)}
+                                    onChange={e => {
+                                       const newUnit = e.target.value;
+                                       setData(prev => ({
+                                         ...prev,
+                                         package_unit: newUnit,
+                                         package_qty: (!prev.package_qty || Number(prev.package_qty) === 0) ? '1' : prev.package_qty
+                                       }));
+                                     }}
                                     className="w-full bg-white border border-gray-100 rounded-2xl px-6 py-5 text-[11px] font-black uppercase tracking-[0.2em] text-gray-700 focus:ring-8 focus:ring-[#eca840]/10 appearance-none cursor-pointer hover:bg-gray-50 transition-all shadow-inner"
                                   >
                                     <option value="" className="bg-white">Choose Format...</option>
@@ -1401,27 +1408,28 @@ export default function SellerProducts({ products, archived_products, categories
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
                                   </div>
                                 </div>
-                             </div>
-
-                             {!['bilao', 'tray', 'large_tub', 'whole_tray'].includes(data.package_unit) && (
                               <div className="space-y-4 pt-2 animate-in slide-in-from-right-8 duration-700">
                                 <div className="flex justify-between items-center px-1">
-                                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Quantity Per Collective</label>
+                                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Collective Yield</label>
                                   <span className="text-[7px] font-black text-[#eca840] uppercase tracking-[0.3em] bg-[#eca840]/10 px-3 py-1 rounded-full border border-[#eca840]/20">Required spec</span>
                                 </div>
                                 <div className="relative group">
                                   <input
                                     type="number"
+                                    min="1"
                                     value={data.package_qty}
-                                    onChange={e => setData('package_qty', e.target.value)}
+                                    onChange={e => {
+                                      const val = e.target.value;
+                                      if (val === '' || Number(val) >= 1) {
+                                        setData('package_qty', val);
+                                      }
+                                    }}
                                     className="w-full bg-white border border-gray-100 rounded-2xl px-6 py-5 text-lg font-black text-gray-900 focus:ring-8 focus:ring-[#eca840]/10 focus:bg-gray-50 transition-all shadow-inner placeholder:text-gray-300"
-                                    placeholder="12"
+                                    placeholder="1"
                                   />
-                                  <div className="absolute right-6 top-1/2 -translate-y-1/2 text-[9px] font-black text-gray-400 uppercase tracking-[0.3em]">Units</div>
                                 </div>
                                 {errors.package_qty && <p className="text-[9px] font-bold text-red-500 uppercase tracking-widest mt-2 ml-1">{errors.package_qty}</p>}
                               </div>
-                             )}
 
                              <div className="p-6 mt-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-6 shadow-3xl">
                                 <div className="flex items-center justify-between">
@@ -1433,8 +1441,9 @@ export default function SellerProducts({ products, archived_products, categories
                                 <div className="flex items-end justify-between">
                                    <div className="space-y-1.5">
                                       <span className="text-[8px] font-[1000] text-gray-500 uppercase tracking-widest">Effective Unit Price</span>
-                                      <div className="text-2xl font-black text-gray-900 tracking-tight tabular-nums">
-                                        ₱{data.package_price && data.package_qty ? (Number(data.package_price) / Number(data.package_qty)).toFixed(2) : '0.00'}
+                                      <div className="text-2xl font-black text-gray-900 tracking-tight tabular-nums flex items-baseline gap-2">
+                                        ₱{data.package_price && Number(data.package_qty) > 0 ? (Number(data.package_price) / Number(data.package_qty)).toFixed(2) : '0.00'}
+                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">/ {(data.package_unit || 'Unit').replace('_', ' ')}</span>
                                       </div>
                                    </div>
                                    <div className="text-right">
@@ -1447,6 +1456,7 @@ export default function SellerProducts({ products, archived_products, categories
                              </div>
                           </div>
                         </div>
+                      </div>
                       </div>
                     </div>
                   )}
