@@ -31,9 +31,7 @@ class OrderController extends Controller
 
     private function isMockMode(string $secret): bool
     {
-        if (env('APP_ENV') !== 'local') {
-            return false;
-        }
+        // Allow mock mode if key is empty or starts with sk_test_ to facilitate testing on staging/production sites.
         return empty($secret) || Str::startsWith($secret, 'sk_test_');
     }
 
@@ -66,7 +64,7 @@ class OrderController extends Controller
             }
 
             Log::error('Stripe API error: ' . $res->body());
-            return response()->json(['error' => 'Payment gateway error.'], 500);
+            return response()->json(['error' => 'Stripe Gateway Error: ' . ($res->json('errors.0.detail') ?? 'Unknown error')], 500);
         } catch (\Exception $e) {
             Log::error('Stripe exception: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
@@ -81,6 +79,11 @@ class OrderController extends Controller
         $amount    = (int) ($request->amount * 100);
         $type      = (string) $request->type;
         $secretKey = (string) env('PAYMONGO_SECRET_KEY');
+
+        // PayMongo Minimum Amount Check (100 PHP)
+        if ($amount < 10000) {
+            return response()->json(['error' => 'PayMongo requires a minimum amount of ₱100.00 for E-Wallet transactions.'], 400);
+        }
 
         if ($this->isPaymongoMockMode($secretKey)) {
             $mockId = 'mock_src_' . Str::random(24);
@@ -104,9 +107,7 @@ class OrderController extends Controller
 
     private function isPaymongoMockMode(string $key): bool
     {
-        if (env('APP_ENV') !== 'local') {
-            return false;
-        }
+        // Allow mock mode if key is empty or starts with sk_test_ to facilitate testing on staging/production sites.
         return empty($key) || Str::startsWith($key, 'sk_test_');
     }
 
@@ -136,8 +137,9 @@ class OrderController extends Controller
                 ]);
             }
 
+            $errorDetail = $res->json('errors.0.detail') ?? 'Failed to create payment source.';
             Log::error('PayMongo source error: ' . $res->body());
-            return response()->json(['error' => 'Failed to create payment source.'], 400);
+            return response()->json(['error' => $errorDetail], 400);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
