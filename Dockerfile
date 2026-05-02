@@ -71,12 +71,13 @@ FROM php:8.2-apache AS runtime
 RUN apt-get update && apt-get install -y \
     libpng-dev libonig-dev libxml2-dev libzip-dev \
     && docker-php-ext-install pdo pdo_mysql mbstring xml ctype fileinfo bcmath zip \
+    && a2dismod mpm_event && a2enmod mpm_prefork \
     && a2enmod rewrite \
     && sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf \
     && sed -i 's!/var/www/!/var/www/html/public!g' /etc/apache2/apache2.conf \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+WORKDIR /var/www/html
 
 # Copy built app from php-builder
 COPY --from=php-builder /app .
