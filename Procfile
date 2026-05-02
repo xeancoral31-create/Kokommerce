@@ -1,1 +1,1 @@
-web: php artisan migrate --force && php artisan storage:link --force && (php-fpm -D && nginx -g "daemon off;")
+web: php artisan migrate --force && php artisan storage:link --force && php artisan serve --host=0.0.0.0 --port=$PORT

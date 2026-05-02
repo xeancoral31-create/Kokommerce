@@ -1457,7 +1457,6 @@ export default function SellerProducts({ products, archived_products, categories
                           </div>
                         </div>
                       </div>
-                      </div>
                     </div>
                   )}
 
