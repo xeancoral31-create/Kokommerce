@@ -1430,6 +1430,7 @@ export default function SellerProducts({ products, archived_products, categories
                                 </div>
                                 {errors.package_qty && <p className="text-[9px] font-bold text-red-500 uppercase tracking-widest mt-2 ml-1">{errors.package_qty}</p>}
                               </div>
+                             </div>
 
                              <div className="p-6 mt-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-6 shadow-3xl">
                                 <div className="flex items-center justify-between">
