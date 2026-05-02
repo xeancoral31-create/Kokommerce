@@ -20,8 +20,9 @@
         'php artisan config:cache',
         'php artisan route:cache',
         'php artisan view:cache',
-        'php artisan optimize'
+        'php artisan optimize',
+        'php artisan storage:link --force'
     ]
 
 [start]
-    cmd = 'php artisan migrate --force && php artisan storage:link --force && php artisan serve --host=0.0.0.0 --port=$PORT'
+    cmd = 'php artisan migrate --force && (php-fpm -D && nginx -g "daemon off;")'

@@ -172,7 +172,7 @@ class BuyerController extends Controller
     {
         return Inertia::render('Buyer/OrderConfirmPay', [
             'cart_items' => [],
-            'stripe_key' => env('STRIPE_KEY', 'pk_test_2zuyBaQ6NePxHFMmmsQ94zxm')
+            'stripe_key' => config('services.stripe.key', 'pk_test_2zuyBaQ6NePxHFMmmsQ94zxm')
         ]);
     }
 

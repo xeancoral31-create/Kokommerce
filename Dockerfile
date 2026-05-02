@@ -22,13 +22,14 @@ RUN npm run prod
 # ============================================================
 # Stage 2: PHP + Composer — Build app
 # ============================================================
-FROM php:8.2-cli AS php-builder
+FROM php:8.2-apache AS php-builder
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpng-dev libonig-dev libxml2-dev \
     libcurl4-openssl-dev libzip-dev \
     && docker-php-ext-install pdo pdo_mysql mbstring xml ctype fileinfo bcmath zip curl \
+    && a2enmod rewrite \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
@@ -64,12 +65,15 @@ RUN mkdir -p storage/framework/{sessions,views,cache,testing} \
 # ============================================================
 # Stage 3: Final runtime image
 # ============================================================
-FROM php:8.2-cli AS runtime
+FROM php:8.2-apache AS runtime
 
 # Install only runtime PHP extensions
 RUN apt-get update && apt-get install -y \
     libpng-dev libonig-dev libxml2-dev libzip-dev \
     && docker-php-ext-install pdo pdo_mysql mbstring xml ctype fileinfo bcmath zip \
+    && a2enmod rewrite \
+    && sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf \
+    && sed -i 's!/var/www/!/var/www/html/public!g' /etc/apache2/apache2.conf \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -86,6 +90,11 @@ EXPOSE 8080
 # Run migrations, link storage, then start server
 CMD sh -c "mkdir -p storage/framework/{sessions,views,cache,testing} storage/logs bootstrap/cache && \
            chmod -R 777 storage bootstrap/cache && \
+           php artisan optimize:clear && \
+           php artisan config:cache && \
+           php artisan route:cache && \
+           php artisan view:cache && \
+           php artisan optimize && \
            php artisan migrate --force && \
            php artisan storage:link --force 2>/dev/null || true && \
-           php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"
+           apache2-foreground"

@@ -20,7 +20,7 @@ class OrderController extends Controller
     public function createPaymentIntent(Request $request): JsonResponse
     {
         $amount = (int) ($request->total * 100);
-        $secret = (string) env('STRIPE_SECRET');
+        $secret = (string) config('services.stripe.secret');
 
         if ($this->isMockMode($secret)) {
             return $this->mockPaymentResponse();
@@ -31,7 +31,7 @@ class OrderController extends Controller
 
     private function isMockMode(string $secret): bool
     {
-        if (env('APP_ENV') !== 'local') {
+        if (config('app.env') !== 'local') {
             return false;
         }
         return empty($secret) || Str::startsWith($secret, 'sk_test_');
@@ -80,7 +80,7 @@ class OrderController extends Controller
     {
         $amount    = (int) ($request->amount * 100);
         $type      = (string) $request->type;
-        $secretKey = (string) env('PAYMONGO_SECRET_KEY');
+        $secretKey = (string) config('services.paymongo.secret_key');
 
         if ($this->isPaymongoMockMode($secretKey)) {
             $mockId = 'mock_src_' . Str::random(24);
@@ -104,7 +104,7 @@ class OrderController extends Controller
 
     private function isPaymongoMockMode(string $key): bool
     {
-        if (env('APP_ENV') !== 'local') {
+        if (config('app.env') !== 'local') {
             return false;
         }
         return empty($key) || Str::startsWith($key, 'sk_test_');
@@ -155,7 +155,7 @@ class OrderController extends Controller
         }
 
         try {
-            $key = (string) env('PAYMONGO_SECRET_KEY');
+            $key = (string) config('services.paymongo.secret_key');
             $res = Http::withBasicAuth($key, '')
                 ->get("https://api.paymongo.com/v1/sources/{$sourceId}");
 
