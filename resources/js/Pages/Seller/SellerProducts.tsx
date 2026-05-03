@@ -1025,16 +1025,10 @@ export default function SellerProducts({ products, archived_products, categories
             <div className="px-10 py-8 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
               <div className="flex items-center gap-5">
                  <div className="w-14 h-14 rounded-2xl bg-[#eca840]/10 border border-[#eca840]/20 flex items-center justify-center text-[#eca840] shadow-[0_0_20px_rgba(236,168,64,0.1)]">
-                   <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 21v-8a2 2 0 00-2-2H6a2 2 0 00-2 2v8" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2 21h20" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8v3" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v3" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8v3" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4h.01" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4h.01" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 4h.01" />
+                    <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M21 11H3c0 4.97 4.03 9 9 9s9-4.03 9-9Z" />
+                      <path d="M18.5 2a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+                      <rect x="16" y="3.5" width="2" height="9" rx="1" transform="rotate(-35 16 3.5)" />
                     </svg>
                  </div>
                  <div>
