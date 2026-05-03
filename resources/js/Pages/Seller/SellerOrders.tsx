@@ -464,7 +464,7 @@ export default function SellerOrders({ orders, stats }: OrdersProps) {
                             <span className="text-[10px] font-black text-[#eca840]">Priority Guild Member</span>
                          </div>
                          <div className="flex justify-between text-left">
-                            <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Total Acquisitions</span>
+                            <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Total Purchase</span>
                             <span className="text-xs font-black text-gray-900">₱{parseFloat(selectedOrder.total_amount || 0).toLocaleString()}</span>
                          </div>
                       </div>

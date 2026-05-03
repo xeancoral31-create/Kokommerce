@@ -8,10 +8,9 @@ declare function route(name?: string, params?: any, absolute?: boolean, config?:
 interface SettingsProps {
   store_profile: any;
   operating_hours: any[];
-  payment_methods: any[];
 }
 
-export default function SellerSettings({ store_profile, operating_hours, payment_methods }: SettingsProps) {
+export default function SellerSettings({ store_profile, operating_hours }: SettingsProps) {
   const { user, isLoaded } = useUser();
   const { data, setData, post, processing, errors } = useForm({
     name: store_profile.name,
@@ -223,34 +222,7 @@ export default function SellerSettings({ store_profile, operating_hours, payment
                  </div>
               </div>
 
-              {/* Payment Methods Section */}
-              <div className="bg-white rounded-[2.5rem] p-12 border border-gray-100 shadow-sm">
-                 <div className="flex justify-between items-center mb-10">
-                    <div className="flex items-center gap-4">
-                       <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-xl">💳</div>
-                       <h3 className="text-2xl font-black text-gray-900">Payments</h3>
-                    </div>
-                    <button type="button" className="text-[10px] font-black text-[#eca840] uppercase tracking-widest hover:underline">Manage Methods</button>
-                 </div>
 
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {payment_methods.map(method => (
-                      <div key={method.id} className="p-6 border border-gray-100 rounded-2xl hover:border-[#eca840]/20 transition-all bg-gray-50/30">
-                         <div className="flex justify-between items-start mb-6">
-                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-white text-md shadow-lg ${method.name.includes('GCash') ? 'bg-blue-600 shadow-blue-500/20' : 'bg-gray-900 shadow-gray-900/20'}`}>
-                               {method.name.includes('GCash') ? 'GC' : '🏛️'}
-                            </div>
-                            <span className={`text-[8px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest ${method.status === 'ACTIVE' ? 'bg-[#eca840]/10 text-[#eca840]' : 'bg-green-50 text-green-500'}`}>
-                               {method.status}
-                            </span>
-                         </div>
-                         <h4 className="text-sm font-black text-gray-900 mb-1">{method.name}</h4>
-                         <p className="text-[10px] text-gray-400 font-bold mb-6">{method.details}</p>
-                         <button type="button" className="text-[9px] font-black text-gray-300 uppercase tracking-widest hover:text-[#eca840] transition-all">Configure</button>
-                      </div>
-                    ))}
-                 </div>
-              </div>
 
               {/* Security & Access Card */}
               <div className="bg-white rounded-[2.5rem] p-12 border border-gray-100 shadow-sm overflow-hidden relative">

@@ -603,42 +603,53 @@ export default function Navbar() {
                 </div>
             )}
 
-            {/* Notification Detail Modal */}
+            {/* Notification Detail Modal - Compact & Scrollable */}
             {selectedNotification && (
-                <div className="fixed inset-0 z-[1100] flex items-center justify-center p-6">
-                    <div className="absolute inset-0 bg-[#2d2a26]/60 backdrop-blur-md" onClick={() => setSelectedNotification(null)} />
-                    <div className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-transparent dark:border-gray-800 transition-colors duration-500">
-                        <div className="p-10">
-                            <div className="flex justify-between items-start mb-8">
-                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${selectedNotification.type === 'order_update' ? 'bg-blue-50 text-blue-500' : selectedNotification.type === 'promotion' ? 'bg-pink-50 text-pink-500' : 'bg-orange-50 text-[#eca840]'}`}>
+                <div className="fixed inset-0 z-[1100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSelectedNotification(null)} />
+                    <div className="relative w-full max-w-sm bg-white dark:bg-gray-900 rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-gray-100 dark:border-gray-800">
+                        <div className="p-8">
+                            <div className="flex justify-between items-center mb-6">
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                                    selectedNotification.type === 'order_update' ? 'bg-blue-50 text-blue-500' : 
+                                    selectedNotification.type === 'promotion' ? 'bg-pink-50 text-pink-500' : 
+                                    'bg-orange-50 text-[#eca840]'
+                                }`}>
                                     <BellIcon />
                                 </div>
                                 <button
                                     onClick={() => setSelectedNotification(null)}
-                                    className="w-10 h-10 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    className="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all"
                                 >
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                                 </button>
                             </div>
 
-                            <span className="text-[9px] font-black text-[#eca840] uppercase tracking-[0.4em] mb-3 block">Notification Detail</span>
-                            <h2 className="text-2xl font-black text-gray-900 dark:text-white tracking-tighter uppercase mb-6 leading-none">{selectedNotification.title}</h2>
-                            <div className="prose prose-sm max-w-none mb-10">
-                                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed whitespace-pre-wrap">{selectedNotification.message}</p>
+                            <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.3em] mb-2 block">Official Notification</span>
+                            <h2 className="text-xl font-black text-gray-900 dark:text-white tracking-tight uppercase mb-4 leading-tight">{selectedNotification.title}</h2>
+                            
+                            {/* Scrollable Message Area */}
+                            <div className="max-h-[200px] overflow-y-auto custom-scrollbar pr-2 mb-8">
+                                <p className="text-gray-600 dark:text-gray-400 text-xs leading-relaxed whitespace-pre-wrap">
+                                    {selectedNotification.message}
+                                </p>
                             </div>
 
-                            <div className="flex items-center gap-4 pt-8 border-t border-gray-50 dark:border-gray-800">
+                            <div className="flex items-center justify-between pt-6 border-t border-gray-50 dark:border-gray-800">
                                 <div className="flex flex-col">
-                                    <span className="text-[8px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Received On</span>
-                                    <span className="text-[10px] font-bold text-gray-900 dark:text-white">{new Date(selectedNotification.created_at).toLocaleString()}</span>
+                                    <span className="text-[7px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Received</span>
+                                    <span className="text-[9px] font-bold text-gray-900 dark:text-white">{new Date(selectedNotification.created_at).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</span>
                                 </div>
+                                <span className="text-[8px] font-black text-gray-300 dark:text-gray-600 uppercase tracking-widest italic">
+                                    #{selectedNotification.id.toString().slice(-4)}
+                                </span>
                             </div>
                         </div>
                         <button
                             onClick={() => setSelectedNotification(null)}
-                            className="w-full bg-gray-900 dark:bg-black text-white py-6 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-black dark:hover:bg-gray-900 transition-all"
+                            className="w-full bg-[#eca840] text-white py-5 text-[9px] font-black uppercase tracking-[0.3em] hover:bg-[#d99630] transition-all"
                         >
-                            Dismiss
+                            Understood
                         </button>
                     </div>
                 </div>

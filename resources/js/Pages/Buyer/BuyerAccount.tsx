@@ -167,8 +167,6 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
     const menuItems = [
         { id: 'overview', label: 'Overview', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
         { id: 'details', label: 'Account Details', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
-        { id: 'orders', label: 'Orders', icon: 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z' },
-        { id: 'wishlist', label: 'Wishlist', icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
     ];
 
     const handleUpdateProfile = (e: React.FormEvent) => {
@@ -294,15 +292,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                 {menuItems.map((item) => (
                                     <button
                                         key={item.id}
-                                        onClick={() => {
-                                            if (item.id === 'wishlist') {
-                                                window.location.href = '/buyer/wishlist';
-                                            } else if (item.id === 'orders') {
-                                                window.location.href = '/buyer/history';
-                                            } else {
-                                                setActiveTab(item.id);
-                                            }
-                                        }}
+                                        onClick={() => setActiveTab(item.id)}
                                         className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold transition-all duration-300 group ${
                                             activeTab === item.id 
                                             ? 'bg-[#eca840] text-white shadow-[0_10px_20px_rgba(236,168,64,0.2)]' 
@@ -338,7 +328,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                     {/* Stats Grid */}
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                         {[
-                                            { id: 'orders', label: 'Total Acquisitions', value: orders_count.toString().padStart(2, '0'), icon: 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z', href: '/buyer/history' },
+                                            { id: 'orders', label: 'Total Purchase', value: orders_count.toString().padStart(2, '0'), icon: 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z', href: '/buyer/history' },
                                             { id: 'wishlist', label: 'Collection Count', value: wishlistItems.length.toString().padStart(2, '0'), icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z', href: '/buyer/wishlist' },
                                             { id: 'offers', label: 'Available Offers', value: offers_count.toString().padStart(2, '0'), icon: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z', href: '/buyer/offer' },
                                         ].map((stat, i) => (
@@ -618,27 +608,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                 </div>
                             )}
 
-                            {activeTab === 'orders' && (
-                                <div className="bg-white dark:bg-[#1a1a1a] rounded-3xl p-10 border border-gray-100 dark:border-white/5 text-center py-32 animate-in fade-in zoom-in-95 duration-500">
-                                    <div className="w-20 h-20 rounded-full bg-gray-50 dark:bg-white/5 flex items-center justify-center mx-auto mb-6">
-                                        <svg className="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-                                    </div>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Recent Acquisitions</h3>
-                                    <p className="text-sm text-gray-400 dark:text-gray-500 mb-8 max-w-xs mx-auto italic">Your order history is a blank canvas. Time to fill it with artisanal delights.</p>
-                                    <button className="text-[#eca840] text-xs font-black uppercase tracking-widest hover:underline" onClick={() => window.location.href='/buyer/shop'}>Start Shopping — Explore the Collection</button>
-                                </div>
-                            )}
 
-                            {activeTab === 'wishlist' && (
-                                <div className="bg-white dark:bg-[#1a1a1a] rounded-3xl p-10 border border-gray-100 dark:border-white/5 text-center py-32 animate-in fade-in zoom-in-95 duration-500">
-                                    <div className="w-20 h-20 rounded-full bg-gray-50 dark:bg-white/5 flex items-center justify-center mx-auto mb-6">
-                                        <svg className="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                                    </div>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Your Wishlist is Empty</h3>
-                                    <p className="text-sm text-gray-400 dark:text-gray-500 mb-8 max-w-xs mx-auto italic">Save your favorite artisanal creations here for future gourmet experiences.</p>
-                                    <button className="text-[#eca840] text-xs font-black uppercase tracking-widest hover:underline" onClick={() => window.location.href='/buyer/shop'}>Explore the Bakery</button>
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>

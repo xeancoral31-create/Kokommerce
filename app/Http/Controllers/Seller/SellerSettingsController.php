@@ -31,10 +31,7 @@ class SellerSettingsController extends Controller
                 ['day' => 'Saturday', 'hours' => '08:00 - 21:00'],
                 ['day' => 'Sunday', 'hours' => 'CLOSED'],
             ],
-            'payment_methods' => [
-                ['id' => 1, 'name' => 'GCash Mobile', 'status' => 'ACTIVE', 'details' => '0917 **** 888'],
-                ['id' => 2, 'name' => 'Bank Transfer', 'status' => 'CONNECTED', 'details' => 'BDO Unibank **** 4291'],
-            ]
+
         ]);
     }
 
