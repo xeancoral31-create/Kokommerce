@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\AuthSyncController;
 // Artisanal Auth Bridge — Social Login (Google, Facebook, TikTok)
 // Whitelisted emails → seller/dashboard | All others → buyer/home
 Route::post('/auth/sync', [AuthSyncController::class, 'sync'])->name('auth.sync');
+Route::post('/logout', [AuthSyncController::class, 'logout'])->name('logout');
 
 
 // Professional and Formal UI Flow Routes

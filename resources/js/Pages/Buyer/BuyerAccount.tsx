@@ -2,7 +2,7 @@ import React from 'react';
 import BuyerLayout from '../../Components/BuyerLayout';
 import { Head, usePage } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
-import { useUser } from '@clerk/clerk-react';
+import { useUser, useClerk } from '@clerk/clerk-react';
 import { useWishlist } from '../../Context/WishlistContext';
 import L from 'leaflet';
 // @ts-ignore
@@ -17,6 +17,7 @@ interface BuyerAccountProps {
 export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0 }: BuyerAccountProps) {
     const { auth_user, auth } = usePage().props as any;
     const { isLoaded, isSignedIn, user: clerkUser } = useUser();
+    const { signOut } = useClerk();
     const { wishlistItems } = useWishlist();
     const user = auth_user || auth?.user || buyer;
     
@@ -221,10 +222,15 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
         }
     };
 
-    const handleSignOut = () => {
+    const handleSignOut = async () => {
         if (confirm("Are you sure you want to sign out?")) {
-            // Redirect to logout or use Inertia.post('/logout')
-            window.location.href = '/';
+            try {
+                await signOut();
+                Inertia.post('/logout');
+            } catch (error) {
+                console.error("Sign out failed:", error);
+                Inertia.post('/logout');
+            }
         }
     };
 
