@@ -304,13 +304,32 @@ class OrderController extends Controller
     private function dispatchOrderNotification(Order $order): void
     {
         try {
-            \App\Models\Notification::create([
-                'type'    => 'order',
-                'title'   => 'New Order Received',
-                'message' => "Order #{$order->order_reference} has been placed for ₱"
-                    . number_format($order->total_amount, 2),
-                'is_read' => false,
-            ]);
+            // 1. Notify the Buyer (if they are a registered user)
+            if (auth()->check()) {
+                \App\Models\Notification::create([
+                    'user_id' => auth()->id(),
+                    'type'    => 'order',
+                    'title'   => 'Order Confirmation',
+                    'message' => "Your order #{$order->order_reference} has been placed successfully for ₱"
+                        . number_format($order->total_amount, 2),
+                    'is_read' => false,
+                    'data'    => ['order_id' => $order->id]
+                ]);
+            }
+
+            // 2. Notify all Sellers
+            $sellers = \App\Models\User::where('role', 'seller')->get();
+            foreach ($sellers as $seller) {
+                \App\Models\Notification::create([
+                    'user_id' => $seller->id,
+                    'type'    => 'order',
+                    'title'   => 'New Order Received',
+                    'message' => "A new artisanal order #{$order->order_reference} has been placed for ₱"
+                        . number_format($order->total_amount, 2),
+                    'is_read' => false,
+                    'data'    => ['order_id' => $order->id]
+                ]);
+            }
         } catch (\Exception $e) {
             Log::warning('Could not create order notification: ' . $e->getMessage());
         }
