@@ -184,7 +184,7 @@ export default function BuyerShoppingCart({ cart_items, active_promotions }: Buy
                                                     <div className="flex flex-col items-center min-w-[40px]">
                                                         <div className="flex items-baseline gap-1">
                                                             {item.isFixedQty && (
-                                                                <span className="text-[12px] font-black text-[#eca840] animate-pulse">4x</span>
+                                                                <span className="text-[12px] font-black text-[#d4af37] animate-pulse">4x</span>
                                                             )}
                                                             <span className="font-black text-gray-900 text-2xl leading-none tracking-tighter">
                                                                 {item.isFixedQty ? item.qty / 4 : item.qty}
@@ -331,10 +331,10 @@ export default function BuyerShoppingCart({ cart_items, active_promotions }: Buy
 
                                 <Link
                                     href="/buyer/delivery"
-                                    className="w-full py-4 bg-[#d4af37] text-[#1a1a1a] rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-white transition-all shadow-md group"
+                                    className="w-full py-5 bg-[#d4af37] text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-[0_20px_40px_-15px_rgba(212,175,55,0.4)] hover:bg-black hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-500 flex items-center justify-center gap-3 group border border-[#d4af37]/20"
                                 >
-                                    Proceed to Delivery
-                                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                    <span>Proceed to Delivery</span>
+                                    <svg className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                                 </Link>
 
                                 <div className="mt-10 flex flex-col items-center gap-4">

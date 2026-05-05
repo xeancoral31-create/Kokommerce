@@ -10,7 +10,7 @@ const Filter = ({ className }: { className?: string }) => (
 );
 
 const ShoppingCart = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+  <i className={`fa-solid fa-cart-arrow-down ${className}`}></i>
 );
 
 const Heart = ({ className }: { className?: string }) => (
@@ -223,7 +223,7 @@ export default function Shop({ products: initialProducts, categories: dbCategori
         {toast.show && (
           <div className="fixed top-24 right-8 z-[1100] animate-in fade-in slide-in-from-right-8 duration-300">
             <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border ${toast.type === 'success' ? 'bg-white border-green-100' : 'bg-white border-blue-100'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${toast.type === 'success' ? 'bg-green-500' : 'bg-[#eca840]'}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${toast.type === 'success' ? 'bg-green-500' : 'bg-[#d4af37]'}`}>
                 {toast.type === 'success' ? <span className="text-white">✓</span> : <ShoppingCart className="w-4 h-4 text-white" />}
               </div>
               <div>
@@ -242,8 +242,8 @@ export default function Shop({ products: initialProducts, categories: dbCategori
                 <div className="flex justify-between items-start mb-10">
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="w-2 h-2 rounded-full bg-[#eca840] animate-pulse"></div>
-                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#eca840]">Adding Item</span>
+                      <div className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse"></div>
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#d4af37]">Adding Item</span>
                     </div>
                     <h2 className="text-4xl font-black text-[#2d2a26] tracking-tighter leading-none">Choose Option</h2>
                   </div>
@@ -270,7 +270,7 @@ export default function Shop({ products: initialProducts, categories: dbCategori
                     </span>
                     <h3 className="text-2xl font-black text-[#2d2a26] leading-tight mb-2 tracking-tight">{selectionProduct.name}</h3>
                     <div className="flex items-center gap-3">
-                      <span className="text-3xl font-black text-[#eca840] tabular-nums tracking-tighter">
+                      <span className="text-3xl font-black text-[#d4af37] tabular-nums tracking-tighter">
                         ₱{parseFloat(String(priceType === 'Solo' ? selectionProduct.solo_price : selectionProduct.package_price)).toLocaleString()}
                       </span>
                       <div className="h-4 w-px bg-gray-200"></div>
@@ -287,7 +287,7 @@ export default function Shop({ products: initialProducts, categories: dbCategori
                 <div className="mb-8">
                   <div className="flex items-center justify-between px-2 mb-6">
                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Select Size</label>
-                    <span className="text-[9px] font-black text-[#eca840] uppercase tracking-widest bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
+                    <span className="text-[9px] font-black text-[#d4af37] uppercase tracking-widest bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
                       {selectionProduct.category?.name?.toLowerCase() === 'cake'
                         ? (priceType === 'Solo' ? 'Slice' : 'Whole Cake')
                         : 'Variant Selected'}
@@ -306,22 +306,22 @@ export default function Shop({ products: initialProducts, categories: dbCategori
                         <span className={`text-[10px] font-black uppercase tracking-widest ${priceType === 'Solo' ? 'text-gray-900' : 'text-gray-400'}`}>
                           {selectionProduct.category?.name?.toLowerCase() === 'cake' ? 'Slice' : 'Solo'}
                         </span>
-                        <span className={`text-[9px] font-bold tabular-nums mt-1 ${priceType === 'Solo' ? 'text-[#eca840]' : 'text-gray-300'}`}>₱{parseFloat(String(selectionProduct.solo_price)).toLocaleString()}</span>
+                        <span className={`text-[9px] font-bold tabular-nums mt-1 ${priceType === 'Solo' ? 'text-[#d4af37]' : 'text-gray-300'}`}>₱{parseFloat(String(selectionProduct.solo_price)).toLocaleString()}</span>
                       </div>
                     </button>
 
                     <button
                       onClick={() => setPriceType('Package')}
-                      className={`group flex items-center gap-4 px-6 py-4 rounded-full border-2 transition-all duration-500 ${priceType === 'Package' ? 'border-[#eca840] bg-white shadow-xl shadow-orange-100' : 'border-gray-50 bg-white hover:border-gray-200'}`}
+                      className={`group flex items-center gap-4 px-6 py-4 rounded-full border-2 transition-all duration-500 ${priceType === 'Package' ? 'border-[#d4af37] bg-white shadow-xl shadow-orange-100' : 'border-gray-50 bg-white hover:border-gray-200'}`}
                     >
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${priceType === 'Package' ? 'bg-[#eca840] text-white rotate-180' : 'bg-gray-50 text-gray-300'}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${priceType === 'Package' ? 'bg-[#d4af37] text-white rotate-180' : 'bg-gray-50 text-gray-300'}`}>
                         {priceType === 'Package' ? <div className="w-2 h-2 rounded-full bg-white animate-pulse"></div> : <div className="w-1.5 h-1.5 rounded-full bg-gray-200"></div>}
                       </div>
                       <div className="flex flex-col items-start leading-none">
                         <span className={`text-[10px] font-black uppercase tracking-widest ${priceType === 'Package' ? 'text-gray-900' : 'text-gray-400'}`}>
                           {selectionProduct.category?.name?.toLowerCase() === 'cake' ? 'Whole' : 'Package'}
                         </span>
-                        <span className={`text-[9px] font-bold tabular-nums mt-1 ${priceType === 'Package' ? 'text-[#eca840]' : 'text-gray-300'}`}>₱{parseFloat(String(selectionProduct.package_price)).toLocaleString()}</span>
+                        <span className={`text-[9px] font-bold tabular-nums mt-1 ${priceType === 'Package' ? 'text-[#d4af37]' : 'text-gray-300'}`}>₱{parseFloat(String(selectionProduct.package_price)).toLocaleString()}</span>
                       </div>
                     </button>
                   </div>
@@ -351,11 +351,11 @@ export default function Shop({ products: initialProducts, categories: dbCategori
 
                 <button
                   onClick={handleAddToBasket}
-                  className="w-full bg-[#eca840] text-white py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-2xl shadow-[#eca840]/30 hover:bg-[#d69635] hover:translate-y-[-4px] active:scale-95 transition-all flex items-center justify-center gap-4 group"
+                  className="w-full bg-[#d4af37] text-white py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_20px_40px_-15px_rgba(212,175,55,0.4)] hover:bg-black hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-500 flex items-center justify-center gap-4 group border border-[#d4af37]/20"
                 >
-                  <ShoppingCart className="w-5 h-5 flex-shrink-0" />
+                  <ShoppingCart className="w-5 h-5 flex-shrink-0 transition-transform duration-500 group-hover:scale-110" />
                   <span>Add to Basket</span>
-                  <div className="w-8 h-[2px] bg-white/20 transform origin-left group-hover:scale-x-125 transition-transform"></div>
+                  <div className="w-8 h-[2px] bg-white/20 transform origin-left group-hover:scale-x-125 transition-transform duration-500"></div>
                   <span className="tabular-nums tracking-tight text-sm">₱{((priceType === 'Solo' ? Number(selectionProduct.solo_price || 0) : Number(selectionProduct.package_price || 0)) * quantity).toLocaleString()}</span>
                 </button>
 
@@ -412,8 +412,8 @@ export default function Shop({ products: initialProducts, categories: dbCategori
                           </span>
                           <div className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${
                             selectedStatus === item.value 
-                              ? 'bg-[#eca840] scale-125' 
-                              : 'bg-gray-100 group-hover:bg-[#eca840]/40'
+                              ? 'bg-[#d4af37] scale-125' 
+                              : 'bg-gray-100 group-hover:bg-[#d4af37]/40'
                           }`}></div>
                         </button>
                       ))}
@@ -577,18 +577,18 @@ function ShopProductCard({ product, onOpenSelection }: { product: Product, onOpe
               <SignedIn>
                 <button
                   onClick={onOpenSelection}
-                  className="w-full bg-[#eca840] text-white font-black py-5 rounded-2xl text-[10px] flex items-center justify-center gap-4 hover:bg-[#d69635] shadow-2xl shadow-[#eca840]/20 transition-all active:scale-95 uppercase tracking-[0.3em] group"
+                  className="w-full bg-[#d4af37] text-white font-black py-5 rounded-2xl text-[10px] flex items-center justify-center gap-4 transition-all duration-500 shadow-[0_20px_40px_-15px_rgba(212,175,55,0.4)] hover:bg-black hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] hover:-translate-y-1 uppercase tracking-[0.3em] group border border-[#d4af37]/20"
                 >
-                  <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform duration-500" />
                   Order Item
                 </button>
               </SignedIn>
               <SignedOut>
                 <SignInButton mode="modal" afterSignInUrl="/buyer/shop">
                   <button
-                    className="w-full bg-[#eca840] text-white font-black py-5 rounded-2xl text-[10px] flex items-center justify-center gap-4 hover:bg-[#d69635] shadow-2xl shadow-[#eca840]/20 transition-all active:scale-95 uppercase tracking-[0.3em] group"
+                    className="w-full bg-[#d4af37] text-white font-black py-5 rounded-2xl text-[10px] flex items-center justify-center gap-4 transition-all duration-500 shadow-[0_20px_40px_-15px_rgba(212,175,55,0.4)] hover:bg-black hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] hover:-translate-y-1 uppercase tracking-[0.3em] group border border-[#d4af37]/20"
                   >
-                    <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform duration-500" />
                     Sign In to Buy
                   </button>
                 </SignInButton>

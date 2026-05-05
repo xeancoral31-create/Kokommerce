@@ -174,7 +174,7 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
                                                 <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em] mb-1">Starting Price</span>
                                                 <span className="text-4xl font-black tabular-nums tracking-tighter">₱{parseFloat(String(displayNewArrivals[0].price)).toLocaleString()}</span>
                                             </div>
-                                            <Link href="/shop" className="group/btn flex items-center gap-4 px-12 py-6 bg-[#eca840] text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all shadow-2xl">
+                                            <Link href="/shop" className="group/btn flex items-center gap-4 px-12 py-6 bg-[#d4af37] text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] transition-all duration-500 shadow-[0_20px_40px_-15px_rgba(212,175,55,0.4)] hover:bg-black hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] hover:-translate-y-1 border border-[#d4af37]/20">
                                                 <span>Buy Now</span>
                                                 <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-2 transition-transform" />
                                             </Link>

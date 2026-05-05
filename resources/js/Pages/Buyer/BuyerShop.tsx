@@ -202,16 +202,16 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
             {notification && (
                 <div className="fixed top-12 right-12 z-[2000] animate-in fade-in slide-in-from-right-12 duration-700">
                     <div className="bg-[#141414] text-white px-10 py-6 rounded-[2rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex items-center gap-6 border border-white/10 backdrop-blur-3xl">
-                        <div className="w-14 h-14 rounded-2xl bg-[#eca840]/10 flex items-center justify-center text-[#eca840] border border-[#eca840]/20">
+                        <div className="w-14 h-14 rounded-2xl bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37] border border-[#d4af37]/20">
                             <i className="fa-solid fa-cart-arrow-down text-2xl"></i>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.4em] mb-1">Concierge Note</span>
+                            <span className="text-[10px] font-bold text-[#d4af37] uppercase tracking-[0.4em] mb-1">Concierge Note</span>
                             <span className="text-base font-bold tracking-tight text-white/90">{notification}</span>
                             {(notification.includes('curated') || notification.includes('added')) && (
                                 <Link 
                                     href="/buyer/wishlist" 
-                                    className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mt-3 hover:text-[#eca840] transition-all flex items-center gap-2 group/link"
+                                    className="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em] mt-3 hover:text-[#d4af37] transition-all flex items-center gap-2 group/link"
                                 >
                                     Review Curated Collection
                                     <svg className="w-3 h-3 transition-transform group-hover/link:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -238,18 +238,18 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                                 <div className="absolute bottom-8 left-8 right-8">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <div className={`w-3 h-3 rounded-full border-2 border-white transition-all duration-500 ${priceType === 'Solo' ? 'bg-[#eca840] scale-125' : 'bg-transparent'}`}></div>
-                                        <div className={`w-3 h-3 rounded-full border-2 border-white transition-all duration-500 ${priceType === 'Package' ? 'bg-[#eca840] scale-125' : 'bg-transparent'}`}></div>
+                                        <div className={`w-3 h-3 rounded-full border-2 border-white transition-all duration-500 ${priceType === 'Solo' ? 'bg-[#d4af37] scale-125' : 'bg-transparent'}`}></div>
+                                        <div className={`w-3 h-3 rounded-full border-2 border-white transition-all duration-500 ${priceType === 'Package' ? 'bg-[#d4af37] scale-125' : 'bg-transparent'}`}></div>
                                     </div>
-                                    <span className="text-[10px] font-black text-white uppercase tracking-[0.4em] drop-shadow-lg">Product Type: {priceType}</span>
+                                    <span className="text-[10px] font-bold text-white uppercase tracking-[0.4em] drop-shadow-lg">Product Type: {priceType}</span>
                                 </div>
                             </div>
 
                             <div className="flex-1 p-10 lg:p-12 flex flex-col">
                                 <div className="flex justify-between items-start mb-8">
                                     <div>
-                                        <span className="text-[9px] font-black text-[#eca840] uppercase tracking-[0.3em] mb-1 block">Product Details</span>
-                                        <h2 className="text-3xl font-black text-[#2d2a26] tracking-tighter leading-none">{buyNowProduct.name}</h2>
+                                        <span className="text-[9px] font-bold text-[#d4af37] uppercase tracking-[0.3em] mb-1 block">Product Details</span>
+                                        <h2 className="text-3xl font-bold text-[#2d2a26] tracking-tighter leading-none">{buyNowProduct.name}</h2>
                                     </div>
                                     <button onClick={() => setBuyNowProduct(null)} className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-gray-900 hover:text-white transition-all">
                                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -259,16 +259,16 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                                 <div className="space-y-8 flex-1">
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-center px-1">
-                                            <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block">Configuration</label>
-                                            <span className="text-[8px] font-black text-[#eca840] uppercase tracking-widest bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
+                                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block">Configuration</label>
+                                            <span className="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
                                                 {priceType} Mode
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-6 bg-[#f8f9fa] p-6 rounded-[2rem] border border-gray-100">
                                             <div className="flex-1">
                                                 <div className="flex items-baseline gap-1">
-                                                    <span className="text-3xl font-black text-[#2d2a26] tabular-nums tracking-tighter">₱{parseFloat(String(priceType === 'Solo' ? (buyNowProduct?.solo_price || 0) : (buyNowProduct?.package_price || 0))).toLocaleString()}</span>
-                                                    <span className="text-[10px] font-black text-gray-400 capitalize">/{priceType === 'Solo' ? 'unit' : 'bundle'}</span>
+                                                    <span className="text-3xl font-bold text-[#2d2a26] tabular-nums tracking-tighter">₱{parseFloat(String(priceType === 'Solo' ? (buyNowProduct?.solo_price || 0) : (buyNowProduct?.package_price || 0))).toLocaleString()}</span>
+                                                    <span className="text-[10px] font-bold text-gray-400 capitalize">/{priceType === 'Solo' ? 'unit' : 'bundle'}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -276,41 +276,47 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
 
                                     {/* Batch Control */}
                                     {buyNowProduct && priceType === 'Solo' && parseFloat(String(buyNowProduct.solo_price)) >= 5 && parseFloat(String(buyNowProduct.solo_price)) <= 15 ? (
-                                         <div className="px-6 py-4 bg-[#fcfaf7] rounded-[1rem] border border-[#eca840]/20 flex items-center justify-center gap-3">
-                                            <span className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.3em]">Fixed Artisanal Batch (4 Units)</span>
+                                         <div className="px-6 py-4 bg-[#fcfaf7] rounded-[1rem] border border-[#d4af37]/20 flex items-center justify-center gap-3">
+                                            <span className="text-[10px] font-bold text-[#d4af37] uppercase tracking-[0.3em]">Fixed Artisanal Batch (4 Units)</span>
                                          </div>
                                     ) : (
                                         <div className="space-y-4">
-                                            <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block px-1">Specify Quantity</label>
+                                            <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block px-1">Specify Quantity</label>
                                             <div className="flex items-center justify-between bg-white border border-gray-100 p-2 rounded-2xl shadow-sm">
                                                 <button
                                                     onClick={() => setBuyNowQuantity(q => Math.max(1, q - 1))}
-                                                    className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-xl font-black text-[#2d2a26] hover:bg-gray-900 hover:text-white transition-all shadow-sm active:scale-95"
+                                                    className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-xl font-bold text-[#2d2a26] hover:bg-gray-900 hover:text-white transition-all shadow-sm active:scale-95"
                                                 >−</button>
                                                 <div className="flex items-baseline gap-1">
                                                     {buyNowProduct && priceType === 'Solo' && parseFloat(String(buyNowProduct.solo_price)) >= 5 && parseFloat(String(buyNowProduct.solo_price)) <= 15 && (
-                                                        <span className="text-[10px] font-black text-[#eca840] tracking-tighter">4x</span>
+                                                        <span className="text-[10px] font-bold text-[#d4af37] tracking-tighter">4x</span>
                                                     )}
-                                                    <span className="text-3xl font-black text-[#2d2a26] tabular-nums tracking-tighter">{buyNowQuantity}</span>
+                                                    <span className="text-3xl font-bold text-[#2d2a26] tabular-nums tracking-tighter">{buyNowQuantity}</span>
                                                 </div>
                                                 <button
                                                     onClick={() => setBuyNowQuantity(q => q + 1)}
-                                                    className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-xl font-black text-[#2d2a26] hover:bg-gray-900 hover:text-white transition-all shadow-sm active:scale-95"
+                                                    className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-xl font-bold text-[#2d2a26] hover:bg-gray-900 hover:text-white transition-all shadow-sm active:scale-95"
                                                 >+</button>
                                             </div>
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="mt-10 flex gap-4">
+                                <div className="mt-10 flex gap-3">
                                     <button
                                         onClick={handleModalAddToBag}
-                                        className="flex-1 py-5 border-2 border-gray-100 rounded-2xl text-[9px] font-black uppercase tracking-widest text-[#2d2a26] hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all"
-                                    >To Bag</button>
+                                        className="flex-1 py-4 border-2 border-gray-100 dark:border-gray-800 rounded-xl text-[10px] font-semibold uppercase tracking-[0.3em] text-[#2d2a26] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 flex items-center justify-center gap-2 group/bag"
+                                    >
+                                        <i className="fa-solid fa-cart-arrow-down text-[11px] transition-transform group-hover/bag:-translate-y-0.5"></i>
+                                        Add To Bag
+                                    </button>
                                     <button
                                         onClick={handleProceedToPayment}
-                                        className="flex-[2] py-5 bg-[#eca840] text-white rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] shadow-xl shadow-[#eca840]/20 hover:translate-y-[-2px] transition-all"
-                                    >Buy Now ₱{((priceType === 'Solo' ? (buyNowProduct?.solo_price || 0) : (buyNowProduct?.package_price || 0)) * buyNowQuantity).toLocaleString()}</button>
+                                        className="flex-[2] py-4 bg-[#d4af37] text-white rounded-xl text-[11px] font-bold uppercase tracking-[0.4em] shadow-lg shadow-[#d4af37]/20 hover:bg-[#1c1917] hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-0.5 transition-all duration-500 border border-[#d4af37]/10 flex items-center justify-center gap-3 group/buy"
+                                    >
+                                        Buy Now ₱{((priceType === 'Solo' ? (buyNowProduct?.solo_price || 0) : (buyNowProduct?.package_price || 0)) * buyNowQuantity).toLocaleString()}
+                                        <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover/buy:translate-x-1.5" />
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -323,7 +329,7 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                 <aside className="w-full lg:w-64 flex-shrink-0">
                     <div className="sticky top-[120px] space-y-8">
                         <div>
-                            <span className="text-[10px] font-[1000] text-[#eca840] uppercase tracking-[0.4em] mb-4 block">Collection</span>
+                            <span className="text-[10px] font-bold text-[#d4af37] uppercase tracking-[0.4em] mb-4 block">Collection</span>
                             <div className="flex flex-col gap-2 max-h-[280px] overflow-y-auto pr-2 custom-scrollbar">
                                 {categories.map(cat => (
                                     <button
@@ -332,17 +338,16 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                                         className={`group flex items-center justify-between px-6 py-3.5 rounded-[1rem] transition-all duration-500 border ${
                                             selectedCategory === cat 
                                             ? 'bg-[#2d2a26] border-[#2d2a26] text-white shadow-xl translate-x-2' 
-                                            : 'bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-gray-400 hover:border-[#eca840]/30 hover:text-[#eca840] hover:translate-x-1'
-                                        }`}
-                                    >
+                                            : 'bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-gray-400 hover:border-[#d4af37]/30 hover:text-[#d4af37] hover:translate-x-1'
+                                        } transition-all duration-500`}>
                                         <div className="flex items-center gap-3">
                                             <div className={`w-1 h-1 rounded-full transition-all duration-500 ${
-                                                selectedCategory === cat ? 'bg-[#eca840] scale-150' : 'bg-gray-200 group-hover:bg-[#eca840]/40'
+                                                selectedCategory === cat ? 'bg-[#d4af37] scale-150' : 'bg-gray-200 group-hover:bg-[#d4af37]/40'
                                             }`}></div>
-                                            <span className="text-[10px] font-black uppercase tracking-[0.15em]">{cat}</span>
+                                            <span className="text-[10px] font-bold uppercase tracking-[0.15em]">{cat}</span>
                                         </div>
                                         {selectedCategory === cat && (
-                                            <svg className="w-4 h-4 text-[#eca840] animate-in slide-in-from-left-2 duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg className="w-4 h-4 text-[#d4af37] animate-in slide-in-from-left-2 duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
                                             </svg>
                                         )}
@@ -352,7 +357,7 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                         </div>
 
                         <div>
-                            <span className="text-[10px] font-[1000] text-[#eca840] uppercase tracking-[0.4em] mb-4 block">Availability</span>
+                            <span className="text-[10px] font-bold text-[#d4af37] uppercase tracking-[0.4em] mb-4 block">Availability</span>
                             <div className="flex flex-col gap-2 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar">
                                 {[
                                     { label: 'All Availability', value: null },
@@ -366,14 +371,13 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                                         className={`group flex items-center justify-between px-6 py-3 rounded-[0.75rem] transition-all duration-500 border ${
                                             selectedStatus === status.value 
                                             ? 'bg-[#2d2a26] border-[#2d2a26] text-white shadow-lg translate-x-2' 
-                                            : 'bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-gray-400 hover:border-[#eca840]/30 hover:text-[#eca840] hover:translate-x-1'
-                                        }`}
-                                    >
+                                            : 'bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-gray-400 hover:border-[#d4af37]/30 hover:text-[#d4af37] hover:translate-x-1'
+                                        } transition-all duration-500`}>
                                         <div className="flex items-center gap-3">
                                             <div className={`w-1 h-1 rounded-full transition-all duration-500 ${
-                                                selectedStatus === status.value ? 'bg-[#eca840] scale-150' : 'bg-gray-200 group-hover:bg-[#eca840]/40'
+                                                selectedStatus === status.value ? 'bg-[#d4af37] scale-150' : 'bg-gray-200 group-hover:bg-[#d4af37]/40'
                                             }`}></div>
-                                            <span className="text-[9px] font-black uppercase tracking-[0.15em]">{status.label}</span>
+                                            <span className="text-[9px] font-bold uppercase tracking-[0.15em]">{status.label}</span>
                                         </div>
                                     </button>
                                 ))}
@@ -382,8 +386,8 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
 
                         {/* Formal Aesthetic Note */}
                         <div className="p-8 rounded-[2rem] bg-[#fcfaf7] dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 relative overflow-hidden group text-center">
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-[#eca840]/5 rounded-full -mr-12 -mt-12 transition-transform duration-1000 group-hover:scale-110"></div>
-                            <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.3em] mb-2 block relative z-10">Artisanal Promise</span>
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-[#d4af37]/5 rounded-full -mr-12 -mt-12 transition-transform duration-1000 group-hover:scale-110"></div>
+                            <span className="text-[8px] font-bold text-[#d4af37] uppercase tracking-[0.3em] mb-2 block relative z-10">Artisanal Promise</span>
                             <p className="text-[10px] text-gray-400 font-bold leading-relaxed relative z-10">
                                 Curated for exceptional quality and traditional heritage.
                             </p>
@@ -394,11 +398,11 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                 <div className="flex-1">
                     <div className="flex items-center justify-between mb-8">
                         <div>
-                            <h2 className="text-3xl lg:text-4xl font-black text-[#2d2a26] dark:text-white tracking-tighter uppercase leading-tight mb-2">
+                            <h2 className="text-3xl lg:text-4xl font-bold text-[#2d2a26] dark:text-white tracking-tighter uppercase leading-tight mb-2">
                                 {selectedCategory === 'All' ? 'The Full Collection' : selectedCategory}
                             </h2>
                             <p className="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
-                                <span className="text-[#eca840]">{filteredProducts.length}</span> Masterpieces Found
+                                <span className="text-[#d4af37]">{filteredProducts.length}</span> Masterpieces Found
                             </p>
                         </div>
                     </div>
@@ -419,7 +423,7 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
 
                     {filteredProducts.length === 0 && (
                         <div className="py-40 text-center bg-[#fcfaf7] dark:bg-gray-800/30 rounded-[3rem] border border-dashed border-gray-200 dark:border-gray-700">
-                            <h3 className="text-2xl font-black text-gray-300 dark:text-gray-600 uppercase tracking-widest">No selections curated yet.</h3>
+                            <h3 className="text-2xl font-bold text-gray-300 dark:text-gray-600 uppercase tracking-widest">No selections curated yet.</h3>
                         </div>
                     )}
 
@@ -428,7 +432,7 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                             <button
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
-                                className="w-14 h-14 rounded-2xl border border-gray-100 dark:border-gray-800 flex items-center justify-center text-gray-400 hover:border-[#eca840] hover:text-[#eca840] transition-all disabled:opacity-30 active:scale-90"
+                                className="w-14 h-14 rounded-2xl border border-gray-100 dark:border-gray-800 flex items-center justify-center text-gray-400 hover:border-[#d4af37] hover:text-[#d4af37] transition-all disabled:opacity-30 active:scale-90"
                             >
                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" /></svg>
                             </button>
@@ -437,10 +441,10 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                                 <button
                                     key={i}
                                     onClick={() => setCurrentPage(i + 1)}
-                                    className={`w-14 h-14 rounded-2xl text-[10px] font-black transition-all duration-500 ${
+                                    className={`w-14 h-14 rounded-2xl text-[10px] font-bold transition-all duration-500 ${
                                         currentPage === i + 1 
-                                        ? 'bg-[#eca840] text-white shadow-2xl shadow-[#eca840]/30 scale-110' 
-                                        : 'bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 text-gray-400 hover:border-[#eca840] hover:text-[#eca840]'
+                                        ? 'bg-[#d4af37] text-white shadow-2xl shadow-[#d4af37]/30 scale-110' 
+                                        : 'bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 text-gray-400 hover:border-[#d4af37] hover:text-[#d4af37]'
                                     }`}
                                 >
                                     {String(i + 1).padStart(2, '0')}
@@ -450,7 +454,7 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                             <button
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}
-                                className="w-14 h-14 rounded-2xl border border-gray-100 dark:border-gray-800 flex items-center justify-center text-gray-400 hover:border-[#eca840] hover:text-[#eca840] transition-all disabled:opacity-30 active:scale-90"
+                                className="w-14 h-14 rounded-2xl border border-gray-100 dark:border-gray-800 flex items-center justify-center text-gray-400 hover:border-[#d4af37] hover:text-[#d4af37] transition-all disabled:opacity-30 active:scale-90"
                             >
                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" /></svg>
                             </button>
@@ -485,11 +489,11 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
     const isSoloFixed4 = localPriceType === 'Solo' && productSoloPrice >= 5 && productSoloPrice <= 15;
 
     return (
-        <div className="group relative flex flex-col bg-white dark:bg-gray-900 rounded-[1.5rem] overflow-visible transition-all duration-700 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 dark:border-gray-800 hover:border-[#eca840]/30 min-h-[460px] hover:-translate-y-1.5">
+        <div className="group relative flex flex-col bg-white dark:bg-gray-900 rounded-[1.5rem] overflow-visible transition-all duration-700 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 dark:border-gray-800 hover:border-[#d4af37]/30 min-h-[460px] hover:-translate-y-1.5">
             {product.stock <= 0 && (
                 <div className="absolute inset-0 z-30 bg-white/70 dark:bg-gray-900/70 backdrop-blur-md rounded-[2rem] flex items-center justify-center pointer-events-none">
-                    <div className="bg-[#2d2a26] dark:bg-black text-white text-[9px] font-black uppercase tracking-[0.4em] px-8 py-3.5 rounded-2xl flex items-center gap-3 shadow-2xl">
-                        <svg className="w-4 h-4 text-[#eca840]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                    <div className="bg-[#2d2a26] dark:bg-black text-white text-[9px] font-bold uppercase tracking-[0.4em] px-8 py-3.5 rounded-2xl flex items-center gap-3 shadow-2xl">
+                        <svg className="w-4 h-4 text-[#d4af37]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                         Out of Stock
                     </div>
                 </div>
@@ -530,7 +534,7 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
                             }
                         }}
                         title="Add to Wishlist"
-                        className={`w-10 h-10 rounded-full backdrop-blur-xl flex items-center justify-center transition-all duration-700 shadow-2xl overflow-hidden active:scale-90 border-2 ${isWishlisted ? 'bg-[#eca840] border-[#eca840] text-white' : 'bg-white/95 dark:bg-gray-900/95 border-white dark:border-gray-800 text-gray-400 hover:text-[#eca840] hover:scale-105'}`}
+                        className={`w-10 h-10 rounded-full backdrop-blur-xl flex items-center justify-center transition-all duration-700 shadow-2xl overflow-hidden active:scale-90 border-2 ${isWishlisted ? 'bg-[#d4af37] border-[#d4af37] text-white' : 'bg-white/95 dark:bg-gray-900/95 border-white dark:border-gray-800 text-gray-400 hover:text-[#d4af37] hover:scale-105'}`}
                     >
                         <svg className={`w-4 h-4 transition-all duration-700 ${isWishlisted ? 'scale-110 drop-shadow-md' : ''}`} fill={isWishlisted ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 20.2 10.7 19C5.8 14.5 2.5 11.5 2.5 7.8A4.8 4.8 0 0 1 7.3 3a5.3 5.3 0 0 1 4.7 2.6A5.3 5.3 0 0 1 16.7 3a4.8 4.8 0 0 1 4.8 4.8c0 3.7-3.3 6.7-8.2 11.2Z" />
@@ -539,11 +543,11 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
                 </div>
 
                 <div className="absolute top-6 left-6 flex flex-col gap-2 z-20">
-                    <span className="text-[8px] self-start font-black text-white bg-black/60 backdrop-blur-md px-3 py-1.5 uppercase tracking-[0.3em] rounded border border-white/20 shadow-lg">
+                    <span className="text-[8px] self-start font-bold text-white bg-black/60 backdrop-blur-md px-3 py-1.5 uppercase tracking-[0.3em] rounded border border-white/20 shadow-lg">
                         {getProductCategory(product)}
                     </span>
                     {product.status === 'pre_order' && (
-                        <span className="text-[8px] self-start font-black text-white bg-blue-600 px-3 py-1.5 uppercase tracking-[0.3em] rounded border border-blue-400 shadow-lg">
+                        <span className="text-[8px] self-start font-bold text-white bg-blue-600 px-3 py-1.5 uppercase tracking-[0.3em] rounded border border-blue-400 shadow-lg">
                             Pre-Order
                         </span>
                     )}
@@ -551,7 +555,7 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
             </div>
 
             <div className="p-6 flex-1 flex flex-col bg-white dark:bg-gray-900 rounded-b-[1.5rem] z-10 relative">
-                <h3 className="text-base font-black text-[#2d2a26] dark:text-white mb-2 tracking-tight group-hover:text-[#eca840] transition-colors duration-300">
+                <h3 className="text-base font-bold text-[#2d2a26] dark:text-white mb-2 tracking-tight group-hover:text-[#d4af37] transition-colors duration-300">
                     {product.name}
                 </h3>
 
@@ -571,58 +575,62 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
                         
                         <button 
                         onClick={(e) => { e.stopPropagation(); setLocalPriceType('Solo'); }}
-                        className={`relative z-10 flex-1 py-3 text-[9px] font-[1000] uppercase tracking-[0.25em] transition-colors duration-300 ${localPriceType === 'Solo' ? 'text-[#eca840]' : 'text-gray-400 dark:text-gray-500 hover:text-[#2d2a26] dark:hover:text-white'}`}>
+                        className={`relative z-10 flex-1 py-3 text-[9px] font-bold uppercase tracking-[0.25em] transition-colors duration-300 ${localPriceType === 'Solo' ? 'text-[#d4af37]' : 'text-gray-400 dark:text-gray-500 hover:text-[#2d2a26] dark:hover:text-white'}`}>
                             {isProductCake ? 'Slice' : 'Solo'}
                         </button>
                         <button 
                         onClick={(e) => { e.stopPropagation(); setLocalPriceType('Package'); }}
-                        className={`relative z-10 flex-1 py-3 text-[9px] font-[1000] uppercase tracking-[0.25em] transition-colors duration-300 ${localPriceType === 'Package' ? 'text-[#eca840]' : 'text-gray-400 dark:text-gray-500 hover:text-[#2d2a26] dark:hover:text-white'}`}>
+                        className={`relative z-10 flex-1 py-3 text-[9px] font-bold uppercase tracking-[0.25em] transition-colors duration-300 ${localPriceType === 'Package' ? 'text-[#d4af37]' : 'text-gray-400 dark:text-gray-500 hover:text-[#2d2a26] dark:hover:text-white'}`}>
                             {isProductCake ? 'Whole' : 'Package'}
                         </button>
                     </div>
 
                     {isSoloFixed4 && (
-                         <div className="mb-8 px-4 py-3 bg-[#fcfaf7] dark:bg-gray-800 rounded-[1rem] border border-[#eca840]/20 flex items-center justify-center gap-3">
-                            <span className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.2em]">Fixed Qty: 4</span>
-                            <div className="w-1 h-1 rounded-full bg-[#eca840]/40"></div>
+                         <div className="mb-8 px-4 py-3 bg-[#fcfaf7] dark:bg-gray-800 rounded-[1rem] border border-[#d4af37]/20 flex items-center justify-center gap-3">
+                            <span className="text-[10px] font-bold text-[#d4af37] uppercase tracking-[0.2em]">Fixed Qty: 4</span>
+                            <div className="w-1 h-1 rounded-full bg-[#d4af37]/40"></div>
                             <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Artisanal Solo</span>
                          </div>
                     )}
 
                     <div className="flex items-end justify-between mb-6 pb-4 border-b border-gray-100/50 dark:border-gray-800">
                         <div className="flex flex-col">
-                            <span className="text-[7px] font-black text-gray-400 uppercase tracking-[0.3em] mb-1">Price</span>
+                            <span className="text-[7px] font-bold text-gray-400 uppercase tracking-[0.3em] mb-1">Price</span>
                             <div className="flex items-baseline gap-1">
                                 {isSoloFixed4 && (
-                                    <span className="text-[12px] font-black text-[#eca840] animate-pulse">4x</span>
+                                    <span className="text-[12px] font-bold text-[#d4af37] animate-pulse">4x</span>
                                 )}
-                                <span className="text-2xl font-black text-[#2d2a26] dark:text-white tabular-nums tracking-tighter leading-none">₱{parseFloat(String(localPriceType === 'Solo' ? (product.solo_price || 0) : (product.package_price || 0))).toLocaleString()}</span>
+                                <span className="text-2xl font-bold text-[#2d2a26] dark:text-white tabular-nums tracking-tighter leading-none">₱{parseFloat(String(localPriceType === 'Solo' ? (product.solo_price || 0) : (product.package_price || 0))).toLocaleString()}</span>
                             </div>
                         </div>
                         <div className="flex flex-col items-end">
-                            <span className="text-[7px] font-black text-gray-400 uppercase tracking-[0.3em] mb-1">Stock</span>
-                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-lg border transition-all ${product.stock < 5 ? 'text-red-500 bg-red-400/10 border-red-200' : 'text-[#2d2a26] dark:text-gray-300 bg-[#fcfaf7] dark:bg-gray-800 border-gray-200/60 dark:border-gray-700'}`}>
+                            <span className="text-[7px] font-bold text-gray-400 uppercase tracking-[0.3em] mb-1">Stock</span>
+                            <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg border transition-all ${product.stock < 5 ? 'text-red-500 bg-red-400/10 border-red-200' : 'text-[#2d2a26] dark:text-gray-300 bg-[#fcfaf7] dark:bg-gray-800 border-gray-200/60 dark:border-gray-700'}`}>
                                 {product.stock} Units
                             </span>
                         </div>
                     </div>
 
-                    <div className="flex gap-2.5">
+                    <div className="flex gap-3">
                         <button
                             onClick={(e) => { e.stopPropagation(); onBuyNow(localPriceType); }}
                             disabled={product.stock <= 0}
-                            className={`flex-[1.1] py-3 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all duration-300 active:scale-95 disabled:opacity-0 border-2 flex items-center justify-center gap-1.5 group/basket ${localPriceType === 'Solo' ? 'border-gray-200 dark:border-gray-700 text-[#2d2a26] dark:text-white hover:border-gray-900 dark:hover:border-white hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:shadow-xl shadow-black/10' : 'border-dashed border-gray-300 dark:border-gray-600 text-gray-500 hover:border-solid hover:border-gray-900 dark:hover:border-white hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:shadow-xl shadow-black/10'}`}
+                            className={`flex-[1.1] py-4 rounded-xl text-[10px] font-semibold uppercase tracking-[0.25em] transition-all duration-300 active:scale-95 disabled:opacity-0 border-2 flex items-center justify-center gap-2 group/basket ${
+                                localPriceType === 'Solo' 
+                                ? 'border-gray-200 dark:border-gray-700 text-[#2d2a26] dark:text-white hover:border-gray-900 dark:hover:border-white hover:bg-gray-50 dark:hover:bg-gray-800/50' 
+                                : 'border-dashed border-gray-300 dark:border-gray-600 text-gray-500 hover:border-solid hover:border-gray-900 dark:hover:border-white hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                            }`}
                         >
-                            <i className="fa-solid fa-cart-arrow-down transition-transform duration-300 group-hover/basket:-translate-y-0.5"></i>
-                            <span className="leading-none">Add to Bag</span>
+                            <i className="fa-solid fa-cart-arrow-down text-[11px] transition-transform duration-300 group-hover/basket:-translate-y-0.5"></i>
+                            <span className="leading-none">Bag</span>
                         </button>
                         <button
                             onClick={(e) => { e.stopPropagation(); onBuyNow(localPriceType); }}
                             disabled={product.stock <= 0}
-                            className="flex-[1.8] py-3 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all duration-300 active:scale-95 disabled:opacity-0 bg-[#eca840] text-white shadow-lg shadow-[#eca840]/20 hover:bg-[#d69635] hover:shadow-2xl hover:shadow-[#eca840]/40 hover:-translate-y-0.5 flex items-center justify-center gap-1.5 group/buy"
+                            className="flex-[1.9] py-4 rounded-xl text-[11px] font-bold uppercase tracking-[0.4em] transition-all duration-500 active:scale-95 disabled:opacity-0 bg-[#d4af37] text-white shadow-lg shadow-[#d4af37]/20 hover:bg-[#1c1917] hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-0.5 flex items-center justify-center gap-3 group/buy border border-[#d4af37]/10"
                         >
                             <span className="leading-none">Buy Now</span>
-                            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover/buy:translate-x-1" />
+                            <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover/buy:translate-x-1.5" />
                         </button>
                     </div>
                 </div>

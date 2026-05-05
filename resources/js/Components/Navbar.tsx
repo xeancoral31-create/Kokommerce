@@ -272,7 +272,7 @@ export default function Navbar() {
                         <Logo size={40} />
                         <div className="flex flex-col">
                             <span className="font-black text-xl text-gray-900 dark:text-white leading-none tracking-tighter">KOKOMMERCE</span>
-                            <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.4em] mt-1">Artisanal Bakery</span>
+                            <span className="text-[8px] font-black text-[#d4af37] uppercase tracking-[0.4em] mt-1">Artisanal Bakery</span>
                         </div>
                     </Link>
 
@@ -283,7 +283,7 @@ export default function Navbar() {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className={`text-[11px] font-black uppercase tracking-[0.2em] transition-all hover:text-[#eca840] ${url === link.href ? 'text-[#eca840]' : 'text-gray-500 dark:text-gray-400'}`}
+                                className={`text-[11px] font-black uppercase tracking-[0.2em] transition-all hover:text-[#d4af37] ${url === link.href ? 'text-[#d4af37]' : 'text-gray-500 dark:text-gray-400'}`}
                             >
                                 {link.name}
                             </Link>
@@ -299,7 +299,7 @@ export default function Navbar() {
                                 aria-label={theme === 'light' ? "Switch to dark mode" : "Switch to light mode"}
                                 title={theme === 'light' ? "Switch to dark mode" : "Switch to light mode"}
                             >
-                                <span className="text-gray-400 group-hover:text-[#eca840] transition-colors">
+                                <span className="text-gray-400 group-hover:text-[#d4af37] transition-colors">
                                     {theme === 'light' ? <MoonIcon /> : <SunIcon />}
                                 </span>
                             </button>
@@ -312,7 +312,7 @@ export default function Navbar() {
                                 title="Wishlist"
                                 data-discover="true"
                             >
-                                <span className="text-gray-400 group-hover:text-[#eca840] transition-colors"><WishlistIcon /></span>
+                                <span className="text-gray-400 group-hover:text-[#d4af37] transition-colors"><WishlistIcon /></span>
                                 {wishlistItems.length > 0 && (
                                     <span
                                         className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-sm transition-transform group-hover:scale-110"
@@ -329,7 +329,7 @@ export default function Navbar() {
                                 aria-label="Notifications"
                                 title="Notifications"
                             >
-                                <span className="text-gray-400 group-hover:text-[#eca840] transition-colors"><BellIcon /></span>
+                                <span className="text-gray-400 group-hover:text-[#d4af37] transition-colors"><BellIcon /></span>
                                 {unreadCount > 0 && (
                                     <span
                                         className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-sm transition-transform group-hover:scale-110"
@@ -346,12 +346,12 @@ export default function Navbar() {
                                 aria-label="Open Your Bag"
                                 title="Your Bag"
                             >
-                                <span className={`text-gray-400 group-hover:text-[#eca840] transition-all duration-300 ${cartAnimated ? 'scale-125 text-[#eca840]' : ''}`}>
+                                <span className={`text-gray-400 group-hover:text-[#d4af37] transition-all duration-300 ${cartAnimated ? 'scale-125 text-[#d4af37]' : ''}`}>
                                     <i className="fa-solid fa-cart-arrow-down transition-transform duration-300 group-hover:scale-110"></i>
                                 </span>
                                 {cartCount > 0 && (
                                     <span
-                                        className={`absolute -top-2 -right-2 bg-[#eca840] text-white text-[8px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-lg transition-all duration-500 ${cartAnimated ? 'scale-125' : 'scale-100'} animate-pulse`}
+                                        className={`absolute -top-2 -right-2 bg-[#d4af37] text-white text-[8px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-lg transition-all duration-500 ${cartAnimated ? 'scale-125' : 'scale-100'} animate-pulse`}
                                     >
                                         {cartCount}
                                     </span>
@@ -361,12 +361,12 @@ export default function Navbar() {
                             {/* Account Link (Far Right Anchor) */}
                             <Link 
                                 href="/buyer/account" 
-                                className={`icon-nav-button relative flex items-center group focus:outline-none ${url === '/buyer/account' ? 'text-[#eca840]' : 'text-gray-400'}`}
+                                className={`icon-nav-button relative flex items-center group focus:outline-none ${url === '/buyer/account' ? 'text-[#d4af37]' : 'text-gray-400'}`}
                                 aria-label="Account"
                                 title="Account"
                                 data-discover="true"
                             >
-                                <span className="group-hover:text-[#eca840] transition-colors">
+                                <span className="group-hover:text-[#d4af37] transition-colors">
                                     <AccountIcon />
                                 </span>
                             </Link>
@@ -376,7 +376,7 @@ export default function Navbar() {
                                 {isViewingAsSeller && (
                                     <button
                                         onClick={handleReturnToDashboard}
-                                        className="bg-[#eca840]/10 text-[#eca840] border border-[#eca840]/30 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#eca840] hover:text-white transition-all shadow-lg shadow-[#eca840]/10"
+                                        className="bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/30 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#d4af37] hover:text-white transition-all shadow-lg shadow-[#d4af37]/10"
                                     >
                                         Dashboard
                                     </button>
@@ -417,8 +417,8 @@ export default function Navbar() {
                             <div className="flex justify-between items-start">
                                 <div>
                                     <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tighter uppercase">Your Bag</h2>
-                                    <div className="text-[9px] font-black text-[#eca840] uppercase tracking-[0.4em] mt-3 flex items-center gap-2">
-                                        <div className="w-1.5 h-1.5 bg-[#eca840] rounded-full animate-pulse"></div>
+                                    <div className="text-[9px] font-black text-[#d4af37] uppercase tracking-[0.4em] mt-3 flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 bg-[#d4af37] rounded-full animate-pulse"></div>
                                         {cartCount} Item{cartCount !== 1 ? 's' : ''} in Bag
                                     </div>
                                 </div>
@@ -439,7 +439,7 @@ export default function Navbar() {
                                         <i className="fa-solid fa-cart-arrow-down transition-transform duration-300 group-hover:scale-110"></i>
                                     </div>
                                     <h3 className="text-sm font-black text-gray-400 dark:text-gray-600 uppercase tracking-[0.3em] leading-none mb-4">Your bag is empty</h3>
-                                    <button onClick={() => setShowSideCart(false)} className="text-[#eca840] font-black text-[9px] uppercase tracking-[0.3em] border-b-2 border-[#eca840]/20 pb-1 hover:border-[#eca840] transition-all">Go to Shop</button>
+                                    <button onClick={() => setShowSideCart(false)} className="text-[#d4af37] font-black text-[9px] uppercase tracking-[0.3em] border-b-2 border-[#d4af37]/20 pb-1 hover:border-[#d4af37] transition-all">Go to Shop</button>
                                 </div>
                             ) : (
                                 <div className="space-y-10">
@@ -450,7 +450,7 @@ export default function Navbar() {
                                             </div>
                                             <div className="flex-1 flex flex-col justify-center">
                                                 <div className="flex justify-between items-start mb-2">
-                                                    <h3 className="text-sm font-black text-gray-900 dark:text-white group-hover:text-[#eca840] transition-colors tracking-tight uppercase leading-none">{item.name}</h3>
+                                                    <h3 className="text-sm font-black text-gray-900 dark:text-white group-hover:text-[#d4af37] transition-colors tracking-tight uppercase leading-none">{item.name}</h3>
                                                     <button
                                                         onClick={(e) => {
                                                             e.preventDefault();
@@ -468,13 +468,13 @@ export default function Navbar() {
                                                     <div className="flex bg-gray-50/80 dark:bg-gray-900/80 p-0.5 rounded-lg border border-gray-100/50 dark:border-gray-800">
                                                         <button 
                                                             onClick={() => updateVariant(item.id, 'Solo')}
-                                                            className={`px-3 py-1 text-[8px] font-black uppercase tracking-widest rounded-md transition-all ${item.priceType === 'Solo' ? 'bg-white dark:bg-gray-800 text-[#eca840] shadow-sm' : 'text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-400'}`}
+                                                            className={`px-3 py-1 text-[8px] font-black uppercase tracking-widest rounded-md transition-all ${item.priceType === 'Solo' ? 'bg-white dark:bg-gray-800 text-[#d4af37] shadow-sm' : 'text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-400'}`}
                                                         >
                                                             Solo
                                                         </button>
                                                         <button 
                                                             onClick={() => updateVariant(item.id, 'Package')}
-                                                            className={`px-3 py-1 text-[8px] font-black uppercase tracking-widest rounded-md transition-all ${item.priceType === 'Package' ? 'bg-white dark:bg-gray-800 text-[#eca840] shadow-sm' : 'text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-400'}`}
+                                                            className={`px-3 py-1 text-[8px] font-black uppercase tracking-widest rounded-md transition-all ${item.priceType === 'Package' ? 'bg-white dark:bg-gray-800 text-[#d4af37] shadow-sm' : 'text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-400'}`}
                                                         >
                                                             Pkg
                                                         </button>
@@ -485,7 +485,7 @@ export default function Navbar() {
                                                         <span className="text-[9px] font-black text-gray-300 dark:text-gray-600 tracking-tighter">QTY</span>
                                                         <span className="text-sm font-black text-gray-900 dark:text-white">
                                                             {item.qty}
-                                                            {item.isFixedQty && <span className="text-[#eca840] ml-0.5">x</span>}
+                                                            {item.isFixedQty && <span className="text-[#d4af37] ml-0.5">x</span>}
                                                         </span>
                                                     </div>
                                                     <span className="text-sm font-black text-gray-900 dark:text-white pr-2">₱{(item.price * item.qty).toLocaleString()}</span>
@@ -523,13 +523,13 @@ export default function Navbar() {
                                 {isSignedIn ? (
                                     <Link
                                         href="/buyer/cart"
-                                        className="w-full bg-[#eca840] text-white py-6 rounded-[2rem] text-[11px] font-black uppercase tracking-[0.3em] text-center hover:bg-[#d69635] hover:shadow-2xl hover:shadow-[#eca840]/20 transition-all active:scale-[0.98] shadow-xl shadow-[#eca840]/10 block"
+                                        className="w-full bg-[#d4af37] text-white py-6 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] text-center transition-all duration-300 active:scale-[0.98] shadow-xl shadow-[#d4af37]/20 hover:bg-black block"
                                     >
                                         Proceed to Checkout
                                     </Link>
                                 ) : (
                                     <SignInButton mode="modal" afterSignInUrl="/buyer/cart">
-                                        <button className="w-full bg-[#eca840] text-white py-6 rounded-[2rem] text-[11px] font-black uppercase tracking-[0.3em] text-center hover:bg-[#d69635] hover:shadow-2xl hover:shadow-[#eca840]/20 transition-all active:scale-[0.98] shadow-xl shadow-[#eca840]/10">
+                                        <button className="w-full bg-[#d4af37] text-white py-6 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] text-center transition-all duration-300 active:scale-[0.98] shadow-xl shadow-[#d4af37]/20 hover:bg-black">
                                             Sign In to Checkout
                                         </button>
                                     </SignInButton>
@@ -557,7 +557,7 @@ export default function Navbar() {
                             <div className="flex justify-between items-center">
                                 <div>
                                     <h2 className="text-2xl font-black text-gray-900 dark:text-white tracking-tighter uppercase">Notifications</h2>
-                                    <p className="text-[9px] font-black text-[#eca840] uppercase tracking-[0.3em] mt-1">Stay updated with Kokommerce</p>
+                                    <p className="text-[9px] font-black text-[#d4af37] uppercase tracking-[0.3em] mt-1">Stay updated with Kokommerce</p>
                                 </div>
                                 <button
                                     onClick={() => setShowNotifications(false)}
@@ -571,7 +571,7 @@ export default function Navbar() {
                                 {unreadCount > 0 && (
                                     <button 
                                         onClick={handleMarkAllAsRead}
-                                        className="text-[9px] font-black text-[#eca840] uppercase tracking-widest hover:underline"
+                                        className="text-[9px] font-black text-[#d4af37] uppercase tracking-widest hover:underline"
                                     >
                                         Mark all as read
                                     </button>
@@ -596,17 +596,17 @@ export default function Navbar() {
                                                 setSelectedNotification(n);
                                                 if (!n.is_read) handleMarkAsRead(n.id);
                                             }}
-                                            className={`p-5 rounded-2xl border transition-all cursor-pointer group ${n.is_read ? 'bg-white dark:bg-gray-900 border-gray-50 dark:border-gray-800 grayscale-[0.5] opacity-70' : 'bg-white dark:bg-gray-900 border-[#eca840]/20 dark:border-[#eca840]/40 shadow-sm shadow-[#eca840]/5'}`}
+                                            className={`p-5 rounded-2xl border transition-all cursor-pointer group ${n.is_read ? 'bg-white dark:bg-gray-900 border-gray-50 dark:border-gray-800 grayscale-[0.5] opacity-70' : 'bg-white dark:bg-gray-900 border-[#d4af37]/20 dark:border-[#d4af37]/40 shadow-sm shadow-[#d4af37]/5'}`}
                                         >
                                             <div className="flex justify-between items-start mb-2">
-                                                <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${n.type === 'order_update' ? 'bg-blue-50 text-blue-500' : n.type === 'promotion' ? 'bg-pink-50 text-pink-500' : 'bg-orange-50 text-[#eca840]'}`}>
+                                                <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${n.type === 'order_update' ? 'bg-blue-50 text-blue-500' : n.type === 'promotion' ? 'bg-pink-50 text-pink-500' : 'bg-orange-50 text-[#d4af37]'}`}>
                                                     {n.type.replace('_', ' ')}
                                                 </span>
                                                 <span className="text-[7px] font-bold text-gray-300 dark:text-gray-600 uppercase tracking-tighter italic">
                                                     {new Date(n.created_at).toLocaleDateString()}
                                                 </span>
                                             </div>
-                                            <h3 className={`text-[11px] font-black uppercase tracking-tight mb-1 ${n.is_read ? 'text-gray-600 dark:text-gray-400' : 'text-gray-900 dark:text-white group-hover:text-[#eca840]'}`}>{n.title}</h3>
+                                            <h3 className={`text-[11px] font-black uppercase tracking-tight mb-1 ${n.is_read ? 'text-gray-600 dark:text-gray-400' : 'text-gray-900 dark:text-white group-hover:text-[#d4af37]'}`}>{n.title}</h3>
                                             <p className="text-[10px] text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">{n.message}</p>
                                         </div>
                                     ))}
@@ -627,7 +627,7 @@ export default function Navbar() {
                                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                                     selectedNotification.type === 'order_update' ? 'bg-blue-50 text-blue-500' : 
                                     selectedNotification.type === 'promotion' ? 'bg-pink-50 text-pink-500' : 
-                                    'bg-orange-50 text-[#eca840]'
+                                    'bg-orange-50 text-[#d4af37]'
                                 }`}>
                                     <BellIcon />
                                 </div>
@@ -639,7 +639,7 @@ export default function Navbar() {
                                 </button>
                             </div>
 
-                            <span className="text-[8px] font-black text-[#eca840] uppercase tracking-[0.3em] mb-2 block">Official Notification</span>
+                            <span className="text-[8px] font-black text-[#d4af37] uppercase tracking-[0.3em] mb-2 block">Official Notification</span>
                             <h2 className="text-xl font-black text-gray-900 dark:text-white tracking-tight uppercase mb-4 leading-tight">{selectedNotification.title}</h2>
                             
                             {/* Scrollable Message Area */}
@@ -661,7 +661,7 @@ export default function Navbar() {
                         </div>
                         <button
                             onClick={() => setSelectedNotification(null)}
-                            className="w-full bg-[#eca840] text-white py-5 text-[9px] font-black uppercase tracking-[0.3em] hover:bg-[#d99630] transition-all"
+                            className="w-full bg-[#d4af37] text-white py-5 text-[9px] font-black uppercase tracking-[0.3em] hover:bg-black transition-all"
                         >
                             Understood
                         </button>
@@ -672,12 +672,12 @@ export default function Navbar() {
             {scrolled && cartCount > 0 && !showSideCart && (
                 <button
                     onClick={() => setShowSideCart(true)}
-                    className="fixed bottom-8 right-8 z-[60] bg-[#2d2a26] text-white p-5 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:bg-[#eca840] transition-all duration-500 group animate-in slide-in-from-bottom-12 fade-in"
+                    className="fixed bottom-8 right-8 z-[60] bg-[#2d2a26] text-white p-5 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:bg-[#d4af37] transition-all duration-500 group animate-in slide-in-from-bottom-12 fade-in"
                     aria-label="Floating Cart"
                 >
                     <div className="relative">
                         <i className="fa-solid fa-cart-arrow-down text-xl transition-transform group-hover:scale-110"></i>
-                        <span className="absolute -top-4 -right-4 bg-[#eca840] text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#2d2a26] shadow-md group-hover:scale-110 transition-transform">
+                        <span className="absolute -top-4 -right-4 bg-[#d4af37] text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#2d2a26] shadow-md group-hover:scale-110 transition-transform">
                             {cartCount}
                         </span>
                     </div>

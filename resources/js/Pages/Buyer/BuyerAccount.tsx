@@ -22,7 +22,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
     const user = auth_user || auth?.user || buyer;
     
     // Use Clerk image if available for real-time sync
-    const displayImage = clerkUser?.imageUrl || user?.profile_image_url || user?.image || `https://ui-avatars.com/api/?name=${user?.name || 'Gourmet'}&background=eca840&color=fff`;
+    const displayImage = clerkUser?.imageUrl || user?.profile_image_url || user?.image || `https://ui-avatars.com/api/?name=${user?.name || 'Gourmet'}&background=d4af37&color=fff`;
     const displayName = clerkUser?.fullName || user?.name || 'Honored Guest';
     const displayEmail = clerkUser?.primaryEmailAddress?.emailAddress || user?.email || 'guest@kokommerce.com';
 
@@ -82,7 +82,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
         // Custom Artisanal Gold Marker
         const goldIcon = L.divIcon({
             className: 'custom-gold-marker',
-            html: `<div class="w-8 h-8 bg-[#eca840] rounded-full border-4 border-white shadow-xl flex items-center justify-center animate-bounce">
+            html: `<div class="w-8 h-8 bg-[#d4af37] rounded-full border-4 border-white shadow-xl flex items-center justify-center animate-bounce">
                     <div class="w-2 h-2 bg-white rounded-full"></div>
                    </div>`,
             iconSize: [32, 32],
@@ -242,7 +242,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                 
                 {showSuccess && (
                     <div className="fixed top-24 right-8 z-50 animate-in slide-in-from-right-10 fade-in duration-300">
-                        <div className="bg-[#eca840] text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border border-white/20">
+                        <div className="bg-[#d4af37] text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 border border-white/20">
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
                             <span className="font-bold tracking-tight">Profile Updated Successfully</span>
                         </div>
@@ -258,7 +258,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                             <div className="bg-white dark:bg-[#1a1a1a] rounded-3xl p-8 shadow-sm border border-gray-100 dark:border-white/5 backdrop-blur-xl">
                                 <div className="flex flex-col items-center text-center">
                                     <div className="relative group">
-                                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#eca840]/20 p-1 group-hover:border-[#eca840]/40 transition-all duration-500 relative">
+                                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#d4af37]/20 p-1 group-hover:border-[#d4af37]/40 transition-all duration-500 relative">
                                             <img 
                                                 src={displayImage} 
                                                 alt="Profile" 
@@ -266,7 +266,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                             />
                                             {isUpdatingImage && (
                                                 <div className="absolute inset-0 flex items-center justify-center">
-                                                    <div className="w-6 h-6 border-2 border-[#eca840] border-t-transparent rounded-full animate-spin"></div>
+                                                    <div className="w-6 h-6 border-2 border-[#d4af37] border-t-transparent rounded-full animate-spin"></div>
                                                 </div>
                                             )}
                                         </div>
@@ -280,15 +280,15 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                         <button 
                                             onClick={handleImageClick}
                                             disabled={isUpdatingImage}
-                                            className="absolute bottom-0 right-0 w-8 h-8 bg-[#eca840] text-white rounded-full flex items-center justify-center shadow-lg border-2 border-white dark:border-[#1a1a1a] hover:scale-110 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="absolute bottom-0 right-0 w-8 h-8 bg-[#d4af37] text-white rounded-full flex items-center justify-center shadow-lg border-2 border-white dark:border-[#1a1a1a] hover:scale-110 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812-1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                                         </button>
                                     </div>
                                     <h2 className="mt-4 text-xl font-bold text-gray-900 dark:text-white tracking-tight">{displayName}</h2>
                                     <p className="text-sm text-gray-400 dark:text-gray-500 font-medium mb-4">{displayEmail}</p>
-                                    <div className="px-4 py-1.5 bg-[#eca840]/10 rounded-full border border-[#eca840]/20">
-                                        <span className="text-[10px] font-black text-[#eca840] uppercase tracking-widest">Platinum Member</span>
+                                    <div className="px-4 py-1.5 bg-[#d4af37]/10 rounded-full border border-[#d4af37]/20">
+                                        <span className="text-[10px] font-black text-[#d4af37] uppercase tracking-widest">Platinum Member</span>
                                     </div>
                                 </div>
                             </div>
@@ -301,8 +301,8 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                         onClick={() => setActiveTab(item.id)}
                                         className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold transition-all duration-300 group ${
                                             activeTab === item.id 
-                                            ? 'bg-[#eca840] text-white shadow-[0_10px_20px_rgba(236,168,64,0.2)]' 
-                                            : 'text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-[#eca840]'
+                                            ? 'bg-[#d4af37] text-white shadow-[0_10px_20px_rgba(212,175,55,0.2)]' 
+                                            : 'text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-[#d4af37]'
                                         }`}
                                     >
                                         <svg className={`w-5 h-5 transition-transform group-hover:scale-110`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -347,9 +347,9 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                         setActiveTab(stat.id);
                                                     }
                                                 }}
-                                                className="bg-white dark:bg-[#1a1a1a] p-8 rounded-3xl border border-gray-100 dark:border-white/5 shadow-sm group hover:border-[#eca840]/30 transition-all cursor-pointer"
+                                                className="bg-white dark:bg-[#1a1a1a] p-8 rounded-3xl border border-gray-100 dark:border-white/5 shadow-sm group hover:border-[#d4af37]/30 transition-all cursor-pointer"
                                             >
-                                                <div className="w-12 h-12 rounded-2xl bg-[#eca840]/10 flex items-center justify-center text-[#eca840] mb-6 group-hover:scale-110 transition-transform">
+                                                <div className="w-12 h-12 rounded-2xl bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37] mb-6 group-hover:scale-110 transition-transform">
                                                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={stat.icon} /></svg>
                                                 </div>
                                                 <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.3em] mb-1">{stat.label}</p>
@@ -360,11 +360,11 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
 
                                     {/* Personal Information — High Fidelity Tech Card */}
                                     <div className="bg-white dark:bg-[#1a1a1a] rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-white/5 shadow-2xl shadow-black/5 relative group">
-                                        <div className="absolute top-0 left-0 w-1.5 h-full bg-[#eca840]"></div>
+                                        <div className="absolute top-0 left-0 w-1.5 h-full bg-[#d4af37]"></div>
                                         <div className="p-8 border-b border-gray-50 dark:border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                                             <div>
                                                 <div className="flex items-center gap-3 mb-2">
-                                                    <span className="text-[9px] font-black text-[#eca840] uppercase tracking-[0.4em]">Section // Core Profile</span>
+                                                    <span className="text-[9px] font-black text-[#d4af37] uppercase tracking-[0.4em]">Section // Core Profile</span>
                                                     <div className="px-2 py-0.5 bg-green-500/10 rounded border border-green-500/20">
                                                         <span className="text-[7px] font-black text-green-600 dark:text-green-400 uppercase">Synchronized</span>
                                                     </div>
@@ -373,7 +373,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                             </div>
                                             <button 
                                                 onClick={() => setActiveTab('details')}
-                                                className="px-8 py-3 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#eca840] dark:hover:bg-[#eca840] dark:hover:text-white transition-all shadow-lg"
+                                                className="px-8 py-3 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#d4af37] dark:hover:bg-[#d4af37] dark:hover:text-white transition-all shadow-lg"
                                             >
                                                 Configure Identity
                                             </button>
@@ -393,8 +393,8 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                 <div key={i} className="space-y-3 relative z-10">
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-[8px] font-bold text-gray-400 dark:text-gray-600">{info.code}</span>
-                                                        <div className="h-[1px] w-4 bg-[#eca840]/30"></div>
-                                                        <p className="text-[9px] font-black text-[#eca840] uppercase tracking-[0.2em]">{info.label}</p>
+                                                        <div className="h-[1px] w-4 bg-[#d4af37]/30"></div>
+                                                        <p className="text-[9px] font-black text-[#d4af37] uppercase tracking-[0.2em]">{info.label}</p>
                                                     </div>
                                                     <p className="text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-2">{info.value || 'NOT SET'}</p>
                                                 </div>
@@ -403,9 +403,9 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                     </div>
 
                                     {/* Security & Preferences moved to Clerk Modal for Professionalism */}
-                                    <div className="bg-white dark:bg-[#1a1a1a] rounded-3xl overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm p-8 flex items-center justify-between group hover:border-[#eca840]/20 transition-all cursor-pointer" onClick={() => (window as any).Clerk?.openUserProfile()}>
+                                    <div className="bg-white dark:bg-[#1a1a1a] rounded-3xl overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm p-8 flex items-center justify-between group hover:border-[#d4af37]/20 transition-all cursor-pointer" onClick={() => (window as any).Clerk?.openUserProfile()}>
                                         <div className="flex items-center gap-5">
-                                            <div className="w-12 h-12 rounded-2xl bg-[#eca840]/10 flex items-center justify-center text-[#eca840]">
+                                            <div className="w-12 h-12 rounded-2xl bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37]">
                                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                                             </div>
                                             <div>
@@ -413,7 +413,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                 <p className="text-xs text-gray-400 dark:text-gray-500">Manage passwords, 2FA, and authentication methods formally via Clerk.</p>
                                             </div>
                                         </div>
-                                        <button className="px-6 py-2 bg-gray-50 dark:bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest group-hover:bg-[#eca840] group-hover:text-white transition-all">Open Settings</button>
+                                        <button className="px-6 py-2 bg-gray-50 dark:bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest group-hover:bg-[#d4af37] group-hover:text-white transition-all">Open Settings</button>
                                     </div>
 
                                     {/* Danger Zone */}
@@ -448,14 +448,14 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
 
                                     <div className="bg-white dark:bg-[#1a1a1a] rounded-[2.5rem] p-2 shadow-2xl shadow-black/5 border border-gray-100 dark:border-white/5 relative overflow-hidden">
                                         {/* Decorative Glassmorphism Elements */}
-                                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#eca840]/5 blur-[100px] -mr-32 -mt-32"></div>
+                                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#d4af37]/5 blur-[100px] -mr-32 -mt-32"></div>
                                         
                                         <form onSubmit={handleUpdateProfile} className="relative z-10 p-8 space-y-12">
                                             {/* Section: Personal Identity */}
                                             <div className="space-y-8">
                                                 <div className="flex items-center gap-4">
                                                     <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 dark:via-white/10 to-transparent"></div>
-                                                    <span className="text-[9px] font-black uppercase tracking-[0.5em] text-[#eca840]">Identity Core // 01</span>
+                                                    <span className="text-[9px] font-black uppercase tracking-[0.5em] text-[#d4af37]">Identity Core // 01</span>
                                                     <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 dark:via-white/10 to-transparent"></div>
                                                 </div>
 
@@ -468,7 +468,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                         <div className="relative group">
                                                             <input 
                                                                 type="text" 
-                                                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5 rounded-2xl px-7 py-5 focus:ring-2 focus:ring-[#eca840]/20 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium text-sm group-hover:bg-white dark:group-hover:bg-black/40" 
+                                                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5 rounded-2xl px-7 py-5 focus:ring-2 focus:ring-[#d4af37]/20 focus:border-[#d4af37] outline-none transition-all text-gray-900 dark:text-white font-medium text-sm group-hover:bg-white dark:group-hover:bg-black/40" 
                                                                 value={fullName}
                                                                 onChange={(e) => setFullName(e.target.value)}
                                                                 placeholder="Enter formal name..."
@@ -490,7 +490,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                         <div className="relative group">
                                                             <input 
                                                                 type="email" 
-                                                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5 rounded-2xl px-7 py-5 focus:ring-2 focus:ring-[#eca840]/20 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium text-sm group-hover:bg-white dark:group-hover:bg-black/40" 
+                                                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5 rounded-2xl px-7 py-5 focus:ring-2 focus:ring-[#d4af37]/20 focus:border-[#d4af37] outline-none transition-all text-gray-900 dark:text-white font-medium text-sm group-hover:bg-white dark:group-hover:bg-black/40" 
                                                                 value={email}
                                                                 onChange={(e) => setEmail(e.target.value)}
                                                                 placeholder="name@domain.com"
@@ -507,7 +507,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                             <div className="space-y-8">
                                                 <div className="flex items-center gap-4">
                                                     <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 dark:via-white/10 to-transparent"></div>
-                                                    <span className="text-[9px] font-black uppercase tracking-[0.5em] text-[#eca840]">Logistics Node // 02</span>
+                                                    <span className="text-[9px] font-black uppercase tracking-[0.5em] text-[#d4af37]">Logistics Node // 02</span>
                                                     <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 dark:via-white/10 to-transparent"></div>
                                                 </div>
 
@@ -517,7 +517,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                         <div className="relative group">
                                                             <input 
                                                                 type="tel" 
-                                                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5 rounded-2xl px-7 py-5 focus:ring-2 focus:ring-[#eca840]/20 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium text-sm group-hover:bg-white dark:group-hover:bg-black/40" 
+                                                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5 rounded-2xl px-7 py-5 focus:ring-2 focus:ring-[#d4af37]/20 focus:border-[#d4af37] outline-none transition-all text-gray-900 dark:text-white font-medium text-sm group-hover:bg-white dark:group-hover:bg-black/40" 
                                                                 value={phone}
                                                                 onChange={(e) => setPhone(e.target.value)}
                                                                 placeholder="+63 000 000 0000"
@@ -531,14 +531,14 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                     <div className="space-y-4">
                                                         <div className="flex items-center justify-between">
                                                             <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] ml-1">Primary Residence Axis</label>
-                                                            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#eca840]/10 rounded-lg border border-[#eca840]/20">
-                                                                <div className="w-1 h-1 rounded-full bg-[#eca840] animate-pulse"></div>
-                                                                <span className="text-[7px] font-black uppercase text-[#eca840]">GPS Ready</span>
+                                                            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#d4af37]/10 rounded-lg border border-[#d4af37]/20">
+                                                                <div className="w-1 h-1 rounded-full bg-[#d4af37] animate-pulse"></div>
+                                                                <span className="text-[7px] font-black uppercase text-[#d4af37]">GPS Ready</span>
                                                             </div>
                                                         </div>
                                                         <div className="relative group">
                                                             <textarea 
-                                                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5 rounded-2xl px-7 py-5 focus:ring-2 focus:ring-[#eca840]/20 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium text-sm group-hover:bg-white dark:group-hover:bg-black/40 pr-14 resize-none min-h-[100px]" 
+                                                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-100 dark:border-white/5 rounded-2xl px-7 py-5 focus:ring-2 focus:ring-[#d4af37]/20 focus:border-[#d4af37] outline-none transition-all text-gray-900 dark:text-white font-medium text-sm group-hover:bg-white dark:group-hover:bg-black/40 pr-14 resize-none min-h-[100px]" 
                                                                 value={primaryAddress}
                                                                 onChange={(e) => setPrimaryAddress(e.target.value)}
                                                                 placeholder="Enter primary delivery address..."
@@ -547,7 +547,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                                 type="button"
                                                                 onClick={handleDetectLocation}
                                                                 disabled={isDetecting}
-                                                                className={`absolute right-5 top-1/2 -translate-y-1/2 text-[#eca840] hover:scale-110 transition-transform ${isDetecting ? 'opacity-50 animate-pulse' : ''}`}
+                                                                className={`absolute right-5 top-1/2 -translate-y-1/2 text-[#d4af37] hover:scale-110 transition-transform ${isDetecting ? 'opacity-50 animate-pulse' : ''}`}
                                                                 title="Detect Location"
                                                             >
                                                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
@@ -560,7 +560,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                             {/* Artisanal Map Integration & Verification Hub */}
                                             <div className="space-y-4">
                                                 <div className="flex items-center justify-between px-1">
-                                                    <label className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.3em]">Precision Mapping & Verification Hub</label>
+                                                    <label className="text-[10px] font-black text-[#d4af37] uppercase tracking-[0.3em]">Precision Mapping & Verification Hub</label>
                                                     {isLocationVerified && (
                                                         <div className="flex items-center gap-2 text-green-500 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
                                                             <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
@@ -576,7 +576,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                     />
                                                     {!detectedCoords && (
                                                         <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-white/80 dark:bg-black/80 backdrop-blur-md px-6 py-2.5 rounded-full border border-gray-100 dark:border-white/10 shadow-lg flex items-center gap-3">
-                                                            <div className="w-1.5 h-1.5 rounded-full bg-[#eca840] animate-pulse"></div>
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] animate-pulse"></div>
                                                             <span className="text-[9px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Map Initialized — Awaiting Detection</span>
                                                         </div>
                                                     )}
@@ -584,18 +584,18 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                     {/* Map Overlay for Glassmorphism feel */}
                                                     <div className="absolute inset-0 pointer-events-none border-[12px] border-white/10 dark:border-white/5 rounded-[2rem] z-20"></div>
                                                 </div>
-                                                <div className="flex items-center gap-4 p-5 bg-[#eca840]/5 rounded-2xl border border-[#eca840]/20">
-                                                    <div className="w-8 h-8 rounded-xl bg-[#eca840]/10 flex items-center justify-center text-[#eca840] shrink-0">
+                                                <div className="flex items-center gap-4 p-5 bg-[#d4af37]/5 rounded-2xl border border-[#d4af37]/20">
+                                                    <div className="w-8 h-8 rounded-xl bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37] shrink-0">
                                                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                                     </div>
-                                                    <p className="text-[9px] text-[#eca840] font-bold leading-relaxed uppercase tracking-wider">Our verification hub ensures your accurate location is synchronized for the most premium delivery experience.</p>
+                                                    <p className="text-[9px] text-[#d4af37] font-bold leading-relaxed uppercase tracking-wider">Our verification hub ensures your accurate location is synchronized for the most premium delivery experience.</p>
                                                 </div>
                                             </div>
 
                                             <div className="pt-4 flex flex-col sm:flex-row gap-4 items-center">
                                                 <button 
                                                     type="submit"
-                                                    className="w-full sm:w-auto px-10 py-4 bg-[#eca840] text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] shadow-[0_20px_40px_rgba(236,168,64,0.2)] hover:-translate-y-1 active:translate-y-0 transition-all"
+                                                    className="w-full sm:w-auto px-10 py-4 bg-[#d4af37] text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] shadow-[0_20px_40px_rgba(212,175,55,0.2)] hover:-translate-y-1 active:translate-y-0 transition-all"
                                                 >
                                                     Save Changes
                                                 </button>
@@ -648,8 +648,8 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                             <div className="p-8 sm:p-10 space-y-8 max-h-[65vh] overflow-y-auto custom-scrollbar">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.3em] ml-1">Location Label</label>
-                                        <select className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#eca840]/50 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium appearance-none">
+                                        <label className="text-[10px] font-black text-[#d4af37] uppercase tracking-[0.3em] ml-1">Location Label</label>
+                                        <select className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#d4af37]/50 focus:border-[#d4af37] outline-none transition-all text-gray-900 dark:text-white font-medium appearance-none">
                                             <option>Home Residence</option>
                                             <option>Professional Office</option>
                                             <option>Seasonal Retreat</option>
@@ -657,16 +657,16 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                         </select>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.3em] ml-1">Recipient Name</label>
-                                        <input type="text" placeholder="Full legal name" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#eca840]/50 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium" />
+                                        <label className="text-[10px] font-black text-[#d4af37] uppercase tracking-[0.3em] ml-1">Recipient Name</label>
+                                        <input type="text" placeholder="Full legal name" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#d4af37]/50 focus:border-[#d4af37] outline-none transition-all text-gray-900 dark:text-white font-medium" />
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.3em] ml-1">Street Address</label>
+                                    <label className="text-[10px] font-black text-[#d4af37] uppercase tracking-[0.3em] ml-1">Street Address</label>
                                     <div className="relative">
-                                        <input type="text" placeholder="Building, street, and house number" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#eca840]/50 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium" />
-                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-[#eca840]">
+                                        <input type="text" placeholder="Building, street, and house number" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#d4af37]/50 focus:border-[#d4af37] outline-none transition-all text-gray-900 dark:text-white font-medium" />
+                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-[#d4af37]">
                                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
                                         </div>
                                     </div>
@@ -674,16 +674,16 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
 
                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.3em] ml-1">City</label>
-                                        <input type="text" placeholder="Metro Manila" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#eca840]/50 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium" />
+                                        <label className="text-[10px] font-black text-[#d4af37] uppercase tracking-[0.3em] ml-1">City</label>
+                                        <input type="text" placeholder="Metro Manila" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#d4af37]/50 focus:border-[#d4af37] outline-none transition-all text-gray-900 dark:text-white font-medium" />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.3em] ml-1">State / Province</label>
-                                        <input type="text" placeholder="National Capital" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#eca840]/50 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium" />
+                                        <label className="text-[10px] font-black text-[#d4af37] uppercase tracking-[0.3em] ml-1">State / Province</label>
+                                        <input type="text" placeholder="National Capital" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#d4af37]/50 focus:border-[#d4af37] outline-none transition-all text-gray-900 dark:text-white font-medium" />
                                     </div>
                                     <div className="space-y-2 col-span-2 sm:col-span-1">
-                                        <label className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.3em] ml-1">Postal Code</label>
-                                        <input type="text" placeholder="1000" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#eca840]/50 focus:border-[#eca840] outline-none transition-all text-gray-900 dark:text-white font-medium" />
+                                        <label className="text-[10px] font-black text-[#d4af37] uppercase tracking-[0.3em] ml-1">Postal Code</label>
+                                        <input type="text" placeholder="1000" className="w-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#d4af37]/50 focus:border-[#d4af37] outline-none transition-all text-gray-900 dark:text-white font-medium" />
                                     </div>
                                 </div>
 
@@ -709,7 +709,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                         setShowSuccess(true);
                                         setTimeout(() => setShowSuccess(false), 3000);
                                     }}
-                                    className="px-12 py-4 bg-[#eca840] text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.4em] shadow-xl shadow-[#eca840]/20 hover:-translate-y-1 active:translate-y-0 transition-all"
+                                    className="px-12 py-4 bg-[#d4af37] text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.4em] shadow-xl shadow-[#d4af37]/20 hover:-translate-y-1 active:translate-y-0 transition-all"
                                 >
                                     Add Address
                                 </button>
