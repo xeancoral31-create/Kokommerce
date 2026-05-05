@@ -4,7 +4,7 @@ import { Head, Link } from '@inertiajs/inertia-react';
 import { useCart } from '../../Context/CartContext';
 import { useWishlist } from '../../Context/WishlistContext';
 import { useNotifications } from '../../Context/NotificationContext';
-import { Bell } from 'lucide-react';
+import { Bell, ArrowRight, Package, CreditCard, Tag } from 'lucide-react';
 
 interface BuyerHomeProps {
     user_name: string;
@@ -22,11 +22,11 @@ declare function route(name: string, params?: any): string;
 
 export default function BuyerHome({ user_name, featured_products, new_arrivals, recent_favorites, promotions, stats }: BuyerHomeProps) {
     const { isDetectingLocation } = useCart();
-    const { notifications, markAsRead } = useNotifications();
     const [isBuyModalOpen, setIsBuyModalOpen] = React.useState(false);
     const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
     const [quantity, setQuantity] = React.useState(1);
     const [notification, setNotification] = React.useState<string | null>(null);
+    const { notifications, markAsRead } = useNotifications();
 
     const showNotification = (msg: string) => {
         setNotification(msg);
@@ -225,97 +225,6 @@ export default function BuyerHome({ user_name, featured_products, new_arrivals, 
                 </div>
             )}
 
-            {/* Notifications Boxed Container */}
-            <section className="mb-12">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Activity Feed (Boxed & Scrollable) */}
-                    <div className="lg:col-span-2 bg-white dark:bg-gray-950 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden flex flex-col">
-                        <div className="px-10 py-8 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center bg-gray-50/30 dark:bg-gray-900/30">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-xl bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37]">
-                                    <Bell className="w-5 h-5" />
-                                </div>
-                                <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-900 dark:text-white">Pulse & Activity</h2>
-                            </div>
-                            <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">{notifications.filter(n => !n.is_read).length} Unread Updates</span>
-                        </div>
-                        
-                        <div className="max-h-[350px] overflow-y-auto custom-scrollbar divide-y divide-gray-50 dark:divide-gray-900">
-                            {notifications.length === 0 ? (
-                                <div className="py-24 text-center">
-                                    <div className="w-16 h-16 bg-gray-50 dark:bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6 opacity-40">
-                                        <Bell className="w-6 h-6 text-gray-300" />
-                                    </div>
-                                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">Your artisanal timeline is clear.</p>
-                                </div>
-                            ) : (
-                                notifications.map((notif) => (
-                                    <div 
-                                        key={notif.id} 
-                                        onClick={() => markAsRead(notif.id)}
-                                        className={`px-10 py-7 hover:bg-gray-50/50 dark:hover:bg-gray-900/30 transition-all cursor-pointer group relative ${!notif.is_read ? 'bg-[#d4af37]/5' : ''}`}
-                                    >
-                                        {!notif.is_read && (
-                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-[#d4af37] rounded-full shadow-[0_0_8px_rgba(212,175,55,0.5)]"></div>
-                                        )}
-                                        <div className="flex flex-col gap-3">
-                                            <div className="flex justify-between items-center">
-                                                <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
-                                                    notif.type === 'order_update' ? 'bg-amber-50 text-amber-600 dark:bg-amber-900/20' : 
-                                                    notif.type === 'payment' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20' :
-                                                    'bg-gray-100 text-gray-600 dark:bg-gray-800'
-                                                }`}>
-                                                    {notif.title}
-                                                </span>
-                                                <span className="text-[9px] font-medium text-gray-400">
-                                                    {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(notif.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' })}
-                                                </span>
-                                            </div>
-                                            <p className="text-[13px] text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
-                                                {notif.message}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                        
-                        <div className="px-10 py-5 bg-gray-50/30 dark:bg-gray-900/30 border-t border-gray-50 dark:border-gray-800 flex justify-center">
-                            <button className="text-[9px] font-black text-[#d4af37] uppercase tracking-[0.3em] hover:tracking-[0.4em] transition-all">
-                                Expand Concierge Logs
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Quick Stats Sidebar (Boxed) */}
-                    <div className="bg-[#141414] rounded-[2rem] p-10 flex flex-col justify-between relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <Bell className="w-32 h-32 text-white" />
-                        </div>
-                        <div className="relative z-10">
-                            <h3 className="text-[#d4af37] text-[10px] font-black uppercase tracking-[0.4em] mb-8">Account Brief</h3>
-                            <div className="space-y-8">
-                                <div>
-                                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1">Gourmet Status</p>
-                                    <p className="text-white text-xl font-light tracking-tight">Elite Connoisseur</p>
-                                </div>
-                                <div>
-                                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1">Recent Orders</p>
-                                    <p className="text-white text-xl font-light tracking-tight">{stats.recent_orders_count} Fulfilled</p>
-                                </div>
-                                <div>
-                                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1">Member Since</p>
-                                    <p className="text-white text-xl font-light tracking-tight">May 2024</p>
-                                </div>
-                            </div>
-                        </div>
-                        <Link href="/buyer/account" className="relative z-10 mt-12 py-4 border border-white/10 rounded-xl text-center text-white text-[9px] font-black uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all">
-                            Manage Portfolio
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
             {/* Featured Promotions */}
             {promotions.length > 0 && (
                 <section className="mb-12">
@@ -334,35 +243,112 @@ export default function BuyerHome({ user_name, featured_products, new_arrivals, 
                 </section>
             )}
 
-            {/* New Arrivals - Editorial List */}
+            {/* New Arrivals & Activity Hub */}
             <section className="mb-12">
-                <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-8 transition-colors duration-500 border border-transparent dark:border-gray-800">
-                    <div className="text-center mb-8">
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tighter mb-2">New Arrivals</h2>
-                        <div className="w-16 h-1 bg-[#d4af37] mx-auto rounded-full"></div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {new_arrivals.slice(0, 4).map((product) => (
-                            <Link key={product.id} href={route('buyer.shop')} className="flex items-center gap-6 group">
-                                <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 shadow-md group-hover:shadow-lg transition-all bg-gray-100 dark:bg-gray-800 flex items-center justify-center border border-transparent dark:border-gray-700">
-                                    {(product.image || product.solo_image || product.img) ? (
-                                        <img 
-                                            src={product.image || product.solo_image || product.img} 
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                                            alt={product.name} 
-                                        />
-                                    ) : (
-                                        <span className="text-2xl opacity-20 group-hover:scale-110 transition-transform duration-500">🥐</span>
-                                    )}
-                                </div>
-                                <div>
-                                    <span className="text-[9px] font-bold text-[#d4af37] uppercase tracking-widest">{product.category?.name}</span>
-                                    <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-[#d4af37] transition-colors mb-1">{product.name}</h4>
-                                    <p className="text-base font-medium text-gray-700 dark:text-gray-400">₱{parseFloat(product.price).toLocaleString()}</p>
-                                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* New Arrivals - Editorial List */}
+                    <div className="lg:col-span-2 bg-gray-50 dark:bg-gray-900 rounded-[2rem] p-10 transition-colors duration-500 border border-transparent dark:border-gray-800">
+                        <div className="flex justify-between items-center mb-10">
+                            <div>
+                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tighter mb-2">New Arrivals</h2>
+                                <div className="w-12 h-1 bg-[#d4af37] rounded-full"></div>
+                            </div>
+                            <Link href={route('buyer.shop')} className="text-[10px] font-black text-[#d4af37] uppercase tracking-[0.2em] flex items-center gap-2 group/all">
+                                View Full Collection
+                                <ArrowRight className="w-3 h-3 transition-transform group-hover/all:translate-x-1" />
                             </Link>
-                        ))}
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {new_arrivals.slice(0, 4).map((product) => (
+                                <Link key={product.id} href={route('buyer.shop')} className="flex items-center gap-6 group">
+                                    <div className="w-24 h-24 rounded-2xl overflow-hidden shrink-0 shadow-sm group-hover:shadow-md transition-all bg-white dark:bg-gray-800 flex items-center justify-center border border-gray-100 dark:border-gray-700">
+                                        {(product.image || product.solo_image || product.img) ? (
+                                            <img 
+                                                src={product.image || product.solo_image || product.img} 
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                                alt={product.name} 
+                                            />
+                                        ) : (
+                                            <span className="text-2xl opacity-20 group-hover:scale-110 transition-transform duration-500">🥐</span>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <span className="text-[9px] font-bold text-[#d4af37] uppercase tracking-widest">{product.category?.name}</span>
+                                        <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-[#d4af37] transition-colors mb-1">{product.name}</h4>
+                                        <p className="text-base font-medium text-gray-700 dark:text-gray-400">₱{parseFloat(product.price).toLocaleString()}</p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Notification & Activity Boxed Container */}
+                    <div className="bg-white dark:bg-[#141414] rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-2xl flex flex-col h-full min-h-[500px] overflow-hidden">
+                        <div className="p-8 border-b border-gray-50 dark:border-white/5 bg-gray-50/50 dark:bg-white/5">
+                            <div className="flex items-center gap-4 mb-2">
+                                <div className="w-10 h-10 rounded-xl bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37]">
+                                    <Bell className="w-5 h-5" />
+                                </div>
+                                <h3 className="text-[11px] font-black text-gray-900 dark:text-white uppercase tracking-[0.3em]">Updates & Activity</h3>
+                            </div>
+                            <p className="text-[9px] text-gray-400 font-medium tracking-wide">Latest signals from the artisanal vault.</p>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
+                            {notifications.length === 0 ? (
+                                <div className="h-full flex flex-col items-center justify-center text-center px-10 py-12">
+                                    <div className="w-20 h-20 bg-gray-50 dark:bg-white/5 rounded-full flex items-center justify-center mb-6 border border-gray-100 dark:border-white/5">
+                                        <Bell className="w-8 h-8 text-gray-200 dark:text-gray-800" />
+                                    </div>
+                                    <p className="text-[10px] font-black text-gray-300 dark:text-gray-700 uppercase tracking-widest leading-relaxed">
+                                        Silence in the gallery.<br/>Awaiting new masterpieces.
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {notifications.map((notif) => (
+                                        <div 
+                                            key={notif.id} 
+                                            onClick={() => markAsRead(notif.id)}
+                                            className={`p-5 rounded-2xl border transition-all duration-300 cursor-pointer group relative ${
+                                                notif.is_read 
+                                                ? 'bg-transparent border-gray-50 dark:border-white/5 opacity-60' 
+                                                : 'bg-white dark:bg-white/5 border-gray-100 dark:border-[#d4af37]/30 shadow-sm'
+                                            }`}
+                                        >
+                                            {!notif.is_read && (
+                                                <div className="absolute top-5 right-5 w-2 h-2 bg-[#d4af37] rounded-full shadow-[0_0_10px_rgba(212,175,55,0.5)]"></div>
+                                            )}
+                                            <div className="flex gap-4">
+                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                                                    notif.type === 'order' ? 'bg-amber-50 text-amber-600 dark:bg-amber-900/20' :
+                                                    notif.type === 'payment' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20' :
+                                                    'bg-gray-100 text-gray-600 dark:bg-gray-800'
+                                                }`}>
+                                                    {notif.type === 'order' ? <Package className="w-5 h-5" /> : 
+                                                     notif.type === 'payment' ? <CreditCard className="w-5 h-5" /> : 
+                                                     <Tag className="w-5 h-5" />}
+                                                </div>
+                                                <div className="flex flex-col gap-1 pr-4">
+                                                    <h4 className="text-[10px] font-black text-gray-900 dark:text-white uppercase tracking-wider">{notif.title}</h4>
+                                                    <p className="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2">{notif.message}</p>
+                                                    <span className="text-[8px] font-bold text-gray-400 mt-1 uppercase tracking-widest">
+                                                        {new Date(notif.created_at).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="p-6 bg-gray-50/50 dark:bg-white/5 border-t border-gray-50 dark:border-white/5 text-center">
+                            <button className="text-[9px] font-black text-gray-400 hover:text-[#d4af37] transition-colors uppercase tracking-[0.3em]">
+                                Archive Exploration
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>

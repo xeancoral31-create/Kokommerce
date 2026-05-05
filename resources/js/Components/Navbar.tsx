@@ -17,10 +17,12 @@ import {
     X,
     ChevronRight,
     ArrowRight,
-    Check
+    Check,
+    Package,
+    CreditCard,
+    Tag,
+    CheckCircle
 } from "lucide-react";
-
-
 
 import { useCart } from "../Context/CartContext";
 import { useWishlist } from "../Context/WishlistContext";
@@ -353,22 +355,27 @@ export default function Navbar() {
                                                                     {!notif.is_read && (
                                                                         <div className="absolute left-3 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-[#d4af37] rounded-full"></div>
                                                                     )}
-                                                                    <div className="flex flex-col gap-2">
-                                                                        <div className="flex justify-between items-start">
-                                                                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${
-                                                                                notif.type === 'order_update' ? 'bg-amber-50 text-amber-600 dark:bg-amber-900/20' : 
-                                                                                notif.type === 'promotion' ? 'bg-rose-50 text-rose-600 dark:bg-rose-900/20' :
-                                                                                'bg-gray-100 text-gray-600 dark:bg-gray-800'
-                                                                            }`}>
-                                                                                {notif.title}
-                                                                            </span>
-                                                                            <span className="text-[8px] font-medium text-gray-400">
-                                                                                {new Date(notif.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' })}
-                                                                            </span>
+                                                                    <div className="flex gap-4">
+                                                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                                                                            notif.type === 'order' ? 'bg-amber-50 text-amber-600 dark:bg-amber-900/20' :
+                                                                            notif.type === 'payment' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20' :
+                                                                            'bg-gray-100 text-gray-600 dark:bg-gray-800'
+                                                                        }`}>
+                                                                            {notif.type === 'order' ? <Package className="w-5 h-5" /> : 
+                                                                             notif.type === 'payment' ? <CreditCard className="w-5 h-5" /> : 
+                                                                             <Tag className="w-5 h-5" />}
                                                                         </div>
-                                                                        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
-                                                                            {notif.message}
-                                                                        </p>
+                                                                        <div className="flex flex-col gap-1 pr-4">
+                                                                            <div className="flex justify-between items-start">
+                                                                                <h4 className="text-[10px] font-black text-gray-900 dark:text-white uppercase tracking-wider">{notif.title}</h4>
+                                                                                <span className="text-[8px] font-medium text-gray-400">
+                                                                                    {new Date(notif.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                                                                                </span>
+                                                                            </div>
+                                                                            <p className="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 font-medium">
+                                                                                {notif.message}
+                                                                            </p>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             ))}
