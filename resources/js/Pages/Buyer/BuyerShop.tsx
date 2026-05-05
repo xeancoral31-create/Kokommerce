@@ -305,17 +305,17 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                                 <div className="mt-10 flex gap-3">
                                     <button
                                         onClick={handleModalAddToBag}
-                                        className="flex-1 py-4 border-2 border-gray-100 dark:border-gray-800 rounded-xl text-[10px] font-semibold uppercase tracking-[0.3em] text-[#2d2a26] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 flex items-center justify-center gap-2 group/bag"
+                                        className="flex-1 py-4 px-4 border-2 border-gray-100 dark:border-gray-800 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] text-[#2d2a26] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 flex items-center justify-center gap-2 group/bag"
                                     >
                                         <i className="fa-solid fa-cart-arrow-down text-[11px] transition-transform group-hover/bag:-translate-y-0.5"></i>
-                                        Add To Bag
+                                        <span className="leading-none">Add to Bag</span>
                                     </button>
                                     <button
                                         onClick={handleProceedToPayment}
-                                        className="flex-[2] py-4 bg-[#d4af37] text-white rounded-xl text-[11px] font-bold uppercase tracking-[0.4em] shadow-lg shadow-[#d4af37]/20 hover:bg-[#1c1917] hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-0.5 transition-all duration-500 border border-[#d4af37]/10 flex items-center justify-center gap-3 group/buy"
+                                        className="flex-[1.5] py-4 px-4 bg-[#d4af37] text-white rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] shadow-lg shadow-[#d4af37]/20 hover:bg-[#1c1917] hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-0.5 transition-all duration-500 border border-[#d4af37]/10 flex items-center justify-center gap-2 group/buy"
                                     >
-                                        Buy Now ₱{((priceType === 'Solo' ? (buyNowProduct?.solo_price || 0) : (buyNowProduct?.package_price || 0)) * buyNowQuantity).toLocaleString()}
-                                        <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover/buy:translate-x-1.5" />
+                                        <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover/buy:-translate-x-0.5" />
+                                        <span className="leading-none">Buy Now ₱{((priceType === 'Solo' ? (buyNowProduct?.solo_price || 0) : (buyNowProduct?.package_price || 0)) * buyNowQuantity).toLocaleString()}</span>
                                     </button>
                                 </div>
                             </div>
@@ -615,7 +615,7 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
                         <button
                             onClick={(e) => { e.stopPropagation(); onBuyNow(localPriceType); }}
                             disabled={product.stock <= 0}
-                            className={`flex-[1.1] py-4 rounded-xl text-[10px] font-semibold uppercase tracking-[0.25em] transition-all duration-300 active:scale-95 disabled:opacity-0 border-2 flex items-center justify-center gap-2 group/basket ${
+                            className={`flex-1 py-4 px-2 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 active:scale-95 disabled:opacity-0 border-2 flex items-center justify-center gap-2 group/basket ${
                                 localPriceType === 'Solo' 
                                 ? 'border-gray-200 dark:border-gray-700 text-[#2d2a26] dark:text-white hover:border-gray-900 dark:hover:border-white hover:bg-gray-50 dark:hover:bg-gray-800/50' 
                                 : 'border-dashed border-gray-300 dark:border-gray-600 text-gray-500 hover:border-solid hover:border-gray-900 dark:hover:border-white hover:bg-gray-50 dark:hover:bg-gray-800/50'
@@ -627,10 +627,10 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
                         <button
                             onClick={(e) => { e.stopPropagation(); onBuyNow(localPriceType); }}
                             disabled={product.stock <= 0}
-                            className="flex-[1.9] py-4 rounded-xl text-[11px] font-bold uppercase tracking-[0.4em] transition-all duration-500 active:scale-95 disabled:opacity-0 bg-[#d4af37] text-white shadow-lg shadow-[#d4af37]/20 hover:bg-[#1c1917] hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-0.5 flex items-center justify-center gap-3 group/buy border border-[#d4af37]/10"
+                            className="flex-[1.5] py-4 px-2 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-500 active:scale-95 disabled:opacity-0 bg-[#d4af37] text-white shadow-lg shadow-[#d4af37]/20 hover:bg-[#1c1917] hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-0.5 flex items-center justify-center gap-2 group/buy border border-[#d4af37]/10"
                         >
+                            <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover/buy:-translate-x-0.5" />
                             <span className="leading-none">Buy Now</span>
-                            <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover/buy:translate-x-1.5" />
                         </button>
                     </div>
                 </div>
