@@ -4,6 +4,8 @@ import { Head, usePage } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { useWishlist } from '../../Context/WishlistContext';
+import { useNotifications } from '../../Context/NotificationContext';
+import { Bell, Package, CreditCard, Tag, CheckCircle } from 'lucide-react';
 import L from 'leaflet';
 // @ts-ignore
 import 'leaflet/dist/leaflet.css';
@@ -19,6 +21,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
     const { isLoaded, isSignedIn, user: clerkUser } = useUser();
     const { signOut } = useClerk();
     const { wishlistItems } = useWishlist();
+    const { notifications, markAsRead, markAllAsRead } = useNotifications();
     const user = auth_user || auth?.user || buyer;
     
     // Use Clerk image if available for real-time sync
@@ -167,6 +170,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
 
     const menuItems = [
         { id: 'overview', label: 'Overview', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+        { id: 'notifications', label: 'Updates & Activity', icon: 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9' },
         { id: 'details', label: 'Account Details', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
     ];
 
@@ -426,6 +430,85 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                         >
                                             Terminate Account
                                         </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'notifications' && (
+                                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 px-4">
+                                        <div>
+                                            <h3 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-[0.2em]">Activity Center</h3>
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-2">Real-time alerts and formal order status history</p>
+                                        </div>
+                                        {notifications.length > 0 && (
+                                            <button 
+                                                onClick={markAllAsRead}
+                                                className="px-6 py-2.5 bg-gray-50 dark:bg-white/5 text-gray-400 hover:text-[#d4af37] rounded-xl text-[10px] font-black uppercase tracking-widest border border-gray-100 dark:border-white/5 transition-all"
+                                            >
+                                                Archive All
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div className="bg-white dark:bg-[#1a1a1a] rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-2xl shadow-black/5 overflow-hidden">
+                                        <div className="p-1 max-h-[600px] overflow-y-auto custom-scrollbar">
+                                            {notifications.length > 0 ? (
+                                                <div className="divide-y divide-gray-50 dark:divide-white/5">
+                                                    {notifications.map((notif) => (
+                                                        <div 
+                                                            key={notif.id}
+                                                            onClick={() => markAsRead(notif.id)}
+                                                            className={`p-8 flex gap-6 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-all cursor-pointer group relative ${!notif.is_read ? 'bg-amber-50/20 dark:bg-[#d4af37]/5' : ''}`}
+                                                        >
+                                                            {!notif.is_read && (
+                                                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-[#d4af37] rounded-r-full shadow-[0_0_15px_rgba(212,175,55,0.4)]"></div>
+                                                            )}
+                                                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border ${
+                                                                notif.type === 'order' ? 'bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-900/20 dark:border-amber-900/30' :
+                                                                notif.type === 'payment' ? 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-900/20 dark:border-emerald-900/30' :
+                                                                'bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:border-gray-700'
+                                                            }`}>
+                                                                {notif.type === 'order' ? <Package className="w-6 h-6" /> : 
+                                                                 notif.type === 'payment' ? <CreditCard className="w-6 h-6" /> : 
+                                                                 <Tag className="w-6 h-6" />}
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <div className="flex justify-between items-start mb-1">
+                                                                    <div className="flex items-center gap-3">
+                                                                        <h4 className="text-[11px] font-black text-gray-900 dark:text-white uppercase tracking-widest group-hover:text-[#d4af37] transition-colors">{notif.title}</h4>
+                                                                        {!notif.is_read && (
+                                                                            <span className="flex h-1.5 w-1.5 rounded-full bg-[#d4af37] animate-pulse"></span>
+                                                                        )}
+                                                                    </div>
+                                                                    <span className="text-[10px] font-medium text-gray-400 tabular-nums">
+                                                                        {new Date(notif.created_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                    </span>
+                                                                </div>
+                                                                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium line-clamp-2 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                                                                    {notif.message}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div className="py-32 flex flex-col items-center text-center px-10">
+                                                    <div className="w-20 h-20 rounded-full bg-gray-50 dark:bg-white/5 flex items-center justify-center mb-6">
+                                                        <Bell className="w-8 h-8 text-gray-200 dark:text-gray-800" />
+                                                    </div>
+                                                    <h4 className="text-lg font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest">Quiet in the Vault</h4>
+                                                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 max-w-[280px]">Your artisanal activity history is clear. New updates will materialize here.</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="px-10 py-6 bg-amber-50/50 dark:bg-amber-900/5 rounded-3xl border border-amber-100/50 dark:border-amber-900/20 flex items-center gap-4">
+                                        <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 shrink-0">
+                                            <Bell className="w-4 h-4" />
+                                        </div>
+                                        <p className="text-[10px] text-amber-700/70 dark:text-amber-500/70 font-bold uppercase tracking-widest">Note: Notifications are synchronized in real-time. Unread items are highlighted with the artisanal gold bar.</p>
                                     </div>
                                 </div>
                             )}
