@@ -77,6 +77,24 @@ class SellerOrderController extends Controller
             'status' => $request->status
         ]);
 
+        // Notify the buyer about the status change
+        if ($order->buyer && $order->buyer->email) {
+            $buyerUser = \App\Models\User::where('email', $order->buyer->email)->first();
+            if ($buyerUser) {
+                \App\Models\Notification::create([
+                    'user_id' => $buyerUser->id,
+                    'type'    => 'order_update',
+                    'title'   => 'Order Status Updated',
+                    'message' => "Your order #{$order->order_reference} is now '{$request->status}'.",
+                    'is_read' => false,
+                    'data'    => [
+                        'order_id' => $order->id,
+                        'status' => $request->status
+                    ]
+                ]);
+            }
+        }
+
         return redirect()->back();
     }
 }

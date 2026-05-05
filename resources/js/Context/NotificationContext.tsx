@@ -1,75 +1,86 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
+import { useAuth } from '@clerk/clerk-react';
 
 export interface Notification {
-    id: string;
+    id: number;
     title: string;
     message: string;
-    type: 'order' | 'payment' | 'promo' | 'system';
-    timestamp: Date;
-    read: boolean;
+    type: string;
+    created_at: string;
+    is_read: boolean;
+    data?: any;
 }
 
 interface NotificationContextType {
     notifications: Notification[];
     unreadCount: number;
-    addNotification: (title: string, message: string, type: Notification['type']) => void;
-    markAsRead: (id: string) => void;
-    clearAll: () => void;
+    fetchNotifications: () => Promise<void>;
+    markAsRead: (id: number) => Promise<void>;
+    markAllAsRead: () => Promise<void>;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [notifications, setNotifications] = useState<Notification[]>([]);
+    const { isSignedIn } = useAuth();
 
-    useEffect(() => {
-        const saved = localStorage.getItem('artisanal_notifications');
-        if (saved) {
-            try {
-                const parsed = JSON.parse(saved);
-                setNotifications(parsed.map((n: any) => ({
-                    ...n,
-                    timestamp: new Date(n.timestamp)
-                })));
-            } catch (e) {
-                console.error("Notification retrieval failed:", e);
-            }
+    const fetchNotifications = async () => {
+        if (!isSignedIn) return;
+        try {
+            const prefix = window.location.pathname.startsWith('/seller') ? '/seller' : '/buyer';
+            const response = await axios.get(`${prefix}/notifications`);
+            setNotifications(response.data);
+        } catch (error) {
+            console.error("Failed to fetch notifications:", error);
         }
-    }, []);
+    };
+
+    const markAsRead = async (id: number) => {
+        try {
+            const prefix = window.location.pathname.startsWith('/seller') ? '/seller' : '/buyer';
+            await axios.post(`${prefix}/notifications/${id}/read`);
+            setNotifications(prev => 
+                prev.map(n => n.id === id ? { ...n, is_read: true } : n)
+            );
+        } catch (error) {
+            console.error("Failed to mark notification as read:", error);
+        }
+    };
+
+    const markAllAsRead = async () => {
+        try {
+            const prefix = window.location.pathname.startsWith('/seller') ? '/seller' : '/buyer';
+            await axios.post(`${prefix}/notifications/read-all`);
+            setNotifications(prev => 
+                prev.map(n => ({ ...n, is_read: true }))
+            );
+        } catch (error) {
+            console.error("Failed to mark all as read:", error);
+        }
+    };
 
     useEffect(() => {
-        localStorage.setItem('artisanal_notifications', JSON.stringify(notifications));
-    }, [notifications]);
+        if (isSignedIn) {
+            fetchNotifications();
+            // Optional: Set up polling every 60 seconds
+            const interval = setInterval(fetchNotifications, 60000);
+            return () => clearInterval(interval);
+        } else {
+            setNotifications([]);
+        }
+    }, [isSignedIn]);
 
-    const addNotification = (title: string, message: string, type: Notification['type']) => {
-        const newNotification: Notification = {
-            id: Math.random().toString(36).substr(2, 9),
-            title,
-            message,
-            type,
-            timestamp: new Date(),
-            read: false,
-        };
-        setNotifications(prev => [newNotification, ...prev]);
-    };
-
-    const markAsRead = (id: string) => {
-        setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
-    };
-
-    const clearAll = () => {
-        setNotifications([]);
-    };
-
-    const unreadCount = notifications.filter(n => !n.read).length;
+    const unreadCount = notifications.filter(n => !n.is_read).length;
 
     return (
         <NotificationContext.Provider value={{ 
             notifications, 
             unreadCount, 
-            addNotification, 
+            fetchNotifications,
             markAsRead, 
-            clearAll 
+            markAllAsRead 
         }}>
             {children}
         </NotificationContext.Provider>

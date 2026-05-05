@@ -196,6 +196,17 @@ class OrderController extends Controller
      */
     public function confirmMockCheckout(Request $request): JsonResponse
     {
+        // 1. Notify the Buyer of payment success
+        if (auth()->check()) {
+            \App\Models\Notification::create([
+                'user_id' => auth()->id(),
+                'type'    => 'payment',
+                'title'   => 'Payment Confirmed',
+                'message' => "Your payment for the recent order has been successfully processed and verified.",
+                'is_read' => false
+            ]);
+        }
+
         return response()->json(['status' => 'success', 'message' => 'Simulated settlement confirmed.']);
     }
 

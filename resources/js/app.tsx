@@ -40,6 +40,7 @@ if (typeof window !== 'undefined') {
 }
 
 import { ThemeProvider } from './Context/ThemeContext';
+import { NotificationProvider } from './Context/NotificationContext';
 
 InertiaProgress.init({ color: '#eca840' });
 
@@ -54,11 +55,13 @@ createInertiaApp({
     render(
       <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
         <ThemeProvider>
-          <WishlistProvider>
-              <CartProvider>
-                  <App {...props} />
-              </CartProvider>
-          </WishlistProvider>
+          <NotificationProvider>
+            <WishlistProvider>
+                <CartProvider>
+                    <App {...props} />
+                </CartProvider>
+            </WishlistProvider>
+          </NotificationProvider>
         </ThemeProvider>
       </ClerkProvider>,
       el

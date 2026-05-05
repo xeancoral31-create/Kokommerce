@@ -1,7 +1,7 @@
 import { Link, usePage } from "@inertiajs/inertia-react";
 import { Inertia } from "@inertiajs/inertia";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/clerk-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Logo from "./Logo";
 
@@ -25,6 +25,7 @@ import {
 import { useCart } from "../Context/CartContext";
 import { useWishlist } from "../Context/WishlistContext";
 import { useTheme } from "../Context/ThemeContext";
+import { useNotifications } from "../Context/NotificationContext";
 
 const WishlistIcon = () => (
     <Heart className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
@@ -52,6 +53,9 @@ const AccountIcon = () => (
 export default function Navbar() {
     const { url } = usePage();
     const { isLoaded, isSignedIn, user } = useUser();
+    const [showNotifications, setShowNotifications] = useState(false);
+    const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+    
     const { 
         cartCount, 
         cartItems, 
@@ -292,15 +296,94 @@ export default function Navbar() {
 
                             {/* Notification Icon (Only on Buyer/Seller routes, Hidden on disabled routes) */}
                             {isSignedIn && !isFeatureDisabled && (isBuyer || isViewingAsSeller) && (
-                                <button
-                                    className="icon-nav-button relative flex items-center group focus:outline-none text-gray-400"
-                                    aria-label="Notifications"
-                                    title="Notifications"
-                                >
-                                    <span className="group-hover:text-[#d4af37] transition-colors">
-                                        <Bell className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-                                    </span>
-                                </button>
+                                <div className="relative">
+                                    <button
+                                        onClick={() => setShowNotifications(!showNotifications)}
+                                        className="icon-nav-button relative flex items-center group focus:outline-none text-gray-400"
+                                        aria-label="Notifications"
+                                        title="Notifications"
+                                    >
+                                        <span className="group-hover:text-[#d4af37] transition-colors">
+                                            <Bell className={`w-5 h-5 transition-transform duration-300 group-hover:scale-110 ${showNotifications ? 'text-[#d4af37]' : ''}`} />
+                                        </span>
+                                        {unreadCount > 0 && (
+                                            <span
+                                                className="absolute -top-1 -right-1 bg-[#d4af37] text-white text-[7px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-sm transition-transform group-hover:scale-110"
+                                            >
+                                                {unreadCount}
+                                            </span>
+                                        )}
+                                    </button>
+
+                                    {/* Notification Dropdown */}
+                                    {showNotifications && (
+                                        <>
+                                            <div 
+                                                className="fixed inset-0 z-40" 
+                                                onClick={() => setShowNotifications(false)}
+                                            ></div>
+                                            <div className="absolute right-0 mt-6 w-96 bg-white dark:bg-gray-950 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 dark:border-gray-800 z-50 overflow-hidden animate-in fade-in zoom-in duration-200 origin-top-right">
+                                                <div className="px-8 py-6 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/50">
+                                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-900 dark:text-white">Updates & Activity</h3>
+                                                    {unreadCount > 0 && (
+                                                        <button 
+                                                            onClick={() => markAllAsRead()}
+                                                            className="text-[8px] font-black text-[#d4af37] uppercase tracking-widest hover:underline"
+                                                        >
+                                                            Mark all as read
+                                                        </button>
+                                                    )}
+                                                </div>
+                                                <div className="max-h-[450px] overflow-y-auto custom-scrollbar">
+                                                    {notifications.length === 0 ? (
+                                                        <div className="px-10 py-16 text-center">
+                                                            <div className="w-16 h-16 bg-gray-50 dark:bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6 border border-gray-100 dark:border-gray-800">
+                                                                <Bell className="w-6 h-6 text-gray-200 dark:text-gray-800" />
+                                                            </div>
+                                                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-relaxed">No notifications yet.<br/>Your artisanal journey starts here.</p>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="divide-y divide-gray-50 dark:divide-gray-900">
+                                                            {notifications.map((notif) => (
+                                                                <div 
+                                                                    key={notif.id} 
+                                                                    className={`px-8 py-6 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors cursor-pointer relative group ${!notif.is_read ? 'bg-blue-50/10 dark:bg-blue-900/5' : ''}`}
+                                                                    onClick={() => markAsRead(notif.id)}
+                                                                >
+                                                                    {!notif.is_read && (
+                                                                        <div className="absolute left-3 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-[#d4af37] rounded-full"></div>
+                                                                    )}
+                                                                    <div className="flex flex-col gap-2">
+                                                                        <div className="flex justify-between items-start">
+                                                                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${
+                                                                                notif.type === 'order_update' ? 'bg-amber-50 text-amber-600 dark:bg-amber-900/20' : 
+                                                                                notif.type === 'promotion' ? 'bg-rose-50 text-rose-600 dark:bg-rose-900/20' :
+                                                                                'bg-gray-100 text-gray-600 dark:bg-gray-800'
+                                                                            }`}>
+                                                                                {notif.title}
+                                                                            </span>
+                                                                            <span className="text-[8px] font-medium text-gray-400">
+                                                                                {new Date(notif.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                                                                            </span>
+                                                                        </div>
+                                                                        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
+                                                                            {notif.message}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="px-8 py-4 bg-gray-50/30 dark:bg-gray-900/30 border-t border-gray-50 dark:border-gray-800 text-center">
+                                                    <button className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] hover:text-[#d4af37] transition-colors">
+                                                        View all activity
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
                             )}
 
 
