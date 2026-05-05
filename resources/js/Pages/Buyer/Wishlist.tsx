@@ -43,14 +43,14 @@ export default function Wishlist() {
     return (
         <BuyerLayout>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
-                    <div className="text-center md:text-left">
-                        <span className="text-[10px] font-[1000] text-[#eca840] uppercase tracking-[0.4em] mb-4 block">Your Curated Collection</span>
+                <div className="flex justify-between items-end mb-16 gap-8">
+                    <div className="text-left">
+                        <span className="text-[10px] font-[1000] text-[#d4af37] uppercase tracking-[0.4em] mb-4 block">Your Curated Collection</span>
                         <h1 className="text-4xl lg:text-5xl font-black text-[#2d2a26] dark:text-white tracking-tighter leading-none uppercase">Wishlist</h1>
                     </div>
                     <Link 
                         href="/buyer/shop" 
-                        className="px-8 py-4 bg-gray-900 dark:bg-white dark:text-gray-950 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-black/10"
+                        className="px-8 py-4 bg-gray-900 dark:bg-white dark:text-gray-950 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-black/10 mb-1"
                     >
                         Continue Shopping
                     </Link>
@@ -67,7 +67,7 @@ export default function Wishlist() {
                         </p>
                         <Link 
                             href="/buyer/shop" 
-                            className="text-[#eca840] font-black text-[11px] uppercase tracking-[0.4em] border-b-2 border-[#eca840]/20 pb-2 hover:border-[#eca840] transition-all"
+                            className="text-[#d4af37] font-black text-[11px] uppercase tracking-[0.4em] border-b-2 border-[#d4af37]/20 pb-2 hover:border-[#d4af37] transition-all"
                         >
                             Explore Our Shop
                         </Link>
@@ -75,7 +75,7 @@ export default function Wishlist() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                         {wishlistItems.map((item) => (
-                            <div key={item.id} className="group relative bg-white dark:bg-gray-900 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-gray-800 hover:border-[#eca840]/30 transition-all duration-700 hover:shadow-[0_45px_100px_-20px_rgba(0,0,0,0.15)] hover:-translate-y-2">
+                            <div key={item.id} className="group relative bg-white dark:bg-gray-900 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-gray-800 hover:border-[#d4af37]/30 transition-all duration-700 hover:shadow-[0_45px_100px_-20px_rgba(0,0,0,0.15)] hover:-translate-y-2">
                                 {/* Image Section */}
                                 <div className="relative aspect-[4/3] overflow-hidden">
                                     <img 
@@ -100,8 +100,8 @@ export default function Wishlist() {
                                 {/* Content Section */}
                                 <div className="p-10 flex flex-col h-full">
                                     <div className="mb-6">
-                                        <span className="text-[9px] font-black text-[#eca840] uppercase tracking-[0.3em] mb-2 block">Artisanal Choice</span>
-                                        <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tighter leading-tight group-hover:text-[#eca840] transition-colors duration-300">
+                                        <span className="text-[9px] font-black text-[#d4af37] uppercase tracking-[0.3em] mb-2 block">Artisanal Choice</span>
+                                        <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tighter leading-tight group-hover:text-[#d4af37] transition-colors duration-300">
                                             {item.name}
                                         </h3>
                                     </div>
@@ -117,7 +117,7 @@ export default function Wishlist() {
 
                                     <button 
                                         onClick={() => handleAddToCart(item)}
-                                        className="w-full py-5 bg-[#eca840] text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl shadow-[#eca840]/20 hover:bg-[#d69635] hover:shadow-2xl hover:shadow-[#eca840]/40 transition-all active:scale-95"
+                                        className="w-full py-5 bg-[#d4af37] text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl shadow-[#d4af37]/20 hover:bg-[#c49b2f] hover:shadow-2xl hover:shadow-[#d4af37]/40 transition-all active:scale-95"
                                     >
                                         <ShoppingCartIcon />
                                         Add to Cart
