@@ -3,6 +3,8 @@ import BuyerLayout from '../../Components/BuyerLayout';
 import { Head, Link } from '@inertiajs/inertia-react';
 import { useCart } from '../../Context/CartContext';
 import { useWishlist } from '../../Context/WishlistContext';
+import { useNotifications } from '../../Context/NotificationContext';
+import { Bell } from 'lucide-react';
 
 interface BuyerHomeProps {
     user_name: string;
@@ -20,6 +22,7 @@ declare function route(name: string, params?: any): string;
 
 export default function BuyerHome({ user_name, featured_products, new_arrivals, recent_favorites, promotions, stats }: BuyerHomeProps) {
     const { isDetectingLocation } = useCart();
+    const { notifications, markAsRead } = useNotifications();
     const [isBuyModalOpen, setIsBuyModalOpen] = React.useState(false);
     const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
     const [quantity, setQuantity] = React.useState(1);
@@ -221,6 +224,97 @@ export default function BuyerHome({ user_name, featured_products, new_arrivals, 
                     </div>
                 </div>
             )}
+
+            {/* Notifications Boxed Container */}
+            <section className="mb-12">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Activity Feed (Boxed & Scrollable) */}
+                    <div className="lg:col-span-2 bg-white dark:bg-gray-950 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden flex flex-col">
+                        <div className="px-10 py-8 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center bg-gray-50/30 dark:bg-gray-900/30">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37]">
+                                    <Bell className="w-5 h-5" />
+                                </div>
+                                <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-900 dark:text-white">Pulse & Activity</h2>
+                            </div>
+                            <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">{notifications.filter(n => !n.is_read).length} Unread Updates</span>
+                        </div>
+                        
+                        <div className="max-h-[350px] overflow-y-auto custom-scrollbar divide-y divide-gray-50 dark:divide-gray-900">
+                            {notifications.length === 0 ? (
+                                <div className="py-24 text-center">
+                                    <div className="w-16 h-16 bg-gray-50 dark:bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6 opacity-40">
+                                        <Bell className="w-6 h-6 text-gray-300" />
+                                    </div>
+                                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">Your artisanal timeline is clear.</p>
+                                </div>
+                            ) : (
+                                notifications.map((notif) => (
+                                    <div 
+                                        key={notif.id} 
+                                        onClick={() => markAsRead(notif.id)}
+                                        className={`px-10 py-7 hover:bg-gray-50/50 dark:hover:bg-gray-900/30 transition-all cursor-pointer group relative ${!notif.is_read ? 'bg-[#d4af37]/5' : ''}`}
+                                    >
+                                        {!notif.is_read && (
+                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-[#d4af37] rounded-full shadow-[0_0_8px_rgba(212,175,55,0.5)]"></div>
+                                        )}
+                                        <div className="flex flex-col gap-3">
+                                            <div className="flex justify-between items-center">
+                                                <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
+                                                    notif.type === 'order_update' ? 'bg-amber-50 text-amber-600 dark:bg-amber-900/20' : 
+                                                    notif.type === 'payment' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20' :
+                                                    'bg-gray-100 text-gray-600 dark:bg-gray-800'
+                                                }`}>
+                                                    {notif.title}
+                                                </span>
+                                                <span className="text-[9px] font-medium text-gray-400">
+                                                    {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(notif.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                                                </span>
+                                            </div>
+                                            <p className="text-[13px] text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
+                                                {notif.message}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                        
+                        <div className="px-10 py-5 bg-gray-50/30 dark:bg-gray-900/30 border-t border-gray-50 dark:border-gray-800 flex justify-center">
+                            <button className="text-[9px] font-black text-[#d4af37] uppercase tracking-[0.3em] hover:tracking-[0.4em] transition-all">
+                                Expand Concierge Logs
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Quick Stats Sidebar (Boxed) */}
+                    <div className="bg-[#141414] rounded-[2rem] p-10 flex flex-col justify-between relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <Bell className="w-32 h-32 text-white" />
+                        </div>
+                        <div className="relative z-10">
+                            <h3 className="text-[#d4af37] text-[10px] font-black uppercase tracking-[0.4em] mb-8">Account Brief</h3>
+                            <div className="space-y-8">
+                                <div>
+                                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1">Gourmet Status</p>
+                                    <p className="text-white text-xl font-light tracking-tight">Elite Connoisseur</p>
+                                </div>
+                                <div>
+                                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1">Recent Orders</p>
+                                    <p className="text-white text-xl font-light tracking-tight">{stats.recent_orders_count} Fulfilled</p>
+                                </div>
+                                <div>
+                                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1">Member Since</p>
+                                    <p className="text-white text-xl font-light tracking-tight">May 2024</p>
+                                </div>
+                            </div>
+                        </div>
+                        <Link href="/buyer/account" className="relative z-10 mt-12 py-4 border border-white/10 rounded-xl text-center text-white text-[9px] font-black uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all">
+                            Manage Portfolio
+                        </Link>
+                    </div>
+                </div>
+            </section>
 
             {/* Featured Promotions */}
             {promotions.length > 0 && (
