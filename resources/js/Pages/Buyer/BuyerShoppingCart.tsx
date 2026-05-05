@@ -244,10 +244,8 @@ export default function BuyerShoppingCart({ cart_items, active_promotions }: Buy
                             ))
                         ) : (
                             <div className="py-24 text-center bg-gray-50 rounded-2xl border border-gray-100 shadow-inner flex flex-col items-center justify-center px-8">
-                                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 text-gray-200">
-                                    <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                    </svg>
+                                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 text-[#d4af37]">
+                                    <i className="fa-solid fa-cart-arrow-down text-2xl"></i>
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 tracking-tight mb-2 uppercase">Your Bag is Empty</h3>
                                 <p className="text-gray-400 font-medium italic max-w-xs mb-8 text-sm">Add some items from our shop to get started.</p>

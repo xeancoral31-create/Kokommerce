@@ -6,7 +6,6 @@ import axios from "axios";
 import Logo from "./Logo";
 
 import { 
-    ShoppingBag, 
     Bell, 
     Heart, 
     Moon, 
@@ -18,13 +17,8 @@ import {
     X,
     ChevronRight,
     ArrowRight,
-    ShoppingBasket,
     Check
 } from "lucide-react";
-
-const ShoppingBagIcon = () => (
-    <ShoppingBag className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-);
 
 const BellIcon = () => (
     <Bell className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
@@ -353,7 +347,7 @@ export default function Navbar() {
                                 title="Your Bag"
                             >
                                 <span className={`text-gray-400 group-hover:text-[#eca840] transition-all duration-300 ${cartAnimated ? 'scale-125 text-[#eca840]' : ''}`}>
-                                    <ShoppingBagIcon />
+                                    <i className="fa-solid fa-cart-arrow-down transition-transform duration-300 group-hover:scale-110"></i>
                                 </span>
                                 {cartCount > 0 && (
                                     <span
@@ -442,7 +436,7 @@ export default function Navbar() {
                             {cartItems.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center text-center opacity-50">
                                     <div className="w-24 h-24 bg-gray-50 dark:bg-gray-900 rounded-full flex items-center justify-center text-gray-200 dark:text-gray-800 mb-8 border border-gray-100 dark:border-gray-800">
-                                        <ShoppingBagIcon />
+                                        <i className="fa-solid fa-cart-arrow-down transition-transform duration-300 group-hover:scale-110"></i>
                                     </div>
                                     <h3 className="text-sm font-black text-gray-400 dark:text-gray-600 uppercase tracking-[0.3em] leading-none mb-4">Your bag is empty</h3>
                                     <button onClick={() => setShowSideCart(false)} className="text-[#eca840] font-black text-[9px] uppercase tracking-[0.3em] border-b-2 border-[#eca840]/20 pb-1 hover:border-[#eca840] transition-all">Go to Shop</button>
@@ -682,7 +676,7 @@ export default function Navbar() {
                     aria-label="Floating Cart"
                 >
                     <div className="relative">
-                        <ShoppingBag className="w-6 h-6 transition-transform group-hover:scale-110" />
+                        <i className="fa-solid fa-cart-arrow-down text-xl transition-transform group-hover:scale-110"></i>
                         <span className="absolute -top-4 -right-4 bg-[#eca840] text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#2d2a26] shadow-md group-hover:scale-110 transition-transform">
                             {cartCount}
                         </span>
