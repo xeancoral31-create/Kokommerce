@@ -17,7 +17,7 @@ const TrashIcon = () => (
     </svg>
 );
 
-const ShoppingBagIcon = () => (
+const ShoppingCartIcon = () => (
     <i className="fa-solid fa-cart-arrow-down"></i>
 );
 
@@ -119,8 +119,8 @@ export default function Wishlist() {
                                         onClick={() => handleAddToCart(item)}
                                         className="w-full py-5 bg-[#eca840] text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl shadow-[#eca840]/20 hover:bg-[#d69635] hover:shadow-2xl hover:shadow-[#eca840]/40 transition-all active:scale-95"
                                     >
-                                        <ShoppingBagIcon />
-                                        Add to Bag
+                                        <ShoppingCartIcon />
+                                        Add to Cart
                                     </button>
                                 </div>
                             </div>

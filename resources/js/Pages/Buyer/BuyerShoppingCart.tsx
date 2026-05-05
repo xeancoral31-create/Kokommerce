@@ -108,7 +108,7 @@ export default function BuyerShoppingCart({ cart_items, active_promotions }: Buy
 
     return (
         <BuyerLayout>
-            <Head title="Your Bag - Kokommerce" />
+            <Head title="Your Cart - Kokommerce" />
 
             <div className="max-w-7xl mx-auto px-6 pb-32 mt-16 md:mt-24">
                 <header className="mb-10 md:mb-16">
@@ -122,14 +122,14 @@ export default function BuyerShoppingCart({ cart_items, active_promotions }: Buy
                         </Link>
                     </div>
                     <div className="flex flex-wrap items-center gap-2 md:gap-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-gray-400 mb-6">
-                        <span className="text-[#d4af37]">01. Bag</span>
+                        <span className="text-[#d4af37]">01. Cart</span>
                         <span className="w-4 md:w-8 h-[1px] bg-gray-200"></span>
                         <span>02. Delivery</span>
                         <span className="w-4 md:w-8 h-[1px] bg-gray-200"></span>
                         <span>03. Payment</span>
                     </div>
-                        Your <span className="text-[#d4af37]">Bag.</span>
-                    <p className="text-gray-400 font-bold uppercase tracking-widest text-xs md:text-sm">Review your bag before checking out.</p>
+                        Your <span className="text-[#d4af37]">Cart.</span>
+                    <p className="text-gray-400 font-bold uppercase tracking-widest text-xs md:text-sm">Review your cart before checking out.</p>
                 </header>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
@@ -232,7 +232,7 @@ export default function BuyerShoppingCart({ cart_items, active_promotions }: Buy
                                                     }, 500);
                                                 }} 
                                                 className="w-14 h-14 rounded-2xl bg-white text-gray-300 hover:bg-black hover:text-white hover:rotate-6 transition-all duration-500 flex items-center justify-center group/trash border border-gray-100 shadow-[0_4px_10px_rgba(0,0,0,0.03)] active:scale-95"
-                                                title="Remove selection from bag"
+                                                title="Remove selection from cart"
                                             >
                                                 <svg className="w-6 h-6 transition-transform group-hover/trash:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -247,7 +247,7 @@ export default function BuyerShoppingCart({ cart_items, active_promotions }: Buy
                                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 text-[#d4af37]">
                                     <i className="fa-solid fa-cart-arrow-down text-2xl"></i>
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-900 tracking-tight mb-2 uppercase">Your Bag is Empty</h3>
+                                <h3 className="text-xl font-bold text-gray-900 tracking-tight mb-2 uppercase">Your Cart is Empty</h3>
                                 <p className="text-gray-400 font-medium italic max-w-xs mb-8 text-sm">Add some items from our shop to get started.</p>
                                 <Link href={route('buyer.shop')} className="inline-flex items-center gap-3 bg-[#2d2a26] text-white px-8 py-3.5 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] shadow-md hover:bg-black transition-all">
                                     Go to Shop

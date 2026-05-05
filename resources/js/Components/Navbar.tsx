@@ -339,12 +339,12 @@ export default function Navbar() {
                                 )}
                             </button>
 
-                            {/* Shopping Bag */}
+                            {/* Shopping Cart */}
                             <button 
                                 onClick={() => setShowSideCart(true)}
                                 className={`icon-nav-button relative flex items-center group focus:outline-none ${cartAnimated ? 'animate-bounce' : ''}`}
-                                aria-label="Open Your Bag"
-                                title="Your Bag"
+                                aria-label="Open Your Cart"
+                                title="Your Cart"
                             >
                                 <span className={`text-gray-400 group-hover:text-[#d4af37] transition-all duration-300 ${cartAnimated ? 'scale-125 text-[#d4af37]' : ''}`}>
                                     <i className="fa-solid fa-cart-arrow-down transition-transform duration-300 group-hover:scale-110"></i>
@@ -403,7 +403,7 @@ export default function Navbar() {
                 </div>
             </header>
 
-            {/* Your Bag - Premium Side Drawer */}
+            {/* Your Cart - Premium Side Drawer */}
             {showSideCart && (
                 <div className="fixed inset-0 z-[1000] flex justify-end overflow-hidden">
                     <div
@@ -416,10 +416,10 @@ export default function Navbar() {
                         <div className="px-10 pt-16 pb-8 border-b border-gray-50 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 sticky top-0 z-10 backdrop-blur-sm">
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tighter uppercase">Your Bag</h2>
+                                    <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tighter uppercase">Your Cart</h2>
                                     <div className="text-[9px] font-black text-[#d4af37] uppercase tracking-[0.4em] mt-3 flex items-center gap-2">
                                         <div className="w-1.5 h-1.5 bg-[#d4af37] rounded-full animate-pulse"></div>
-                                        {cartCount} Item{cartCount !== 1 ? 's' : ''} in Bag
+                                        {cartCount} Item{cartCount !== 1 ? 's' : ''} in Cart
                                     </div>
                                 </div>
                                 <button
@@ -438,7 +438,7 @@ export default function Navbar() {
                                     <div className="w-24 h-24 bg-gray-50 dark:bg-gray-900 rounded-full flex items-center justify-center text-gray-200 dark:text-gray-800 mb-8 border border-gray-100 dark:border-gray-800">
                                         <i className="fa-solid fa-cart-arrow-down transition-transform duration-300 group-hover:scale-110"></i>
                                     </div>
-                                    <h3 className="text-sm font-black text-gray-400 dark:text-gray-600 uppercase tracking-[0.3em] leading-none mb-4">Your bag is empty</h3>
+                                    <h3 className="text-sm font-black text-gray-400 dark:text-gray-600 uppercase tracking-[0.3em] leading-none mb-4">Your cart is empty</h3>
                                     <button onClick={() => setShowSideCart(false)} className="text-[#d4af37] font-black text-[9px] uppercase tracking-[0.3em] border-b-2 border-[#d4af37]/20 pb-1 hover:border-[#d4af37] transition-all">Go to Shop</button>
                                 </div>
                             ) : (
@@ -457,7 +457,7 @@ export default function Navbar() {
                                                             removeFromCart(item.id);
                                                         }}
                                                         className="text-gray-200 dark:text-gray-700 hover:text-red-500 transition-all duration-300 p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl group/trash-side"
-                                                        title="Remove from Bag"
+                                                        title="Remove from Cart"
                                                     >
                                                         <svg className="w-4 h-4 transition-transform group-hover/trash-side:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                                     </button>
@@ -668,25 +668,7 @@ export default function Navbar() {
                     </div>
                 </div>
             )}
-            {/* Fixed Floating Cart - Modern Flow */}
-            {scrolled && cartCount > 0 && !showSideCart && (
-                <button
-                    onClick={() => setShowSideCart(true)}
-                    className="fixed bottom-8 right-8 z-[60] bg-[#2d2a26] text-white p-5 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:bg-[#d4af37] transition-all duration-500 group animate-in slide-in-from-bottom-12 fade-in"
-                    aria-label="Floating Cart"
-                >
-                    <div className="relative">
-                        <i className="fa-solid fa-cart-arrow-down text-xl transition-transform group-hover:scale-110"></i>
-                        <span className="absolute -top-4 -right-4 bg-[#d4af37] text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#2d2a26] shadow-md group-hover:scale-110 transition-transform">
-                            {cartCount}
-                        </span>
-                    </div>
-                    {/* Tooltip */}
-                    <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-white text-gray-900 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl border border-gray-100 pointer-events-none">
-                        View Your Bag
-                    </div>
-                </button>
-            )}
+
         </>
     );
 }

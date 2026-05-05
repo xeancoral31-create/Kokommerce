@@ -356,9 +356,9 @@ const DeliverySummary = ({ deliveryAddress }: any) => (
     </section>
 );
 
-const OrderBag = ({ itemsData }: any) => (
+const OrderCart = ({ itemsData }: any) => (
     <section className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm overflow-hidden relative">
-        <h2 className="text-xl font-bold tracking-tight mb-8 text-gray-900">Your Bag</h2>
+        <h2 className="text-xl font-bold tracking-tight mb-8 text-gray-900">Your Cart</h2>
         <div className="space-y-4">
             {itemsData.map((item: any) => (
                 <div key={item.id} className="flex items-center gap-4">
@@ -422,7 +422,7 @@ export default function OrderConfirmPay({ cart_items, stripe_key }: OrderConfirm
                     </div>
 
                     <div className="lg:col-span-4 space-y-8">
-                        <OrderBag itemsData={activeItems} />
+                        <OrderCart itemsData={activeItems} />
                         <Elements stripe={currentStripePromise}>
                             <CheckoutForm 
                                 total={total} 

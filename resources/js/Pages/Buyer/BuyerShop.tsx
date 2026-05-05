@@ -137,7 +137,7 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
         Inertia.get('/buyer/delivery');
     };
 
-    const handleModalAddToBag = () => {
+    const handleModalAddToCart = () => {
         if (!buyNowProduct) return;
 
         const cat = getProductCategory(buyNowProduct);
@@ -168,7 +168,7 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
             return [...prevItems, newItem];
         });
 
-        setNotification(`${buyNowProduct.name} (${priceType}) added to your bag.`);
+        setNotification(`${buyNowProduct.name} (${priceType}) added to your cart.`);
         setBuyNowProduct(null);
         setTimeout(() => setNotification(null), 3000);
     };
@@ -304,11 +304,11 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
 
                                 <div className="mt-10 flex gap-3">
                                     <button
-                                        onClick={handleModalAddToBag}
-                                        className="flex-1 py-4 px-4 border-2 border-gray-100 dark:border-gray-800 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] text-[#2d2a26] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 flex items-center justify-center gap-2 group/bag"
+                                        onClick={handleModalAddToCart}
+                                        className="flex-1 py-4 px-4 border-2 border-gray-100 dark:border-gray-800 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] text-[#2d2a26] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 flex items-center justify-center gap-2 group/cart"
                                     >
-                                        <i className="fa-solid fa-cart-arrow-down text-[11px] transition-transform group-hover/bag:-translate-y-0.5"></i>
-                                        <span className="leading-none">Add to Bag</span>
+                                        <i className="fa-solid fa-cart-arrow-down text-[11px] transition-transform group-hover/cart:-translate-y-0.5"></i>
+                                        <span className="leading-none">Add to Cart</span>
                                     </button>
                                     <button
                                         onClick={handleProceedToPayment}
@@ -622,7 +622,7 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
                             }`}
                         >
                             <i className="fa-solid fa-cart-arrow-down text-[11px] transition-transform duration-300 group-hover/basket:-translate-y-0.5"></i>
-                            <span className="leading-none">Bag</span>
+                            <span className="leading-none">Cart</span>
                         </button>
                         <button
                             onClick={(e) => { e.stopPropagation(); onBuyNow(localPriceType); }}
