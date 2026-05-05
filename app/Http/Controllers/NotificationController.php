@@ -2,50 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\Notification;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        
-        $notifications = [
-            'low_stock' => \App\Models\Product::where('seller_id', $user->id)
-                ->where('stock', '<', 10)
-                ->whereNull('deleted_at')
-                ->get(),
-            'recent' => Notification::where('user_id', $user->id)
-                ->where('is_read', false)
-                ->latest()
-                ->get()
-        ];
+        if (!Auth::check()) {
+            return response()->json([]);
+        }
 
-        return Inertia::render('Seller/Notifications', [
-            'notifications' => $notifications
-        ]);
+        $notifications = Notification::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($notifications);
     }
 
     public function markAsRead($id)
     {
-        $notification = Notification::where('user_id', Auth::id())
-            ->where('id', $id)
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $notification = Notification::where('id', $id)
+            ->where('user_id', Auth::id())
             ->firstOrFail();
 
         $notification->update(['is_read' => true]);
 
-        return back()->with('success', 'Notification marked as read');
+        return response()->json(['success' => true]);
     }
 
     public function markAllAsRead()
     {
-        Notification::where('user_id', Auth::id())
-            ->where('is_read', false)
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        Notification::where('is_read', false)
+            ->where('user_id', Auth::id())
             ->update(['is_read' => true]);
 
-        return back()->with('success', 'All notifications marked as read');
+        return response()->json(['success' => true]);
     }
 }

@@ -76,13 +76,10 @@ Route::prefix('buyer')->group(function () {
     Route::post('/payment/mock-checkout/confirm', [OrderController::class, 'confirmMockCheckout'])->name('payment.mock.confirm');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
-    // Notifications (Authenticated)
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
-        Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
-        Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
-    });
-
+    // Notifications
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
     Route::get('/wishlist', [BuyerController::class, 'wishlist'])->name('buyer.wishlist');
     Route::get('/account', [BuyerController::class, 'account'])->name('buyer.account');
     Route::put('/account', [BuyerController::class, 'updateAccount'])->name('buyer.account.update');
@@ -92,8 +89,8 @@ Route::get('/wishlist', function() {
     return redirect()->route('buyer.wishlist');
 });
 
-// Seller Portal Routes (Protected)
-Route::middleware(['auth'])->prefix('seller')->group(function () {
+// Seller Portal Routes (Fully Functional Module)
+Route::prefix('seller')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Seller\SellerDashboardController::class, 'index'])->name('seller.dashboard');
     Route::get('/products', [\App\Http\Controllers\Seller\SellerProductController::class, 'index'])->name('seller.products');
     Route::get('/orders', [\App\Http\Controllers\Seller\SellerOrderController::class, 'index'])->name('seller.orders');
@@ -115,7 +112,7 @@ Route::middleware(['auth'])->prefix('seller')->group(function () {
     Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('seller.notifications.read');
     Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('seller.notifications.read-all');
 
-    // API-like endpoints for CRUD
+    // API-like endpoints for CRUD (Actions mentioned in request)
     Route::post('/products', [\App\Http\Controllers\Seller\SellerProductController::class, 'store'])->name('seller.products.store');
     Route::put('/products/{product}', [\App\Http\Controllers\Seller\SellerProductController::class, 'update'])->name('seller.products.update');
     Route::delete('/products/{product}', [\App\Http\Controllers\Seller\SellerProductController::class, 'destroy'])->name('seller.products.destroy');

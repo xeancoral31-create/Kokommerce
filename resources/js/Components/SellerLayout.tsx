@@ -231,20 +231,12 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                         id="mark-all-read-btn"
                         onClick={(e) => {
                           e.stopPropagation();
-                          // Optimistically clear all notifications from the UI immediately
-                          const previousNotifications = notifications;
-                          setNotifications({ low_stock: [], recent: [] });
-                          
                           Inertia.post(route('seller.notifications.read-all'), {}, {
-                            preserveScroll: true,
-                            preserveState: true,
                             onSuccess: () => {
-                              // Backend synced
+                              // Optimistically clear the recent notifications in local display
+                              setNotifications((prev: any) => ({ ...prev, recent: [] }));
                             },
-                            onError: () => {
-                              // Rollback on error
-                              setNotifications(previousNotifications);
-                            }
+                            preserveScroll: true
                           });
                         }}
                         className="text-[9px] font-black text-[#eca840] uppercase tracking-widest px-3 py-1.5 rounded-lg bg-orange-50 hover:bg-[#eca840] hover:text-white transition-all duration-300 active:scale-95 border border-[#eca840]/20 hover:border-[#eca840]"
@@ -272,17 +264,15 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                             onClick={() => {
                               setSelectedNotification(notif);
                               setShowNotifications(false);
-                              
-                              // Optimistically remove this notification from state
-                              setNotifications((prev: any) => ({
-                                ...prev,
-                                recent: prev.recent.filter((n: any) => n.id !== notif.id)
-                              }));
-
-                              // Mark as read on the backend
+                              // Mark as read when clicked
                               Inertia.post(route('seller.notifications.read', { id: notif.id }), {}, {
-                                preserveScroll: true,
-                                preserveState: true
+                                onSuccess: () => {
+                                  setNotifications((prev: any) => ({
+                                    ...prev,
+                                    recent: prev.recent.filter((n: any) => n.id !== notif.id)
+                                  }));
+                                },
+                                preserveScroll: true
                               });
                             }}
                             className="w-full text-left p-4 bg-orange-50/50 rounded-2xl hover:bg-white border border-transparent hover:border-[#eca840]/20 transition-all cursor-pointer group"
