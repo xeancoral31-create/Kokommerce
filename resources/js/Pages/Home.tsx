@@ -180,9 +180,6 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
                                             </Link>
                                         </div>
                                     </div>
-                                    <button className="absolute top-10 right-10 w-14 h-14 bg-white/5 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white border border-white/10 hover:bg-white hover:text-red-500 transition-all duration-500 transform hover:scale-110">
-                                        <HeartIcon className="w-5 h-5" />
-                                    </button>
                                 </>
                             ) : (
                                 <div className="h-full flex flex-col items-center justify-center text-gray-200 p-20 text-center">
@@ -210,9 +207,6 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
                                                         {displayNewArrivals[idx].category?.name || 'Artisanal'}
                                                     </span>
                                                 </div>
-                                                <button className="absolute top-4 right-4 w-9 h-9 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-500">
-                                                    <HeartIcon className="w-3.5 h-3.5" />
-                                                </button>
                                             </div>
                                             <div className="px-6 py-8 flex-1 flex flex-col justify-between">
                                                 <div>
@@ -256,9 +250,6 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
                                         ) : (
                                             <span className="text-6xl opacity-10">🎂</span>
                                         )}
-                                        <button className="absolute top-6 right-6 w-10 h-10 bg-white shadow-lg rounded-xl flex items-center justify-center text-gray-300 hover:text-red-500 transition-all scale-0 group-hover:scale-100 opacity-0 group-hover:opacity-100">
-                                            <HeartIcon />
-                                        </button>
                                         <span className="absolute bottom-6 left-6 text-[10px] bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white font-black text-gray-600 uppercase tracking-widest shadow-sm">{product.category?.name}</span>
                                     </div>
                                     <div className="p-8">

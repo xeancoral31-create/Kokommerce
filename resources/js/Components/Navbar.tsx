@@ -270,23 +270,25 @@ export default function Navbar() {
                                 </span>
                             </button>
 
-                            {/* Wishlist Link */}
-                            <Link 
-                                href={isBuyer ? "/buyer/wishlist" : "/wishlist"} 
-                                className="icon-nav-button relative flex items-center group focus:outline-none"
-                                aria-label="Wishlist"
-                                title="Wishlist"
-                                data-discover="true"
-                            >
-                                <span className="text-gray-400 group-hover:text-[#d4af37] transition-colors"><WishlistIcon /></span>
-                                {wishlistItems.length > 0 && (
-                                    <span
-                                        className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-sm transition-transform group-hover:scale-110"
-                                    >
-                                        {wishlistItems.length}
-                                    </span>
-                                )}
-                            </Link>
+                            {/* Wishlist Link (Only visible on functional portal pages) */}
+                            {!isFeatureDisabled && (
+                                <Link 
+                                    href={isBuyer ? "/buyer/wishlist" : "/wishlist"} 
+                                    className="icon-nav-button relative flex items-center group focus:outline-none"
+                                    aria-label="Wishlist"
+                                    title="Wishlist"
+                                    data-discover="true"
+                                >
+                                    <span className="text-gray-400 group-hover:text-[#d4af37] transition-colors"><WishlistIcon /></span>
+                                    {wishlistItems.length > 0 && (
+                                        <span
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-sm transition-transform group-hover:scale-110"
+                                        >
+                                            {wishlistItems.length}
+                                        </span>
+                                    )}
+                                </Link>
+                            )}
 
                             {/* Notification Icon (Only on Buyer/Seller routes, Hidden on disabled routes) */}
                             {isSignedIn && !isFeatureDisabled && (isBuyer || isViewingAsSeller) && (

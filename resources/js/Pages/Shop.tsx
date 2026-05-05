@@ -533,12 +533,6 @@ function ShopProductCard({ product, onOpenSelection }: { product: Product, onOpe
           {product.status === 'pre_order' && <span className="bg-blue-600 text-white text-[8px] font-black px-4 py-2 rounded-xl shadow-lg border border-blue-600 tracking-[0.2em] uppercase">Pre-Order</span>}
         </div>
 
-        <button
-          onClick={(e) => { e.stopPropagation(); setIsWishlisted(!isWishlisted); }}
-          className={`absolute top-5 right-5 w-11 h-11 ${isWishlisted ? 'bg-red-50 text-red-500' : 'bg-white/95 text-gray-300'} backdrop-blur-md rounded-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-sm border border-white`}
-        >
-          <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
-        </button>
 
         {isSoldOut && (
           <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px] flex items-center justify-center">
