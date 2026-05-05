@@ -235,12 +235,13 @@ export default function Navbar() {
             const image = user.imageUrl;
             const name = user.fullName || "Artisanal User";
 
-            const lastSynced = sessionStorage.getItem('last_clerk_sync');
-            if (email && lastSynced !== email) {
+            const hasSyncedThisSession = sessionStorage.getItem(`synced_${clerk_id}`);
+            
+            if (email && !hasSyncedThisSession) {
                 axios.post('/auth/sync', { email, clerk_id, name, image })
                     .then(res => {
-                        sessionStorage.setItem('last_clerk_sync', email);
-                        if (res.data.redirect) {
+                        sessionStorage.setItem(`synced_${clerk_id}`, 'true');
+                        if (res.data.redirect && !window.location.pathname.startsWith('/seller')) {
                             window.location.href = res.data.redirect;
                         }
                     })
@@ -395,7 +396,7 @@ export default function Navbar() {
                                 </SignedIn>
 
                                 <SignedOut>
-                                    <SignInButton mode="modal" afterSignInUrl="/buyer/home">
+                                    <SignInButton mode="modal">
                                         <button className="bg-[#2d2a26] text-white px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg shadow-gray-900/10">Sign In</button>
                                     </SignInButton>
                                 </SignedOut>

@@ -25,8 +25,10 @@ class AuthSyncController extends Controller
         $name = $request->name;
         $image = $request->image;
 
-        // Whitelist Logic (Image 1 Req)
-        $isWhitelisted = DB::table('seller_whitelist')->where('email', $email)->exists();
+        // Whitelist Logic (Image 1 Req) - Case Insensitive
+        $isWhitelisted = DB::table('seller_whitelist')
+            ->whereRaw('LOWER(email) = ?', [strtolower($email)])
+            ->exists();
         $role = $isWhitelisted ? 'seller' : 'buyer';
 
         // Secure Role Assignment & Credential Management
