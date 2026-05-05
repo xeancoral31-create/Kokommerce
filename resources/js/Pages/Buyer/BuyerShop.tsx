@@ -9,12 +9,10 @@ import { Product } from '../../types';
 
 declare var route: any;
 
-const ShoppingBagIcon = () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>;
-const WishlistIcon = () => (
-    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M12 20.2 10.7 19C5.8 14.5 2.5 11.5 2.5 7.8A4.8 4.8 0 0 1 7.3 3a5.3 5.3 0 0 1 4.7 2.6A5.3 5.3 0 0 1 16.7 3a4.8 4.8 0 0 1 4.8 4.8c0 3.7-3.3 6.7-8.2 11.2Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-);
+import { ShoppingBag, Heart, Search, ChevronRight, ShoppingBasket, ArrowRight, Star } from 'lucide-react';
+
+const ShoppingBagIcon = () => <ShoppingBag className="w-5 h-5" />;
+const WishlistIcon = () => <Heart className="w-4 h-4" />;
 
 export default function BuyerShop({ products: dbProducts, categories: dbCategories = [] }: { products: Product[], categories?: any[] }) {
     const { setItems, cartItems, addToCart } = useCart();
@@ -205,7 +203,7 @@ export default function BuyerShop({ products: dbProducts, categories: dbCategori
                 <div className="fixed top-12 right-12 z-[2000] animate-in fade-in slide-in-from-right-12 duration-700">
                     <div className="bg-[#141414] text-white px-10 py-6 rounded-[2rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex items-center gap-6 border border-white/10 backdrop-blur-3xl">
                         <div className="w-14 h-14 rounded-2xl bg-[#eca840]/10 flex items-center justify-center text-[#eca840] border border-[#eca840]/20">
-                            <WishlistIcon />
+                            <ShoppingBasket className="w-6 h-6" />
                         </div>
                         <div className="flex flex-col">
                             <span className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.4em] mb-1">Concierge Note</span>
@@ -615,7 +613,7 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
                             disabled={product.stock <= 0}
                             className={`flex-[1.2] py-4 rounded-xl text-[9px] font-black uppercase tracking-[0.25em] transition-all duration-300 active:scale-95 disabled:opacity-0 border-2 flex items-center justify-center gap-2.5 group/basket ${localPriceType === 'Solo' ? 'border-gray-200 dark:border-gray-700 text-[#2d2a26] dark:text-white hover:border-gray-900 dark:hover:border-white hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:shadow-xl shadow-black/10' : 'border-dashed border-gray-300 dark:border-gray-600 text-gray-500 hover:border-solid hover:border-gray-900 dark:hover:border-white hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:shadow-xl shadow-black/10'}`}
                         >
-                            <svg className="w-4 h-4 transition-transform duration-300 group-hover/basket:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                            <ShoppingBasket className="w-4 h-4 transition-transform duration-300 group-hover/basket:-translate-y-0.5" />
                             <span className="hidden sm:inline">Add to Bag</span>
                         </button>
                         <button
@@ -624,7 +622,7 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
                             className="flex-[2] py-4 rounded-xl text-[9px] font-black uppercase tracking-[0.25em] transition-all duration-300 active:scale-95 disabled:opacity-0 bg-[#eca840] text-white shadow-lg shadow-[#eca840]/20 hover:bg-[#d69635] hover:shadow-2xl hover:shadow-[#eca840]/40 hover:-translate-y-0.5 flex items-center justify-center gap-2 group/buy"
                         >
                             Buy Now
-                            <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover/buy:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover/buy:translate-x-1" />
                         </button>
                     </div>
                 </div>

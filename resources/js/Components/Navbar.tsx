@@ -5,16 +5,29 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import Logo from "./Logo";
 
+import { 
+    ShoppingBag, 
+    Bell, 
+    Heart, 
+    Moon, 
+    Sun, 
+    User, 
+    MapPin, 
+    Search, 
+    Menu, 
+    X,
+    ChevronRight,
+    ArrowRight,
+    ShoppingBasket,
+    Check
+} from "lucide-react";
+
 const ShoppingBagIcon = () => (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-    </svg>
+    <ShoppingBag className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
 );
 
 const BellIcon = () => (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-    </svg>
+    <Bell className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
 );
 
 import { useCart } from "../Context/CartContext";
@@ -22,22 +35,15 @@ import { useWishlist } from "../Context/WishlistContext";
 import { useTheme } from "../Context/ThemeContext";
 
 const WishlistIcon = () => (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M12 20.2 10.7 19C5.8 14.5 2.5 11.5 2.5 7.8A4.8 4.8 0 0 1 7.3 3a5.3 5.3 0 0 1 4.7 2.6A5.3 5.3 0 0 1 16.7 3a4.8 4.8 0 0 1 4.8 4.8c0 3.7-3.3 6.7-8.2 11.2Z" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <Heart className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
 );
 
 const MoonIcon = () => (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M20.4 14.6A8.5 8.5 0 1 1 9.4 3.6a7 7 0 1 0 11 11Z" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <Moon className="w-5 h-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
 );
 
 const SunIcon = () => (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <circle cx="12" cy="12" r="5" strokeWidth="2" />
-        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" strokeWidth="2" strokeLinecap="round" />
-    </svg>
+    <Sun className="w-5 h-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-45" />
 );
 
 const LocationPinIcon = () => (
@@ -48,15 +54,7 @@ const LocationPinIcon = () => (
 );
 
 const AccountIcon = () => (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path 
-            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09A1.65 1.65 0 0 0 20.91 10H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" 
-            strokeWidth="1.45" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-        />
-        <circle cx="12" cy="12" r="3" strokeWidth="1.75" />
-    </svg>
+    <User className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
 );
 
 export default function Navbar() {
@@ -77,6 +75,8 @@ export default function Navbar() {
     const [notifications, setNotifications] = React.useState<any[]>([]);
     const [showNotifications, setShowNotifications] = React.useState(false);
     const [selectedNotification, setSelectedNotification] = React.useState<any>(null);
+    const [cartAnimated, setCartAnimated] = React.useState(false);
+    const [scrolled, setScrolled] = React.useState(false);
 
     const fetchNotifications = async () => {
         if (!isSignedIn) return;
@@ -95,6 +95,24 @@ export default function Navbar() {
             return () => clearInterval(interval);
         }
     }, [isSignedIn]);
+
+    // Cart Bounce Animation Trigger
+    useEffect(() => {
+        if (cartCount > 0) {
+            setCartAnimated(true);
+            const timer = setTimeout(() => setCartAnimated(false), 600);
+            return () => clearTimeout(timer);
+        }
+    }, [cartCount]);
+
+    // Scroll Observer for Fixed Elements
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 100);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const handleMarkAllAsRead = async () => {
         try {
@@ -330,14 +348,16 @@ export default function Navbar() {
                             {/* Shopping Bag */}
                             <button 
                                 onClick={() => setShowSideCart(true)}
-                                className="icon-nav-button relative flex items-center group focus:outline-none"
+                                className={`icon-nav-button relative flex items-center group focus:outline-none ${cartAnimated ? 'animate-bounce' : ''}`}
                                 aria-label="Open Your Bag"
                                 title="Your Bag"
                             >
-                                <span className="text-gray-400 group-hover:text-[#eca840] transition-colors"><ShoppingBagIcon /></span>
+                                <span className={`text-gray-400 group-hover:text-[#eca840] transition-all duration-300 ${cartAnimated ? 'scale-125 text-[#eca840]' : ''}`}>
+                                    <ShoppingBagIcon />
+                                </span>
                                 {cartCount > 0 && (
                                     <span
-                                        className="absolute -top-2 -right-2 bg-[#eca840] text-white text-[8px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-sm transition-transform group-hover:scale-110"
+                                        className={`absolute -top-2 -right-2 bg-[#eca840] text-white text-[8px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-lg transition-all duration-500 ${cartAnimated ? 'scale-125' : 'scale-100'} animate-pulse`}
                                     >
                                         {cartCount}
                                     </span>
@@ -653,6 +673,25 @@ export default function Navbar() {
                         </button>
                     </div>
                 </div>
+            )}
+            {/* Fixed Floating Cart - Modern Flow */}
+            {scrolled && cartCount > 0 && !showSideCart && (
+                <button
+                    onClick={() => setShowSideCart(true)}
+                    className="fixed bottom-8 right-8 z-[60] bg-[#2d2a26] text-white p-5 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:bg-[#eca840] transition-all duration-500 group animate-in slide-in-from-bottom-12 fade-in"
+                    aria-label="Floating Cart"
+                >
+                    <div className="relative">
+                        <ShoppingBag className="w-6 h-6 transition-transform group-hover:scale-110" />
+                        <span className="absolute -top-4 -right-4 bg-[#eca840] text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#2d2a26] shadow-md group-hover:scale-110 transition-transform">
+                            {cartCount}
+                        </span>
+                    </div>
+                    {/* Tooltip */}
+                    <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-white text-gray-900 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl border border-gray-100 pointer-events-none">
+                        View Your Bag
+                    </div>
+                </button>
             )}
         </>
     );
