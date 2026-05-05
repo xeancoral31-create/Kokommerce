@@ -231,18 +231,12 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                         id="mark-all-read-btn"
                         onClick={(e) => {
                           e.stopPropagation();
-                          // Optimistically clear ALL indicators for immediate feedback
-                          setNotifications({ low_stock: [], recent: [] });
-                          
                           Inertia.post(route('seller.notifications.read-all'), {}, {
                             onSuccess: () => {
-                              // Backend synced
+                              // Optimistically clear the recent notifications in local display
+                              setNotifications((prev: any) => ({ ...prev, recent: [] }));
                             },
-                            onError: () => {
-                                // Revert or handle error if needed
-                            },
-                            preserveScroll: true,
-                            preserveState: true
+                            preserveScroll: true
                           });
                         }}
                         className="text-[9px] font-black text-[#eca840] uppercase tracking-widest px-3 py-1.5 rounded-lg bg-orange-50 hover:bg-[#eca840] hover:text-white transition-all duration-300 active:scale-95 border border-[#eca840]/20 hover:border-[#eca840]"
@@ -517,19 +511,22 @@ const SellerLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             <div className="px-8 pb-8 flex gap-3">
               {selectedNotification.id && !String(selectedNotification.id).startsWith('low_stock_') && (
                 <button
-                   onClick={async () => {
-                    const notifId = selectedNotification.id;
-                    // Optimistic update
-                    setNotifications((prev: any) => ({
-                        ...prev,
-                        recent: prev.recent.filter((n: any) => n.id !== notifId)
-                    }));
-                    setSelectedNotification(null);
-
-                    Inertia.post(route('seller.notifications.read', { id: notifId }), {}, {
-                        preserveScroll: true,
-                        preserveState: true
-                    });
+                  onClick={async () => {
+                    try {
+                      const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                      await fetch(`/seller/notifications/${selectedNotification.id}/read`, {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-TOKEN': token || '',
+                          'Accept': 'application/json',
+                        },
+                      });
+                      setSelectedNotification(null);
+                      window.location.reload();
+                    } catch (err) {
+                      console.error('Failed to mark as read:', err);
+                    }
                   }}
                   className="flex-1 py-4 bg-[#eca840] text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#2d2a26] transition-all active:scale-95 shadow-lg shadow-orange-200/50"
                 >
