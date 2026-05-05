@@ -5,7 +5,7 @@ import { Inertia } from '@inertiajs/inertia';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import { useWishlist } from '../../Context/WishlistContext';
 import { useNotifications } from '../../Context/NotificationContext';
-import { Bell, Package, CreditCard, Tag, CheckCircle } from 'lucide-react';
+import { Bell, Package, CreditCard, Tag, CheckCircle, ArrowRight } from 'lucide-react';
 import L from 'leaflet';
 // @ts-ignore
 import 'leaflet/dist/leaflet.css';
@@ -36,6 +36,27 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
         const params = new URLSearchParams(window.location.search);
         return params.get('tab') || 'overview';
     });
+
+    // Synchronize tab state with URL for deep-linking and browser navigation
+    React.useEffect(() => {
+        const handleLocationChange = () => {
+            const params = new URLSearchParams(window.location.search);
+            const tab = params.get('tab') || 'overview';
+            if (tab !== activeTab) {
+                setActiveTab(tab);
+            }
+        };
+
+        window.addEventListener('popstate', handleLocationChange);
+        return () => window.removeEventListener('popstate', handleLocationChange);
+    }, [activeTab]);
+
+    const handleTabChange = (tabId: string) => {
+        setActiveTab(tabId);
+        const url = new URL(window.location.href);
+        url.searchParams.set('tab', tabId);
+        window.history.pushState({}, '', url.toString());
+    };
     const [is2FAEnabled, setIs2FAEnabled] = React.useState(true);
     const [showSuccess, setShowSuccess] = React.useState(false);
     const [isAddressModalOpen, setIsAddressModalOpen] = React.useState(false);
@@ -305,7 +326,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                 {menuItems.map((item) => (
                                     <button
                                         key={item.id}
-                                        onClick={() => setActiveTab(item.id)}
+                                        onClick={() => handleTabChange(item.id)}
                                         className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold transition-all duration-300 group ${
                                             activeTab === item.id 
                                             ? 'bg-[#d4af37] text-white shadow-[0_10px_20px_rgba(212,175,55,0.2)]' 
@@ -379,7 +400,7 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                                                 <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-[0.1em] uppercase">Identity Overview</h3>
                                             </div>
                                             <button 
-                                                onClick={() => setActiveTab('details')}
+                                                onClick={() => handleTabChange('details')}
                                                 className="px-8 py-3 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#d4af37] dark:hover:bg-[#d4af37] dark:hover:text-white transition-all shadow-lg"
                                             >
                                                 Configure Identity
@@ -438,80 +459,131 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
                             )}
 
                             {activeTab === 'notifications' && (
-                                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 px-4">
+                                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-12 duration-700">
+                                    {/* Activity Header Section */}
+                                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
                                         <div>
-                                            <h3 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-[0.2em]">Activity Center</h3>
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-2">Real-time alerts and formal order status history</p>
+                                            <div className="flex items-center gap-3 mb-3">
+                                                <div className="w-10 h-[1px] bg-[#d4af37]"></div>
+                                                <span className="text-[10px] font-black text-[#d4af37] uppercase tracking-[0.4em]">Vault Activity Hub</span>
+                                            </div>
+                                            <h3 className="text-4xl font-black text-gray-900 dark:text-white uppercase tracking-tight leading-none">Notifications</h3>
+                                            <p className="text-xs text-gray-400 dark:text-gray-500 mt-4 max-w-md leading-relaxed font-medium">Your formal archive of artisanal updates, order status transitions, and secure communications from the Kokommerce team.</p>
                                         </div>
-                                        {notifications.length > 0 && (
-                                            <button 
-                                                onClick={markAllAsRead}
-                                                className="px-6 py-2.5 bg-gray-50 dark:bg-white/5 text-gray-400 hover:text-[#d4af37] rounded-xl text-[10px] font-black uppercase tracking-widest border border-gray-100 dark:border-white/5 transition-all"
-                                            >
-                                                Archive All
-                                            </button>
-                                        )}
+                                        
+                                        <div className="flex items-center gap-4">
+                                            <div className="px-5 py-2 bg-gray-50 dark:bg-white/5 rounded-full border border-gray-100 dark:border-white/5">
+                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest tabular-nums">
+                                                    {notifications.filter(n => !n.is_read).length} Unread Updates
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div className="bg-white dark:bg-[#1a1a1a] rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-2xl shadow-black/5 overflow-hidden">
-                                        <div className="p-1 max-h-[600px] overflow-y-auto custom-scrollbar">
+                                    {/* Formal Notification Box with Scroll */}
+                                    <div className="bg-white dark:bg-[#1a1a1a] rounded-[3rem] border border-gray-100 dark:border-white/5 shadow-[0_30px_100px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col h-[700px]">
+                                        {/* Box Header - Synchronized with Navbar Dropdown Style */}
+                                        <div className="px-10 py-8 border-b border-gray-50 dark:border-white/5 flex justify-between items-center bg-gray-50/30 dark:bg-white/[0.01]">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-2xl bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37]">
+                                                    <Bell className="w-6 h-6" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="text-[11px] font-black text-gray-900 dark:text-white uppercase tracking-[0.25em]">Updates Feed</h4>
+                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Real-time Synchronization Enabled</p>
+                                                </div>
+                                            </div>
+
+                                            {notifications.length > 0 && (
+                                                <button 
+                                                    onClick={markAllAsRead}
+                                                    className="px-8 py-3 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#d4af37] dark:hover:bg-[#d4af37] dark:hover:text-white transition-all shadow-lg"
+                                                >
+                                                    Mark all as Read
+                                                </button>
+                                            )}
+                                        </div>
+
+                                        {/* Scrollable Content Area */}
+                                        <div className="flex-1 overflow-y-auto custom-scrollbar p-2">
                                             {notifications.length > 0 ? (
-                                                <div className="divide-y divide-gray-50 dark:divide-white/5">
+                                                <div className="space-y-2">
                                                     {notifications.map((notif) => (
                                                         <div 
                                                             key={notif.id}
                                                             onClick={() => markAsRead(notif.id)}
-                                                            className={`p-8 flex gap-6 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-all cursor-pointer group relative ${!notif.is_read ? 'bg-amber-50/20 dark:bg-[#d4af37]/5' : ''}`}
+                                                            className={`p-10 flex gap-8 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-all cursor-pointer group relative rounded-[2rem] mx-2 ${!notif.is_read ? 'bg-amber-50/30 dark:bg-[#d4af37]/5' : ''}`}
                                                         >
                                                             {!notif.is_read && (
-                                                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-[#d4af37] rounded-r-full shadow-[0_0_15px_rgba(212,175,55,0.4)]"></div>
+                                                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-16 bg-[#d4af37] rounded-r-full shadow-[0_0_20px_rgba(212,175,55,0.4)]"></div>
                                                             )}
-                                                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border ${
+                                                            
+                                                            <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center shrink-0 shadow-sm border transition-all duration-500 group-hover:scale-110 ${
                                                                 notif.type === 'order' ? 'bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-900/20 dark:border-amber-900/30' :
                                                                 notif.type === 'payment' ? 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-900/20 dark:border-emerald-900/30' :
                                                                 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:border-gray-700'
                                                             }`}>
-                                                                {notif.type === 'order' ? <Package className="w-6 h-6" /> : 
-                                                                 notif.type === 'payment' ? <CreditCard className="w-6 h-6" /> : 
-                                                                 <Tag className="w-6 h-6" />}
+                                                                {notif.type === 'order' ? <Package className="w-7 h-7" /> : 
+                                                                 notif.type === 'payment' ? <CreditCard className="w-7 h-7" /> : 
+                                                                 <Tag className="w-7 h-7" />}
                                                             </div>
-                                                            <div className="flex-1 min-w-0">
-                                                                <div className="flex justify-between items-start mb-1">
-                                                                    <div className="flex items-center gap-3">
-                                                                        <h4 className="text-[11px] font-black text-gray-900 dark:text-white uppercase tracking-widest group-hover:text-[#d4af37] transition-colors">{notif.title}</h4>
+
+                                                            <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                                                <div className="flex justify-between items-start mb-2">
+                                                                    <div className="flex items-center gap-4">
+                                                                        <h4 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight group-hover:text-[#d4af37] transition-colors">
+                                                                            {notif.title}
+                                                                        </h4>
                                                                         {!notif.is_read && (
-                                                                            <span className="flex h-1.5 w-1.5 rounded-full bg-[#d4af37] animate-pulse"></span>
+                                                                            <span className="flex h-2.5 w-2.5 rounded-full bg-[#d4af37] animate-pulse"></span>
                                                                         )}
                                                                     </div>
-                                                                    <span className="text-[10px] font-medium text-gray-400 tabular-nums">
+                                                                    <span className="text-[10px] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest tabular-nums bg-gray-50 dark:bg-white/5 px-3 py-1 rounded-lg">
                                                                         {new Date(notif.created_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
                                                                     </span>
                                                                 </div>
-                                                                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium line-clamp-2 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                                                                <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed font-medium max-w-3xl group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
                                                                     {notif.message}
                                                                 </p>
+                                                            </div>
+
+                                                            <div className="shrink-0 flex items-center px-4 opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
+                                                                <div className="w-10 h-10 rounded-full bg-white dark:bg-white/10 shadow-md flex items-center justify-center text-[#d4af37]">
+                                                                    <ArrowRight className="w-5 h-5" />
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <div className="py-32 flex flex-col items-center text-center px-10">
-                                                    <div className="w-20 h-20 rounded-full bg-gray-50 dark:bg-white/5 flex items-center justify-center mb-6">
-                                                        <Bell className="w-8 h-8 text-gray-200 dark:text-gray-800" />
+                                                <div className="h-full flex flex-col items-center justify-center text-center px-10 py-32">
+                                                    <div className="w-24 h-24 rounded-[2rem] bg-gray-50 dark:bg-white/5 flex items-center justify-center mb-8 border border-gray-100 dark:border-white/5">
+                                                        <Bell className="w-10 h-10 text-gray-200 dark:text-gray-800" />
                                                     </div>
-                                                    <h4 className="text-lg font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest">Quiet in the Vault</h4>
-                                                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 max-w-[280px]">Your artisanal activity history is clear. New updates will materialize here.</p>
+                                                    <h4 className="text-xl font-black text-gray-400 dark:text-gray-600 uppercase tracking-[0.3em]">The Vault is Quiet</h4>
+                                                    <p className="text-sm text-gray-400 dark:text-gray-500 mt-4 max-w-[320px] leading-relaxed">Your artisanal activity history is currently clear. New updates will materialize here in real-time.</p>
                                                 </div>
                                             )}
                                         </div>
+
+                                        {/* Box Footer */}
+                                        <div className="px-10 py-6 bg-gray-50/50 dark:bg-white/[0.01] border-t border-gray-50 dark:border-white/5 flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                                <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">System Status: Synchronized</span>
+                                            </div>
+                                            <p className="text-[9px] text-gray-400 dark:text-gray-600 font-bold uppercase tracking-widest">Kokommerce Formal Activity Hub v1.0</p>
+                                        </div>
                                     </div>
                                     
-                                    <div className="px-10 py-6 bg-amber-50/50 dark:bg-amber-900/5 rounded-3xl border border-amber-100/50 dark:border-amber-900/20 flex items-center gap-4">
-                                        <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 shrink-0">
-                                            <Bell className="w-4 h-4" />
+                                    <div className="px-10 py-8 bg-amber-500/[0.03] dark:bg-[#d4af37]/[0.02] rounded-[2rem] border border-[#d4af37]/10 flex items-center gap-6">
+                                        <div className="w-12 h-12 rounded-2xl bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37] shrink-0">
+                                            <CheckCircle className="w-6 h-6" />
                                         </div>
-                                        <p className="text-[10px] text-amber-700/70 dark:text-amber-500/70 font-bold uppercase tracking-widest">Note: Notifications are synchronized in real-time. Unread items are highlighted with the artisanal gold bar.</p>
+                                        <div>
+                                            <p className="text-xs text-[#d4af37] font-black uppercase tracking-[0.1em] mb-1">Professional Assurance</p>
+                                            <p className="text-[11px] text-gray-500 dark:text-gray-400 font-medium leading-relaxed">Notifications are securely isolated to your account and encrypted in transit. Mark items as read to archive them from your active feed.</p>
+                                        </div>
                                     </div>
                                 </div>
                             )}
