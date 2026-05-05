@@ -359,17 +359,19 @@ export default function Navbar() {
                             </button>
 
                             {/* Account Link (Far Right Anchor) */}
-                            <Link 
-                                href="/buyer/account" 
-                                className={`icon-nav-button relative flex items-center group focus:outline-none ${url === '/buyer/account' ? 'text-[#d4af37]' : 'text-gray-400'}`}
-                                aria-label="Account"
-                                title="Account"
-                                data-discover="true"
-                            >
-                                <span className="group-hover:text-[#d4af37] transition-colors">
-                                    <AccountIcon />
-                                </span>
-                            </Link>
+                            {isSignedIn && isBuyer && (
+                                <Link 
+                                    href="/buyer/account" 
+                                    className={`icon-nav-button relative flex items-center group focus:outline-none ${url === '/buyer/account' ? 'text-[#d4af37]' : 'text-gray-400'}`}
+                                    aria-label="Account"
+                                    title="Account"
+                                    data-discover="true"
+                                >
+                                    <span className="group-hover:text-[#d4af37] transition-colors">
+                                        <AccountIcon />
+                                    </span>
+                                </Link>
+                            )}
 
                             <div className="flex items-center gap-4">
                                 {/* Returning Seller Dashboard Signal */}

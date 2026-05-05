@@ -615,21 +615,21 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
                         <button
                             onClick={(e) => { e.stopPropagation(); onBuyNow(localPriceType); }}
                             disabled={product.stock <= 0}
-                            className={`flex-1 py-4 px-2 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 active:scale-95 disabled:opacity-0 border-2 flex items-center justify-center gap-2 group/basket ${
+                            className={`flex-1 py-4 px-2 rounded-xl text-[10px] font-bold uppercase tracking-[0.1em] transition-all duration-300 active:scale-95 disabled:opacity-0 border-2 flex items-center justify-center gap-2 group/basket ${
                                 localPriceType === 'Solo' 
-                                ? 'border-gray-200 dark:border-gray-700 text-[#2d2a26] dark:text-white hover:border-gray-900 dark:hover:border-white hover:bg-gray-50 dark:hover:bg-gray-800/50' 
-                                : 'border-dashed border-gray-300 dark:border-gray-600 text-gray-500 hover:border-solid hover:border-gray-900 dark:hover:border-white hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                                ? 'border-gray-200 dark:border-gray-700 text-[#2d2a26] dark:text-white hover:border-gray-900 dark:hover:border-white hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:shadow-xl' 
+                                : 'border-dashed border-gray-300 dark:border-gray-600 text-gray-500 hover:border-solid hover:border-gray-900 dark:hover:border-white hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:shadow-xl'
                             }`}
                         >
                             <i className="fa-solid fa-cart-arrow-down text-[11px] transition-transform duration-300 group-hover/basket:-translate-y-0.5"></i>
-                            <span className="leading-none">Cart</span>
+                            <span className="leading-none">Add to Cart</span>
                         </button>
                         <button
                             onClick={(e) => { e.stopPropagation(); onBuyNow(localPriceType); }}
                             disabled={product.stock <= 0}
-                            className="flex-[1.5] py-4 px-2 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-500 active:scale-95 disabled:opacity-0 bg-[#d4af37] text-white shadow-lg shadow-[#d4af37]/20 hover:bg-[#1c1917] hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-0.5 flex items-center justify-center gap-2 group/buy border border-[#d4af37]/10"
+                            className="flex-[1.8] py-4 px-2 rounded-xl text-[10px] font-bold uppercase tracking-[0.1em] transition-all duration-500 active:scale-95 disabled:opacity-0 bg-[#d4af37] text-white shadow-lg shadow-[#d4af37]/20 hover:bg-[#1c1917] hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-0.5 flex items-center justify-center gap-2 group/buy border border-[#d4af37]/10"
                         >
-                            <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover/buy:-translate-x-0.5" />
+                            <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover/buy:translate-x-1" />
                             <span className="leading-none">Buy Now</span>
                         </button>
                     </div>

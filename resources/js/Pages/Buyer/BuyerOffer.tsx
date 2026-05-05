@@ -106,11 +106,11 @@ export default function BuyerOffer({ promotions }: { promotions: Bounty[] }) {
         <BuyerLayout>
             <div className="max-w-6xl mx-auto px-6 py-12 md:py-20">
                 <header className="mb-16 md:mb-24 text-center">
-                    <span className="inline-block bg-[#fffcf5] text-[#eca840] px-6 py-2 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6 shadow-sm border border-[#fff8e6]">
+                    <span className="inline-block bg-[#fffcf5] text-[#d4af37] px-6 py-2 rounded-full text-[10px] font-black tracking-[0.3em] uppercase mb-6 shadow-sm border border-[#fff8e6]">
                         CURATED BOUNTIES
                     </span>
                     <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-8 tracking-tighter leading-none">
-                        Seasonal <span className="text-[#eca840]">Treasures.</span>
+                        Seasonal <span className="text-[#d4af37]">Treasures.</span>
                     </h1>
                     <p className="text-gray-400 font-medium max-w-xl mx-auto text-base md:text-lg leading-relaxed">
                         Exclusively gathered for our discerning patrons. Experience the peak of artisanal craft through these limited invitations.
@@ -123,13 +123,13 @@ export default function BuyerOffer({ promotions }: { promotions: Bounty[] }) {
                         <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between px-4 md:-mx-16 z-20 pointer-events-none opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-500">
                             <button
                                 onClick={prevOffer}
-                                className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-md border border-gray-100 flex items-center justify-center text-gray-900 shadow-xl hover:bg-[#eca840] hover:text-white transition-all pointer-events-auto active:scale-90"
+                                className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-md border border-gray-100 flex items-center justify-center text-gray-900 shadow-xl hover:bg-[#d4af37] hover:text-white transition-all pointer-events-auto active:scale-90"
                             >
                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" /></svg>
                             </button>
                             <button
                                 onClick={nextOffer}
-                                className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-md border border-gray-100 flex items-center justify-center text-gray-900 shadow-xl hover:bg-[#eca840] hover:text-white transition-all pointer-events-auto active:scale-90"
+                                className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-md border border-gray-100 flex items-center justify-center text-gray-900 shadow-xl hover:bg-[#d4af37] hover:text-white transition-all pointer-events-auto active:scale-90"
                             >
                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" /></svg>
                             </button>
@@ -139,7 +139,7 @@ export default function BuyerOffer({ promotions }: { promotions: Bounty[] }) {
                         <div key={currentOffer.id} className="animate-in fade-in zoom-in-95 duration-700">
                             <div className="flex flex-col md:flex-row items-center gap-12 md:gap-20">
                                 <div className="w-full md:w-1/2 relative group">
-                                    <div className="absolute -inset-4 bg-[#eca840]/5 rounded-[3rem] blur-2xl group-hover:bg-[#eca840]/10 transition-all duration-700"></div>
+                                    <div className="absolute -inset-4 bg-[#d4af37]/5 rounded-[3rem] blur-2xl group-hover:bg-[#d4af37]/10 transition-all duration-700"></div>
                                     <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-gray-100 aspect-[4/5] md:aspect-square">
                                         <img
                                             src={currentOffer.image || currentOffer.product?.image || "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=800"}
@@ -153,21 +153,21 @@ export default function BuyerOffer({ promotions }: { promotions: Bounty[] }) {
                                                 </span>
                                             ) : (
                                                 <span className="bg-white/90 backdrop-blur-md text-gray-900 text-[10px] font-black px-6 py-2.5 rounded-2xl shadow-xl flex items-center gap-2">
-                                                    <div className="w-1.5 h-1.5 bg-[#eca840] rounded-full animate-ping"></div>
+                                                    <div className="w-1.5 h-1.5 bg-[#d4af37] rounded-full animate-ping"></div>
                                                     AUTHENTIC CRAFT
                                                 </span>
                                             )}
                                         </div>
                                         <div className="absolute bottom-8 right-8 h-12 px-6 bg-black/40 backdrop-blur-md rounded-2xl flex items-center gap-3 border border-white/10">
                                             <span className="text-[10px] font-black text-white tracking-[0.2em] uppercase">Invitation</span>
-                                            <span className="text-sm font-black text-white">{(currentIndex + 1).toString().padStart(2, '0')} <span className="text-[#eca840] invisible md:visible">/</span> {promotions.length.toString().padStart(2, '0')}</span>
+                                            <span className="text-sm font-black text-white">{(currentIndex + 1).toString().padStart(2, '0')} <span className="text-[#d4af37] invisible md:visible">/</span> {promotions.length.toString().padStart(2, '0')}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="w-full md:w-1/2 flex flex-col items-start text-left">
-                                    <div className={`flex items-center gap-4 text-[11px] font-black uppercase tracking-widest mb-6 ${isCurrentExpired ? 'text-red-500' : 'text-[#eca840]'}`}>
-                                        <div className={`w-12 h-px ${isCurrentExpired ? 'bg-red-500' : 'bg-[#eca840]'}`}></div>
+                                    <div className={`flex items-center gap-4 text-[11px] font-black uppercase tracking-widest mb-6 ${isCurrentExpired ? 'text-red-500' : 'text-[#d4af37]'}`}>
+                                        <div className={`w-12 h-px ${isCurrentExpired ? 'bg-red-500' : 'bg-[#d4af37]'}`}></div>
                                         {isCurrentExpired ? 'COLLECTION EXPIRED' : (currentOffer.type === 'percentage' ? `${currentOffer.discount_value}% DISCOUNT` : `₱${currentOffer.discount_value} OFF`)}
                                     </div>
                                     <h2 className={`text-4xl md:text-5xl font-black mb-6 tracking-tight leading-tight ${isCurrentExpired ? 'text-gray-400 italic' : 'text-gray-900'}`}>
@@ -180,13 +180,13 @@ export default function BuyerOffer({ promotions }: { promotions: Bounty[] }) {
                                     <div className="flex flex-col sm:flex-row gap-10 w-full mb-16 items-start">
                                         <div className="bg-white p-8 rounded-[2.5rem] border border-stone-100 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] flex flex-col items-start relative overflow-hidden group w-full sm:w-1/2">
                                             <div className="absolute top-0 right-0 w-24 h-24 bg-stone-50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
-                                            <span className="text-[9px] font-black text-[#eca840]/60 uppercase tracking-[0.4em] mb-4">ACCESS CODE</span>
-                                            <span className={`text-2xl font-[1000] tracking-[0.3em] font-mono transition-colors ${isCurrentExpired ? 'text-gray-300' : 'text-gray-900 group-hover:text-[#eca840]'}`}>{currentOffer.code}</span>
+                                            <span className="text-[9px] font-black text-[#d4af37]/60 uppercase tracking-[0.4em] mb-4">ACCESS CODE</span>
+                                            <span className={`text-2xl font-[1000] tracking-[0.3em] font-mono transition-colors ${isCurrentExpired ? 'text-gray-300' : 'text-gray-900 group-hover:text-[#d4af37]'}`}>{currentOffer.code}</span>
                                         </div>
                                         {currentOffer.product && (
                                             <div className={`p-8 rounded-[2.5rem] border shadow-2xl flex flex-col relative overflow-hidden transition-colors duration-700 w-full sm:w-1/2 ${isCurrentExpired ? 'bg-stone-100 border-stone-200' : 'bg-[#1c1917] border-white/5'}`}>
-                                                <div className="absolute top-0 right-0 p-4 opacity-10 text-[#eca840]"><Star /></div>
-                                                <span className={`text-[9px] font-black uppercase tracking-[0.4em] mb-4 ${isCurrentExpired ? 'text-stone-400' : 'text-[#eca840]/40'}`}>VALUATION</span>
+                                                <div className="absolute top-0 right-0 p-4 opacity-10 text-[#d4af37]"><Star /></div>
+                                                <span className={`text-[9px] font-black uppercase tracking-[0.4em] mb-4 ${isCurrentExpired ? 'text-stone-400' : 'text-[#d4af37]/40'}`}>VALUATION</span>
                                                 <div className="flex items-baseline gap-4 mb-6">
                                                     <span className={`text-3xl font-[1000] tracking-tighter ${isCurrentExpired ? 'text-stone-400' : 'text-white'}`}>₱{(calculateFinalPrice(currentOffer)).toLocaleString()}</span>
                                                     <span className="text-sm font-bold text-gray-500 line-through">₱{Number(currentOffer.product.price).toLocaleString()}</span>
@@ -195,7 +195,7 @@ export default function BuyerOffer({ promotions }: { promotions: Bounty[] }) {
                                                     <CountdownTimer
                                                         endDate={currentOffer.end_date}
                                                         onExpire={() => handleExpire(currentOffer.id)}
-                                                        labelClassName="text-[8px] font-black text-[#eca840]/20 uppercase tracking-[0.4em] mb-3"
+                                                        labelClassName="text-[8px] font-black text-[#d4af37]/20 uppercase tracking-[0.4em] mb-3"
                                                         timeClassName={`text-lg font-[1000] tabular-nums tracking-widest ${isCurrentExpired ? 'text-red-500' : 'text-white'}`}
                                                     />
                                                 </div>
@@ -207,7 +207,7 @@ export default function BuyerOffer({ promotions }: { promotions: Bounty[] }) {
                                         <button
                                             disabled={isCurrentExpired}
                                             onClick={handleClaim}
-                                            className={`w-full sm:flex-1 group relative font-[1000] px-16 py-7 rounded-[2.5rem] text-[10px] uppercase tracking-[0.5em] transition-all duration-700 ${isCurrentExpired ? 'bg-stone-50 text-stone-300 cursor-not-allowed border border-stone-100 shadow-none' : (currentOffer.is_used ? 'bg-stone-200 text-stone-500 cursor-not-allowed' : 'bg-[#1c1917] hover:bg-[#eca840] text-white shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] hover:shadow-[#eca840]/40 active:scale-95')}`}
+                                            className={`w-full sm:flex-1 group relative font-[1000] px-16 py-7 rounded-[2.5rem] text-[10px] uppercase tracking-[0.5em] transition-all duration-700 ${isCurrentExpired ? 'bg-stone-50 text-stone-300 cursor-not-allowed border border-stone-100 shadow-none' : (currentOffer.is_used ? 'bg-stone-200 text-stone-500 cursor-not-allowed' : 'bg-[#1c1917] hover:bg-[#d4af37] text-white shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] hover:shadow-[#d4af37]/40 active:scale-95')}`}
                                         >
                                             <span className="relative z-10 flex items-center justify-center gap-4">
                                                 {isCurrentExpired ? 'PERIOD EXPIRED' : (currentOffer.is_used ? 'REWARD CLAIMED' : 'CLAIM REWARD')}
@@ -236,7 +236,7 @@ export default function BuyerOffer({ promotions }: { promotions: Bounty[] }) {
                             <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
                         </div>
                         <p className="text-gray-400 font-black text-xl italic tracking-tight">The vault is currently sealed. Fresh treasures are being curated.</p>
-                        <button className="mt-8 text-[#eca840] font-black text-xs uppercase tracking-widest border-b-2 border-[#eca840]/20 pb-1 hover:border-[#eca840] transition-all">Return to Gallery</button>
+                        <button className="mt-8 text-[#d4af37] font-black text-xs uppercase tracking-widest border-b-2 border-[#d4af37]/20 pb-1 hover:border-[#d4af37] transition-all">Return to Gallery</button>
                     </div>
                 )}
             </div>
@@ -257,11 +257,11 @@ export default function BuyerOffer({ promotions }: { promotions: Bounty[] }) {
                         
                         <div className="p-12 md:p-16">
                             <div className="w-20 h-20 bg-stone-50 rounded-full flex items-center justify-center mb-10 shadow-sm border border-stone-100">
-                                <svg className="w-10 h-10 text-[#eca840]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                                <svg className="w-10 h-10 text-[#d4af37]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                             </div>
                             
-                            <span className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.4em] mb-4 block">SECURITY PROTOCOL</span>
-                            <h3 className="text-3xl md:text-4xl font-black text-stone-900 mb-6 tracking-tight">Reward Already <span className="text-[#eca840]">Claimed.</span></h3>
+                            <span className="text-[10px] font-black text-[#d4af37] uppercase tracking-[0.4em] mb-4 block">SECURITY PROTOCOL</span>
+                            <h3 className="text-3xl md:text-4xl font-black text-stone-900 mb-6 tracking-tight">Reward Already <span className="text-[#d4af37]">Claimed.</span></h3>
                             <p className="text-stone-500 text-lg leading-relaxed font-medium mb-10">
                                 Our records indicate this artisanal invitation has already been redeemed by your account. Each bounty is strictly limited to a single unique acquisition.
                             </p>
@@ -274,7 +274,7 @@ export default function BuyerOffer({ promotions }: { promotions: Bounty[] }) {
                             </button>
                         </div>
                         
-                        <div className="h-2 bg-[#eca840]"></div>
+                        <div className="h-2 bg-[#d4af37]"></div>
                     </div>
                 </div>
             )}
