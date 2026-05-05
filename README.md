@@ -1,4 +1,4 @@
-## Kokommerce
+# Kokommerce
 
 **Laravel-based D2C e-commerce platform with admin + customer system.**
 
