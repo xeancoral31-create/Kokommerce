@@ -607,21 +607,21 @@ function BuyerProductCard({ product, onBuyNow, onToggleWishlist }: { product: an
                         </div>
                     </div>
 
-                    <div className="flex gap-3">
+                    <div className="flex gap-2.5">
                         <button
                             onClick={(e) => { e.stopPropagation(); onBuyNow(localPriceType); }}
                             disabled={product.stock <= 0}
-                            className={`flex-[1.2] py-4 rounded-xl text-[9px] font-black uppercase tracking-[0.25em] transition-all duration-300 active:scale-95 disabled:opacity-0 border-2 flex items-center justify-center gap-2.5 group/basket ${localPriceType === 'Solo' ? 'border-gray-200 dark:border-gray-700 text-[#2d2a26] dark:text-white hover:border-gray-900 dark:hover:border-white hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:shadow-xl shadow-black/10' : 'border-dashed border-gray-300 dark:border-gray-600 text-gray-500 hover:border-solid hover:border-gray-900 dark:hover:border-white hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:shadow-xl shadow-black/10'}`}
+                            className={`flex-[1.1] py-3 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all duration-300 active:scale-95 disabled:opacity-0 border-2 flex items-center justify-center gap-1.5 group/basket ${localPriceType === 'Solo' ? 'border-gray-200 dark:border-gray-700 text-[#2d2a26] dark:text-white hover:border-gray-900 dark:hover:border-white hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:shadow-xl shadow-black/10' : 'border-dashed border-gray-300 dark:border-gray-600 text-gray-500 hover:border-solid hover:border-gray-900 dark:hover:border-white hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:shadow-xl shadow-black/10'}`}
                         >
                             <ShoppingBasket className="w-4 h-4 transition-transform duration-300 group-hover/basket:-translate-y-0.5" />
-                            <span className="hidden sm:inline">Add to Bag</span>
+                            <span className="leading-none">Add to Bag</span>
                         </button>
                         <button
                             onClick={(e) => { e.stopPropagation(); onBuyNow(localPriceType); }}
                             disabled={product.stock <= 0}
-                            className="flex-[2] py-4 rounded-xl text-[9px] font-black uppercase tracking-[0.25em] transition-all duration-300 active:scale-95 disabled:opacity-0 bg-[#eca840] text-white shadow-lg shadow-[#eca840]/20 hover:bg-[#d69635] hover:shadow-2xl hover:shadow-[#eca840]/40 hover:-translate-y-0.5 flex items-center justify-center gap-2 group/buy"
+                            className="flex-[1.8] py-3 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all duration-300 active:scale-95 disabled:opacity-0 bg-[#eca840] text-white shadow-lg shadow-[#eca840]/20 hover:bg-[#d69635] hover:shadow-2xl hover:shadow-[#eca840]/40 hover:-translate-y-0.5 flex items-center justify-center gap-1.5 group/buy"
                         >
-                            Buy Now
+                            <span className="leading-none">Buy Now</span>
                             <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover/buy:translate-x-1" />
                         </button>
                     </div>
