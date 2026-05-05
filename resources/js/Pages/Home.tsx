@@ -44,14 +44,14 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
     const firstCategory = categories[0];
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col bg-white dark:bg-gray-950 transition-colors duration-500">
             <Navbar />
 
             <main className="flex-grow">
                 {/* Hero Section - Reverted to Professional Video/Static Background */}
                 <section className="hero-section">
                     <div className="container-custom">
-                        <div className="hero-banner relative overflow-hidden h-[500px] rounded-[2.5rem] lg:rounded-[3rem] shadow-2xl border border-gray-100">
+                        <div className="hero-banner relative overflow-hidden h-[500px] rounded-[2.5rem] lg:rounded-[3rem] shadow-2xl border border-gray-100 dark:border-gray-800">
                             <div className="hero-video-wrapper">
                                 <video
                                     autoPlay
@@ -86,7 +86,7 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
                                 <Link
                                     key={cat.id}
                                     href={`/shop?category=${cat.name}`}
-                                    className="group relative h-[400px] bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 transition-all duration-500 hover:shadow-2xl hover:-translate-y-3"
+                                    className="group relative h-[400px] bg-white dark:bg-gray-900 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-gray-800 transition-all duration-500 hover:shadow-2xl hover:-translate-y-3"
                                 >
                                     {/* Background Image from Seller Portal */}
                                     {cat.image ? (
@@ -128,12 +128,12 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
                                 <span className="w-8 h-[2px] bg-[#eca840]"></span>
                                 <span className="text-[10px] font-black text-[#eca840] uppercase tracking-[0.4em]">Latest From Oven</span>
                             </div>
-                            <h2 className="text-5xl font-black text-gray-900 tracking-tighter">New Arrivals</h2>
+                            <h2 className="text-5xl font-black text-gray-900 dark:text-white tracking-tighter">New Arrivals</h2>
                             <p className="text-gray-400 mt-4 max-w-lg font-medium">Be the first to experience our newest artisanal creations, masterfully crafted by our head baker.</p>
                         </div>
                         <Link href="/shop" className="view-all group">
                             <span className="text-[11px] font-black uppercase tracking-widest">See All</span>
-                            <div className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center group-hover:bg-[#eca840] group-hover:text-white transition-all">
+                            <div className="w-10 h-10 rounded-full border border-gray-100 dark:border-gray-800 flex items-center justify-center group-hover:bg-[#eca840] group-hover:text-white transition-all">
                                 <ArrowRight />
                             </div>
                         </Link>
@@ -141,7 +141,7 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 min-h-[600px]">
                         {/* Feature Large Card (Item 1) */}
-                        <div className="lg:col-span-2 group relative overflow-hidden rounded-[3.5rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] bg-white border border-gray-100 transition-all duration-1000 hover:-translate-y-3 flex items-center justify-center">
+                        <div className="lg:col-span-2 group relative overflow-hidden rounded-[3.5rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 transition-all duration-1000 hover:-translate-y-3 flex items-center justify-center">
                             {displayNewArrivals[0] ? (
                                 <>
                                     <div className="absolute inset-0">
@@ -195,7 +195,7 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
                         {/* Stacked Small Cards (Item 2 & 3) */}
                         <div className="flex flex-col gap-10">
                             {[1, 2].map((idx) => (
-                                <div key={idx} className="flex-1 group relative overflow-hidden rounded-[3rem] bg-white border border-gray-100 transition-all duration-700 hover:shadow-2xl hover:-translate-y-2">
+                                <div key={idx} className="flex-1 group relative overflow-hidden rounded-[3rem] bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 transition-all duration-700 hover:shadow-2xl hover:-translate-y-2">
                                     {displayNewArrivals[idx] ? (
                                         <div className="flex flex-col h-full p-4">
                                             <div className="relative h-48 overflow-hidden rounded-[2.5rem] bg-[#faf9f6]">
@@ -206,7 +206,7 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
                                                     onError={(e) => { (e.target as HTMLImageElement).src = "/images/placeholder.png"; }}
                                                 />
                                                 <div className="absolute top-4 left-4">
-                                                    <span className="text-[8px] font-black bg-white/90 backdrop-blur-md text-[#2d2a26] px-3 py-1.5 rounded-lg border border-white/20 shadow-sm uppercase tracking-widest">
+                                                    <span className="text-[8px] font-black bg-white/90 dark:bg-gray-800/90 backdrop-blur-md text-gray-900 dark:text-white px-3 py-1.5 rounded-lg border border-white/20 dark:border-gray-700 shadow-sm uppercase tracking-widest">
                                                         {displayNewArrivals[idx].category?.name || 'Artisanal'}
                                                     </span>
                                                 </div>
@@ -216,12 +216,12 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
                                             </div>
                                             <div className="px-6 py-8 flex-1 flex flex-col justify-between">
                                                 <div>
-                                                    <h3 className="text-xl font-black text-[#2d2a26] group-hover:text-[#eca840] transition-colors tracking-tighter mb-2 line-clamp-1 leading-none">{displayNewArrivals[idx].name}</h3>
+                                                    <h3 className="text-xl font-black text-gray-900 dark:text-white group-hover:text-[#eca840] transition-colors tracking-tighter mb-2 line-clamp-1 leading-none">{displayNewArrivals[idx].name}</h3>
                                                     <p className="text-[11px] text-gray-400 font-bold line-clamp-2 leading-relaxed">{displayNewArrivals[idx].description}</p>
                                                 </div>
-                                                <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-50">
-                                                    <span className="text-xl font-black text-[#2d2a26] tracking-tighter">₱{parseFloat(String(displayNewArrivals[idx].price)).toLocaleString()}</span>
-                                                    <Link href="/shop" className="group/btn2 flex items-center gap-2 text-[9px] font-black text-[#eca840] uppercase tracking-[0.2em] hover:text-[#2d2a26] transition-colors">
+                                                <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-50 dark:border-gray-800">
+                                                    <span className="text-xl font-black text-gray-900 dark:text-white tracking-tighter">₱{parseFloat(String(displayNewArrivals[idx].price)).toLocaleString()}</span>
+                                                    <Link href="/shop" className="group/btn2 flex items-center gap-2 text-[9px] font-black text-[#eca840] uppercase tracking-[0.2em] hover:text-gray-900 dark:hover:text-white transition-colors">
                                                         <span>View</span>
                                                         <ArrowRight className="w-3.5 h-3.5 group-hover/btn2:translate-x-1 transition-transform" />
                                                     </Link>
@@ -249,7 +249,7 @@ export default function Home({ favorites, new_arrivals, categories = [] }: HomeP
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                             {displayFavorites.map((product) => (
-                                <div key={product.id} className="product-card group bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                                <div key={product.id} className="product-card group bg-white dark:bg-gray-900 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-gray-800 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
                                     <div className="relative aspect-square overflow-hidden bg-gray-50 flex items-center justify-center">
                                         {(product.image || product.solo_image || product.img) ? (
                                             <img src={product.image || product.solo_image || product.img} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />

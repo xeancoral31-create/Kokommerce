@@ -45,7 +45,7 @@ export default function Offer({ promotions }: { promotions: Promotion[] }) {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#faf9f6]/80 pt-20">
+    <div className="flex flex-col min-h-screen bg-[#faf9f6]/80 dark:bg-gray-950 transition-colors duration-500 pt-20">
       <Navbar />
       <div className="fixed inset-0 bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')] opacity-20 pointer-events-none z-0"></div>
       
@@ -55,7 +55,7 @@ export default function Offer({ promotions }: { promotions: Promotion[] }) {
           {/* Seasonal Special Hero - Latest Promotion */}
           {promotions.length > 0 && (
             <section className="mb-24">
-              <div className="rounded-[4rem] overflow-hidden flex flex-col md:flex-row shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] border border-white/50 bg-white min-h-[600px]">
+              <div className="rounded-[4rem] overflow-hidden flex flex-col md:flex-row shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] border border-white/50 dark:border-gray-800 bg-white dark:bg-gray-900 min-h-[600px]">
                 <div className="bg-[#1c1917] text-white p-12 md:p-24 w-full md:w-3/5 flex flex-col justify-center items-start relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-96 h-96 bg-[#eca840]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
                   
@@ -144,7 +144,7 @@ export default function Offer({ promotions }: { promotions: Promotion[] }) {
                 return (
                   <div 
                     key={promo.id} 
-                    className="group flex flex-col bg-white rounded-[3.5rem] border border-stone-100/60 overflow-hidden hover:shadow-[0_60px_100px_-30px_rgba(0,0,0,0.08)] transition-all duration-700 hover:-translate-y-4"
+                    className="group flex flex-col bg-white dark:bg-gray-900 rounded-[3.5rem] border border-stone-100/60 dark:border-gray-800 overflow-hidden hover:shadow-[0_60px_100px_-30px_rgba(0,0,0,0.08)] transition-all duration-700 hover:-translate-y-4"
                   >
                     <div className="relative h-80 overflow-hidden bg-[#fcfaf7]">
                       <img 
@@ -222,7 +222,7 @@ export default function Offer({ promotions }: { promotions: Promotion[] }) {
 
           {promotions.length === 0 && (
             <div className="py-40 text-center">
-              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl border border-stone-50">
+              <div className="w-24 h-24 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl border border-stone-50 dark:border-gray-700">
                 <Truck className="w-10 h-10 text-stone-200" />
               </div>
               <h3 className="text-4xl font-[1000] text-[#1c1917] tracking-tighter italic">Restocking Bounties</h3>

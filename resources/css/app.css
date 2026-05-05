@@ -4,11 +4,20 @@
   --color-brand-light: #fef3e9;
   --color-bg-main: #faf9f6;
   --color-bg-alt: #f1efe9;
-  --color-bg-dark: #2a2626;
+  --color-bg-dark: #0a0a0a;
   --color-text-main: #2d2a26;
   --color-text-muted: #6b6661;
   --background: var(--color-bg-main);
   --foreground: var(--color-text-main);
+}
+
+.dark {
+  --background: var(--color-bg-dark);
+  --foreground: #ffffff;
+  --color-text-main: #ffffff;
+  --color-bg-main: var(--color-bg-dark);
+  --color-bg-alt: #1a1a1a;
+  --color-text-muted: #a1a1aa;
 }
 
 body {

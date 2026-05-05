@@ -21,7 +21,7 @@ const ShoppingCartIcon = () => (
     <i className="fa-solid fa-cart-arrow-down"></i>
 );
 
-export default function Wishlist() {
+export default function Wishlist({ is_guest }: { is_guest: boolean }) {
     const { wishlistItems, toggleWishlist } = useWishlist();
     const { addToCart } = useCart();
 
@@ -37,7 +37,7 @@ export default function Wishlist() {
             img: item.img,
             priceType: 'Solo'
         });
-        Inertia.visit('/buyer/cart');
+        Inertia.visit(is_guest ? '/shop' : '/buyer/cart');
     };
 
     return (
@@ -49,7 +49,7 @@ export default function Wishlist() {
                         <h1 className="text-4xl lg:text-5xl font-black text-[#2d2a26] dark:text-white tracking-tighter leading-none uppercase">Wishlist</h1>
                     </div>
                     <Link 
-                        href="/buyer/shop" 
+                        href={is_guest ? '/shop' : '/buyer/shop'} 
                         className="px-8 py-4 bg-gray-900 dark:bg-white dark:text-gray-950 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-black/10 mb-1"
                     >
                         Continue Shopping
@@ -66,7 +66,7 @@ export default function Wishlist() {
                             Save your favorite artisanal treats here to easily find them later and bring a piece of our bakery home.
                         </p>
                         <Link 
-                            href="/buyer/shop" 
+                            href={is_guest ? '/shop' : '/buyer/shop'} 
                             className="text-[#d4af37] font-black text-[11px] uppercase tracking-[0.4em] border-b-2 border-[#d4af37]/20 pb-2 hover:border-[#d4af37] transition-all"
                         >
                             Explore Our Shop

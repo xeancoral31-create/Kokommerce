@@ -80,7 +80,7 @@ export default function About() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen pt-24 bg-[#fdfcfb] selection:bg-[#eca840]/20">
+    <div className="flex flex-col min-h-screen pt-24 bg-[#fdfcfb] dark:bg-gray-950 transition-colors duration-500 selection:bg-[#eca840]/20">
       <Navbar />
       <main className="flex-grow">
 
@@ -157,7 +157,7 @@ export default function About() {
                           <div className="w-8 h-[1px] bg-[#eca840]/20"></div>
                           <span className="text-[11px] font-black text-[#eca840] uppercase tracking-[0.5em] italic">{stories[activeStory].subtitle}</span>
                       </div>
-                      <h2 className="text-6xl md:text-7xl font-black text-[#2d2a26] mb-10 tracking-tighter leading-none">
+                      <h2 className="text-6xl md:text-7xl font-black text-gray-900 dark:text-white mb-10 tracking-tighter leading-none">
                           {stories[activeStory].title}
                       </h2>
                       <div className="w-24 h-1.5 bg-[#eca840]/10 mb-10 rounded-full overflow-hidden relative">
@@ -167,7 +167,7 @@ export default function About() {
                       style={{ width: '100%' }}
                           ></div>
                       </div>
-                      <div className="space-y-10 text-[#2d2a26]/80 leading-relaxed text-2xl font-medium">
+                      <div className="space-y-10 text-gray-700 dark:text-gray-300 leading-relaxed text-2xl font-medium">
                           <p className="italic underline decoration-[#eca840]/30 underline-offset-[12px] decoration-2">"{stories[activeStory].description}"</p>
                       </div>
 
@@ -179,7 +179,7 @@ export default function About() {
                                       key={idx}
                                       onClick={() => setActiveStory(idx)}
                                       className={`h-2.5 rounded-full transition-all duration-500 relative overflow-hidden ${
-                                          idx === activeStory ? 'w-20 bg-[#2d2a26]' : 'w-5 bg-gray-200 hover:bg-[#eca840]/40'
+                                          idx === activeStory ? 'w-20 bg-gray-900 dark:bg-[#eca840]' : 'w-5 bg-gray-200 dark:bg-gray-800 hover:bg-[#eca840]/40'
                                       }`}
                                   >
                                       {idx === activeStory && (

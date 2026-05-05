@@ -80,14 +80,22 @@ Route::prefix('buyer')->group(function () {
     Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
-    Route::get('/wishlist', [BuyerController::class, 'wishlist'])->name('buyer.wishlist');
+    Route::get('/wishlist', function() {
+        if (!auth()->check() || auth()->user()->role !== 'buyer') {
+            return redirect()->route('wishlist');
+        }
+        return (new BuyerController)->wishlist();
+    })->name('buyer.wishlist');
     Route::get('/account', [BuyerController::class, 'account'])->name('buyer.account');
     Route::put('/account', [BuyerController::class, 'updateAccount'])->name('buyer.account.update');
 });
 
 Route::get('/wishlist', function() {
-    return redirect()->route('buyer.wishlist');
-});
+    if (auth()->check() && auth()->user()->role === 'buyer') {
+        return redirect()->route('buyer.wishlist');
+    }
+    return (new BuyerController)->wishlist();
+})->name('wishlist');
 
 // Seller Portal Routes (Fully Functional Module)
 Route::prefix('seller')->group(function () {

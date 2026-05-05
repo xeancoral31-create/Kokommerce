@@ -20,9 +20,7 @@ import {
     Check
 } from "lucide-react";
 
-const BellIcon = () => (
-    <Bell className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-);
+
 
 import { useCart } from "../Context/CartContext";
 import { useWishlist } from "../Context/WishlistContext";
@@ -66,29 +64,11 @@ export default function Navbar() {
         setIsDetectingLocation 
     } = useCart();
     const [showSideCart, setShowSideCart] = React.useState(false);
-    const [notifications, setNotifications] = React.useState<any[]>([]);
-    const [showNotifications, setShowNotifications] = React.useState(false);
-    const [selectedNotification, setSelectedNotification] = React.useState<any>(null);
+
     const [cartAnimated, setCartAnimated] = React.useState(false);
     const [scrolled, setScrolled] = React.useState(false);
 
-    const fetchNotifications = async () => {
-        if (!isSignedIn) return;
-        try {
-            const res = await axios.get('/buyer/notifications');
-            setNotifications(res.data);
-        } catch (err) {
-            console.error("Failed to fetch notifications", err);
-        }
-    };
 
-    useEffect(() => {
-        if (isSignedIn) {
-            fetchNotifications();
-            const interval = setInterval(fetchNotifications, 60000); // Poll every minute
-            return () => clearInterval(interval);
-        }
-    }, [isSignedIn]);
 
     // Cart Bounce Animation Trigger
     useEffect(() => {
@@ -108,26 +88,11 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const handleMarkAllAsRead = async () => {
-        try {
-            await axios.post('/buyer/notifications/read-all');
-            fetchNotifications();
-        } catch (err) {
-            console.error("Failed to mark all as read", err);
-        }
-    };
 
-    const handleMarkAsRead = async (id: number) => {
-        try {
-            await axios.post(`/buyer/notifications/${id}/read`);
-            fetchNotifications();
-        } catch (err) {
-            console.error("Failed to mark as read", err);
-        }
-    };
 
-    const unreadCount = notifications.filter(n => !n.is_read).length;
+
     const isBuyer = url.startsWith('/buyer');
+    const isFeatureDisabled = ['/', '/about', '/shop', '/offer'].includes(url);
 
     const [isViewingAsSeller, setIsViewingAsSeller] = React.useState(false);
     useEffect(() => {
@@ -307,7 +272,7 @@ export default function Navbar() {
 
                             {/* Wishlist Link */}
                             <Link 
-                                href="/wishlist" 
+                                href={isBuyer ? "/buyer/wishlist" : "/wishlist"} 
                                 className="icon-nav-button relative flex items-center group focus:outline-none"
                                 aria-label="Wishlist"
                                 title="Wishlist"
@@ -323,29 +288,26 @@ export default function Navbar() {
                                 )}
                             </Link>
 
-                            {/* Notifications */}
-                            <button 
-                                onClick={() => setShowNotifications(true)}
-                                className="icon-nav-button relative flex items-center group focus:outline-none"
-                                aria-label="Notifications"
-                                title="Notifications"
-                            >
-                                <span className="text-gray-400 group-hover:text-[#d4af37] transition-colors"><BellIcon /></span>
-                                {unreadCount > 0 && (
-                                    <span
-                                        className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-sm transition-transform group-hover:scale-110"
-                                    >
-                                        {unreadCount}
+                            {/* Notification Icon (Only on Buyer/Seller routes, Hidden on disabled routes) */}
+                            {isSignedIn && !isFeatureDisabled && (isBuyer || isViewingAsSeller) && (
+                                <button
+                                    className="icon-nav-button relative flex items-center group focus:outline-none text-gray-400"
+                                    aria-label="Notifications"
+                                    title="Notifications"
+                                >
+                                    <span className="group-hover:text-[#d4af37] transition-colors">
+                                        <Bell className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                                     </span>
-                                )}
-                            </button>
+                                </button>
+                            )}
+
 
                             {/* Shopping Cart */}
                             <button 
-                                onClick={() => setShowSideCart(true)}
-                                className={`icon-nav-button relative flex items-center group focus:outline-none ${cartAnimated ? 'animate-bounce' : ''}`}
+                                onClick={() => !isFeatureDisabled && setShowSideCart(true)}
+                                className={`icon-nav-button relative flex items-center group focus:outline-none ${cartAnimated ? 'animate-bounce' : ''} ${isFeatureDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 aria-label="Open Your Cart"
-                                title="Your Cart"
+                                title={isFeatureDisabled ? "Cart accessible in Portal" : "Your Cart"}
                             >
                                 <span className={`text-gray-400 group-hover:text-[#d4af37] transition-all duration-300 ${cartAnimated ? 'scale-125 text-[#d4af37]' : ''}`}>
                                     <i className="fa-solid fa-cart-arrow-down transition-transform duration-300 group-hover:scale-110"></i>
@@ -548,130 +510,7 @@ export default function Navbar() {
                     </div>
                 </div>
             )}
-            {/* Notifications Modal */}
-            {showNotifications && (
-                <div className="fixed inset-0 z-[1000] flex justify-end overflow-hidden">
-                    <div
-                        className="absolute inset-0 bg-[#2d2a26]/40 backdrop-blur-md animate-in fade-in duration-500"
-                        onClick={() => setShowNotifications(false)}
-                    />
 
-                    <div className="relative w-full max-w-md bg-white dark:bg-gray-950 h-full shadow-[-20px_0_60px_rgba(0,0,0,0.05)] border-l border-gray-50 dark:border-gray-800 flex flex-col animate-in slide-in-from-right duration-500 ease-out transition-colors duration-500">
-                        <div className="px-8 pt-16 pb-6 border-b border-gray-50 dark:border-gray-800 bg-white dark:bg-gray-950 sticky top-0 z-10">
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <h2 className="text-2xl font-black text-gray-900 dark:text-white tracking-tighter uppercase">Notifications</h2>
-                                    <p className="text-[9px] font-black text-[#d4af37] uppercase tracking-[0.3em] mt-1">Stay updated with Kokommerce</p>
-                                </div>
-                                <button
-                                    onClick={() => setShowNotifications(false)}
-                                    className="w-10 h-10 rounded-full border border-gray-100 dark:border-gray-800 flex items-center justify-center text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all"
-                                >
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                                </button>
-                            </div>
-                            <div className="mt-6 flex justify-between items-center">
-                                <span className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">{unreadCount} Unread</span>
-                                {unreadCount > 0 && (
-                                    <button 
-                                        onClick={handleMarkAllAsRead}
-                                        className="text-[9px] font-black text-[#d4af37] uppercase tracking-widest hover:underline"
-                                    >
-                                        Mark all as read
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#fdfcfb]/30 dark:bg-gray-950/30 p-4">
-                            {notifications.length === 0 ? (
-                                <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
-                                    <div className="w-16 h-16 bg-gray-50 dark:bg-gray-900 rounded-full flex items-center justify-center text-gray-300 dark:text-gray-700 mb-4 border border-gray-100 dark:border-gray-800">
-                                        <BellIcon />
-                                    </div>
-                                    <p className="text-[10px] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest">No notifications yet</p>
-                                </div>
-                            ) : (
-                                <div className="space-y-3">
-                                    {notifications.map((n) => (
-                                        <div 
-                                            key={n.id}
-                                            onClick={() => {
-                                                setSelectedNotification(n);
-                                                if (!n.is_read) handleMarkAsRead(n.id);
-                                            }}
-                                            className={`p-5 rounded-2xl border transition-all cursor-pointer group ${n.is_read ? 'bg-white dark:bg-gray-900 border-gray-50 dark:border-gray-800 grayscale-[0.5] opacity-70' : 'bg-white dark:bg-gray-900 border-[#d4af37]/20 dark:border-[#d4af37]/40 shadow-sm shadow-[#d4af37]/5'}`}
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${n.type === 'order_update' ? 'bg-blue-50 text-blue-500' : n.type === 'promotion' ? 'bg-pink-50 text-pink-500' : 'bg-orange-50 text-[#d4af37]'}`}>
-                                                    {n.type.replace('_', ' ')}
-                                                </span>
-                                                <span className="text-[7px] font-bold text-gray-300 dark:text-gray-600 uppercase tracking-tighter italic">
-                                                    {new Date(n.created_at).toLocaleDateString()}
-                                                </span>
-                                            </div>
-                                            <h3 className={`text-[11px] font-black uppercase tracking-tight mb-1 ${n.is_read ? 'text-gray-600 dark:text-gray-400' : 'text-gray-900 dark:text-white group-hover:text-[#d4af37]'}`}>{n.title}</h3>
-                                            <p className="text-[10px] text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">{n.message}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Notification Detail Modal - Compact & Scrollable */}
-            {selectedNotification && (
-                <div className="fixed inset-0 z-[1100] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSelectedNotification(null)} />
-                    <div className="relative w-full max-w-sm bg-white dark:bg-gray-900 rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-gray-100 dark:border-gray-800">
-                        <div className="p-8">
-                            <div className="flex justify-between items-center mb-6">
-                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                                    selectedNotification.type === 'order_update' ? 'bg-blue-50 text-blue-500' : 
-                                    selectedNotification.type === 'promotion' ? 'bg-pink-50 text-pink-500' : 
-                                    'bg-orange-50 text-[#d4af37]'
-                                }`}>
-                                    <BellIcon />
-                                </div>
-                                <button
-                                    onClick={() => setSelectedNotification(null)}
-                                    className="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all"
-                                >
-                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                                </button>
-                            </div>
-
-                            <span className="text-[8px] font-black text-[#d4af37] uppercase tracking-[0.3em] mb-2 block">Official Notification</span>
-                            <h2 className="text-xl font-black text-gray-900 dark:text-white tracking-tight uppercase mb-4 leading-tight">{selectedNotification.title}</h2>
-                            
-                            {/* Scrollable Message Area */}
-                            <div className="max-h-[200px] overflow-y-auto custom-scrollbar pr-2 mb-8">
-                                <p className="text-gray-600 dark:text-gray-400 text-xs leading-relaxed whitespace-pre-wrap">
-                                    {selectedNotification.message}
-                                </p>
-                            </div>
-
-                            <div className="flex items-center justify-between pt-6 border-t border-gray-50 dark:border-gray-800">
-                                <div className="flex flex-col">
-                                    <span className="text-[7px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Received</span>
-                                    <span className="text-[9px] font-bold text-gray-900 dark:text-white">{new Date(selectedNotification.created_at).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</span>
-                                </div>
-                                <span className="text-[8px] font-black text-gray-300 dark:text-gray-600 uppercase tracking-widest italic">
-                                    #{selectedNotification.id.toString().slice(-4)}
-                                </span>
-                            </div>
-                        </div>
-                        <button
-                            onClick={() => setSelectedNotification(null)}
-                            className="w-full bg-[#d4af37] text-white py-5 text-[9px] font-black uppercase tracking-[0.3em] hover:bg-black transition-all"
-                        >
-                            Understood
-                        </button>
-                    </div>
-                </div>
-            )}
 
         </>
     );

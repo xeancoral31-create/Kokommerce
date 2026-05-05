@@ -178,7 +178,9 @@ class BuyerController extends Controller
 
     public function wishlist()
     {
-        return Inertia::render('Buyer/Wishlist');
+        return Inertia::render('Buyer/Wishlist', [
+            'is_guest' => !auth()->check()
+        ]);
     }
 }
 

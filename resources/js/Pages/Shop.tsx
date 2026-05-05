@@ -215,7 +215,7 @@ export default function Shop({ products: initialProducts, categories: dbCategori
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#faf9f6] pt-20">
+    <div className="flex flex-col min-h-screen bg-[#faf9f6] dark:bg-gray-950 transition-colors duration-500 pt-20">
       <Navbar />
       <main className="flex-grow">
 
@@ -237,7 +237,7 @@ export default function Shop({ products: initialProducts, categories: dbCategori
         {/* Selection Modal */}
         {selectionProduct && (
           <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6 backdrop-blur-md bg-[#1a1816]/60">
-            <div className="bg-white rounded-[2.5rem] w-full max-w-xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] animate-in zoom-in-95 fade-in duration-300 border border-white/20">
+            <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] w-full max-w-xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] animate-in zoom-in-95 fade-in duration-300 border border-white/20 dark:border-gray-800">
               <div className="p-12">
                 <div className="flex justify-between items-start mb-10">
                   <div>
@@ -245,7 +245,7 @@ export default function Shop({ products: initialProducts, categories: dbCategori
                       <div className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse"></div>
                       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#d4af37]">Adding Item</span>
                     </div>
-                    <h2 className="text-4xl font-black text-[#2d2a26] tracking-tighter leading-none">Choose Option</h2>
+                    <h2 className="text-4xl font-black text-gray-900 dark:text-white tracking-tighter leading-none">Choose Option</h2>
                   </div>
                   <button onClick={() => setSelectionProduct(null)} className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-gray-900 hover:text-white transition-all transform hover:rotate-90 duration-300">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -268,13 +268,13 @@ export default function Shop({ products: initialProducts, categories: dbCategori
                     <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">
                       {selectionProduct.category?.name?.toLowerCase() === 'cake' ? 'Premium Cake' : 'Product'}
                     </span>
-                    <h3 className="text-2xl font-black text-[#2d2a26] leading-tight mb-2 tracking-tight">{selectionProduct.name}</h3>
+                    <h3 className="text-2xl font-black text-gray-900 dark:text-white leading-tight mb-2 tracking-tight">{selectionProduct.name}</h3>
                     <div className="flex items-center gap-3">
                       <span className="text-3xl font-black text-[#d4af37] tabular-nums tracking-tighter">
                         ₱{parseFloat(String(priceType === 'Solo' ? selectionProduct.solo_price : selectionProduct.package_price)).toLocaleString()}
                       </span>
                       <div className="h-4 w-px bg-gray-200"></div>
-                      <span className="text-[10px] font-black text-[#2d2a26] uppercase tracking-widest bg-white px-3 py-1.5 rounded-lg border border-gray-100 shadow-sm">
+                      <span className="text-[10px] font-black text-gray-900 dark:text-white uppercase tracking-widest bg-white dark:bg-gray-800 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm">
                         {selectionProduct.category?.name?.toLowerCase() === 'cake'
                           ? (priceType === 'Solo' ? 'Slice' : 'Whole')
                           : priceType} Mode
@@ -431,7 +431,7 @@ export default function Shop({ products: initialProducts, categories: dbCategori
             </aside>
 
             <div className="flex-1">
-              <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-12 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+              <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-12 bg-white dark:bg-gray-900 p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
                 <div className="relative w-full md:w-96 group">
                   <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-[#eca840] transition-colors" />
                   <input
@@ -521,14 +521,14 @@ function ShopProductCard({ product, onOpenSelection }: { product: Product, onOpe
   };
 
   return (
-    <div className={`bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 flex flex-col group transition-all duration-700 ${isSoldOut ? 'opacity-80' : 'hover:shadow-[0_45px_90px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-3'}`}>
+    <div className={`bg-white dark:bg-gray-900 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-gray-800 flex flex-col group transition-all duration-700 ${isSoldOut ? 'opacity-80' : 'hover:shadow-[0_45px_90px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-3'}`}>
       <div className="relative aspect-[4/5] overflow-hidden bg-[#faf9f6] m-3 rounded-[2rem]">
         <img src={getProductImage(product, 'Solo')} alt={product.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
 
 
         {/* Badges */}
         <div className="absolute top-5 left-5 flex flex-col gap-2">
-          {product.is_top_rated && <span className="bg-white/95 backdrop-blur-md text-[#2d2a26] text-[8px] font-black px-4 py-2 rounded-xl shadow-lg border border-white tracking-[0.2em] uppercase">Top Rated</span>}
+          {product.is_top_rated && <span className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md text-gray-900 dark:text-white text-[8px] font-black px-4 py-2 rounded-xl shadow-lg border border-white dark:border-gray-700 tracking-[0.2em] uppercase">Top Rated</span>}
           {product.is_new && <span className="bg-[#eca840] text-white text-[8px] font-black px-4 py-2 rounded-xl shadow-lg border border-[#eca840] tracking-[0.2em] uppercase">New Arrival</span>}
           {product.status === 'pre_order' && <span className="bg-blue-600 text-white text-[8px] font-black px-4 py-2 rounded-xl shadow-lg border border-blue-600 tracking-[0.2em] uppercase">Pre-Order</span>}
         </div>
@@ -555,14 +555,14 @@ function ShopProductCard({ product, onOpenSelection }: { product: Product, onOpe
           <div className="flex items-center text-[#eca840] text-[10px] font-black"><Star className="w-3 h-3 fill-current mr-1.5" /> {product.rating || '4.9'}</div>
         </div>
 
-        <h3 className="text-2xl font-black text-[#2d2a26] group-hover:text-[#eca840] transition-colors tracking-tighter leading-tight mb-3">{product.name}</h3>
+        <h3 className="text-2xl font-black text-gray-900 dark:text-white group-hover:text-[#eca840] transition-colors tracking-tighter leading-tight mb-3">{product.name}</h3>
         <p className="text-[11px] text-gray-400 mb-8 line-clamp-2 font-bold leading-relaxed">{product.description}</p>
 
         <div className="mt-auto">
           <div className="flex items-end justify-between mb-8 pb-8 border-b border-gray-50">
             <div className="flex flex-col">
               <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest mb-1">Price</span>
-              <span className="text-2xl font-black text-[#2d2a26] tracking-tighter">₱{parseFloat(String(product.solo_price)).toLocaleString()}</span>
+              <span className="text-2xl font-black text-gray-900 dark:text-white tracking-tighter">₱{parseFloat(String(product.solo_price)).toLocaleString()}</span>
             </div>
             <div className="flex flex-col items-end">
               <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest mb-1">Stock Level</span>
