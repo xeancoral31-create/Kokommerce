@@ -112,10 +112,13 @@ const CheckoutForm = ({ total, subtotal, deliveryFee, deliveryAddress, itemsData
                 type: ewalletProvider === 'maya' ? 'paymaya' : 'gcash',
                 items_data: itemsData
             });
-            const { source_id, checkout_url } = res.data;
+            const { source_id, checkout_url, mock } = res.data;
             setPaymongoSource({ source_id, checkout_url });
             setPollStatus('waiting');
             setEwalletModal(true);
+            if (mock) {
+                // If it's a mock, we can optionally notify the user it's a simulation for small amounts
+            }
             startPolling(source_id);
             window.open(checkout_url, '_blank', 'noopener,noreferrer');
         } catch (err: any) {
@@ -269,7 +272,11 @@ const CheckoutForm = ({ total, subtotal, deliveryFee, deliveryAddress, itemsData
                                         <svg className="w-8 h-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                     </div>
                                     <p className="text-sm font-black uppercase tracking-widest mb-2 text-gray-900">Waiting for {providerLabel}</p>
-                                    <p className="text-[10px] text-gray-400 mb-8 italic">Complete payment in the new tab, then return here.</p>
+                                    <p className="text-[10px] text-gray-400 mb-8 italic">
+                                        {total < 100 
+                                            ? "Small amount detected. Processing via secure simulation." 
+                                            : "Complete payment in the new tab, then return here."}
+                                    </p>
                                     
                                     {paymongoSource?.checkout_url && (
                                         <a href={paymongoSource.checkout_url} target="_blank" rel="noopener noreferrer" className="block w-full py-4 bg-gray-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest mb-4 hover:bg-black transition-all">
