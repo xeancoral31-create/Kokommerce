@@ -345,47 +345,57 @@ export default function Navbar() {
                                                             <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-relaxed">No notifications yet.<br/>Your artisanal journey starts here.</p>
                                                         </div>
                                                     ) : (
-                                                        <div className="divide-y divide-gray-50 dark:divide-gray-900">
-                                                            {notifications.map((notif) => (
-                                                                <div 
-                                                                    key={notif.id} 
-                                                                    className={`px-8 py-6 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors cursor-pointer relative group ${!notif.is_read ? 'bg-blue-50/10 dark:bg-blue-900/5' : ''}`}
-                                                                    onClick={() => markAsRead(notif.id)}
-                                                                >
-                                                                    {!notif.is_read && (
-                                                                        <div className="absolute left-3 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-[#d4af37] rounded-full"></div>
-                                                                    )}
-                                                                    <div className="flex gap-4">
-                                                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                                                                            notif.type === 'order' ? 'bg-amber-50 text-amber-600 dark:bg-amber-900/20' :
-                                                                            notif.type === 'payment' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20' :
-                                                                            'bg-gray-100 text-gray-600 dark:bg-gray-800'
-                                                                        }`}>
-                                                                            {notif.type === 'order' ? <Package className="w-5 h-5" /> : 
-                                                                             notif.type === 'payment' ? <CreditCard className="w-5 h-5" /> : 
-                                                                             <Tag className="w-5 h-5" />}
-                                                                        </div>
-                                                                        <div className="flex flex-col gap-1 pr-4">
-                                                                            <div className="flex justify-between items-start">
-                                                                                <h4 className="text-[10px] font-black text-gray-900 dark:text-white uppercase tracking-wider">{notif.title}</h4>
-                                                                                <span className="text-[8px] font-medium text-gray-400">
-                                                                                    {new Date(notif.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' })}
-                                                                                </span>
+                                                                <div className="divide-y divide-gray-50 dark:divide-white/5">
+                                                                    {notifications.map((notif) => (
+                                                                        <div 
+                                                                            key={notif.id} 
+                                                                            className={`px-8 py-7 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-all cursor-pointer relative group ${!notif.is_read ? 'bg-amber-50/20 dark:bg-[#d4af37]/5' : ''}`}
+                                                                            onClick={() => markAsRead(notif.id)}
+                                                                        >
+                                                                            {!notif.is_read && (
+                                                                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-10 bg-[#d4af37] rounded-r-full shadow-[0_0_10px_rgba(212,175,55,0.3)]"></div>
+                                                                            )}
+                                                                            <div className="flex gap-5">
+                                                                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border transition-transform group-hover:scale-105 ${
+                                                                                    notif.type === 'order' ? 'bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-900/20 dark:border-amber-900/30' :
+                                                                                    notif.type === 'payment' ? 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-900/20 dark:border-emerald-900/30' :
+                                                                                    'bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:border-gray-700'
+                                                                                }`}>
+                                                                                    {notif.type === 'order' ? <Package className="w-5 h-5" /> : 
+                                                                                     notif.type === 'payment' ? <CreditCard className="w-5 h-5" /> : 
+                                                                                     <Tag className="w-5 h-5" />}
+                                                                                </div>
+                                                                                <div className="flex-1 min-w-0">
+                                                                                    <div className="flex justify-between items-start mb-1">
+                                                                                        <div className="flex items-center gap-2">
+                                                                                            <h4 className="text-[10px] font-black text-gray-900 dark:text-white uppercase tracking-widest group-hover:text-[#d4af37] transition-colors">{notif.title}</h4>
+                                                                                            {!notif.is_read && (
+                                                                                                <span className="flex h-1.5 w-1.5 rounded-full bg-[#d4af37] animate-pulse"></span>
+                                                                                            )}
+                                                                                        </div>
+                                                                                        <span className="text-[9px] font-medium text-gray-400 tabular-nums shrink-0">
+                                                                                            {new Date(notif.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <p className="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed font-medium line-clamp-2 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">
+                                                                                        {notif.message}
+                                                                                    </p>
+                                                                                </div>
                                                                             </div>
-                                                                            <p className="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 font-medium">
-                                                                                {notif.message}
-                                                                            </p>
                                                                         </div>
-                                                                    </div>
+                                                                    ))}
                                                                 </div>
-                                                            ))}
-                                                        </div>
                                                     )}
                                                 </div>
-                                                <div className="px-8 py-4 bg-gray-50/30 dark:bg-gray-900/30 border-t border-gray-50 dark:border-gray-800 text-center">
-                                                    <button className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] hover:text-[#d4af37] transition-colors">
+                                                <div className="px-8 py-5 bg-gray-50/50 dark:bg-white/[0.02] border-t border-gray-50 dark:border-white/5 text-center">
+                                                    <Link 
+                                                        href="/buyer/account?tab=notifications"
+                                                        onClick={() => setShowNotifications(false)}
+                                                        className="text-[9px] font-black text-[#d4af37] uppercase tracking-[0.25em] hover:text-black dark:hover:text-white transition-all inline-flex items-center gap-2 group/all"
+                                                    >
                                                         View all activity
-                                                    </button>
+                                                        <ArrowRight className="w-3 h-3 transition-transform group-hover/all:translate-x-1" />
+                                                    </Link>
                                                 </div>
                                             </div>
                                         </>

@@ -32,7 +32,10 @@ export default function BuyerAccount({ buyer, orders_count = 0, offers_count = 0
     const fileInputRef = React.useRef<HTMLInputElement>(null);
     const [isUpdatingImage, setIsUpdatingImage] = React.useState(false);
 
-    const [activeTab, setActiveTab] = React.useState('overview');
+    const [activeTab, setActiveTab] = React.useState(() => {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('tab') || 'overview';
+    });
     const [is2FAEnabled, setIs2FAEnabled] = React.useState(true);
     const [showSuccess, setShowSuccess] = React.useState(false);
     const [isAddressModalOpen, setIsAddressModalOpen] = React.useState(false);
