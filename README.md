@@ -1,64 +1,217 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## Kokommerce
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Laravel-based D2C e-commerce platform with admin + customer system.**
 
-## About Laravel
+[![Backend](https://img.shields.io/badge/Backend-Laravel_8-ff2d20?logo=laravel\&logoColor=white)](#tech-stack)
+[![Database](https://img.shields.io/badge/Database-MySQL-00758f?logo=mysql\&logoColor=white)](#tech-stack)
+[![Auth](https://img.shields.io/badge/Auth-Clerk-6c47ff)](#tech-stack)
+[![Payments](https://img.shields.io/badge/Payments-Stripe_%2B_PayMongo-635bff?logo=stripe\&logoColor=white)](#tech-stack)
+[![Maps](https://img.shields.io/badge/Maps-Leaflet-199900?logo=leaflet\&logoColor=white)](#tech-stack)
+[![License](https://img.shields.io/badge/license-MIT-8b5cf6)](LICENSE)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Scalable e-commerce backend focused on structured data modeling, modular features, and real-world deployment readiness.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Features
 
-## Learning Laravel
+### 🛍️ Customer System
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* Product catalog browsing
+* Category-based organization
+* Cart & checkout flow
+* Order tracking
+* Promotions & discount codes
+* Loyalty system (points & tiers)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🛠️ Admin System
 
-## Laravel Sponsors
+* Product & category management
+* Order management
+* Promotion control
+* Activity logs & monitoring
+* Notifications system
+* Help ticket management
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+---
 
-### Premium Partners
+## 🧱 Tech Stack
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+**Backend**
 
-## Contributing
+* Laravel 8.x
+* PHP ^8.2
+* Eloquent ORM
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**Database**
 
-## Code of Conduct
+* MySQL
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Integrations**
 
-## Security Vulnerabilities
+* Clerk (authentication)
+* Stripe & PayMongo (payments)
+* Leaflet (mapping)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🏗️ Architecture
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```id="bmnx8n"
+Client / Frontend
+        ↓
+Laravel API Layer
+        ↓
+MySQL Database
+```
+
+* RESTful API design
+* Clear separation of concerns
+* Modular and scalable structure
+
+---
+
+## 🗄️ Database Overview
+
+### Core Tables
+
+* `users` — admin/operator accounts
+* `buyers` — customer records
+* `products`
+* `categories`
+* `orders`
+* `order_items`
+
+### Supporting Tables
+
+* `promotions`
+* `activity_logs`
+* `notifications`
+* `help_tickets`
+* `store_settings`
+* `seller_whitelist`
+
+### Key Relationships
+
+* Buyer → Orders (1:N)
+* Orders → Order Items (1:N)
+* Products → Order Items (1:N)
+* Users → Logs / Notifications / Tickets
+
+---
+
+## ⚙️ Getting Started
+
+### 1. Clone
+
+```bash id="g2w8yh"
+git clone https://github.com/your-username/kokommerce.git
+cd kokommerce
+```
+
+---
+
+### 2. Install Dependencies
+
+```bash id="1wdjhj"
+composer install
+```
+
+---
+
+### 3. Environment Setup
+
+```bash id="1u2p8h"
+cp .env.example .env
+php artisan key:generate
+```
+
+Update `.env`:
+
+```env id="r45dtt"
+DB_DATABASE=your_db
+DB_USERNAME=your_user
+DB_PASSWORD=your_pass
+```
+
+---
+
+### 4. Run Database
+
+```bash id="q3kk1v"
+php artisan migrate
+php artisan db:seed
+```
+
+---
+
+### 5. Start Server
+
+```bash id="0vtp5o"
+php artisan serve
+```
+
+---
+
+## 🧪 Development Commands
+
+```bash id="o1ru1p"
+# Reset database
+php artisan migrate:fresh --seed
+
+# Clear caches
+php artisan optimize:clear
+
+# Run tests
+php artisan test
+```
+
+---
+
+## 💾 Backup
+
+```bash id="l5f8m2"
+mysqldump -u user -p database_name > kokommerce_backup.sql
+```
+
+---
+
+## 🔐 Environment Variables
+
+```env id="3h5f1n"
+APP_KEY=
+
+DB_DATABASE=
+DB_USERNAME=
+DB_PASSWORD=
+
+CLERK_SECRET=
+STRIPE_KEY=
+PAYMONGO_KEY=
+```
+
+---
+
+## 🧠 Design Decisions
+
+* Separate **users (admins)** and **buyers (customers)**
+* Denormalized `items_data` for order snapshot consistency
+* Flexible promotion system (percentage / fixed)
+* JSON fields for extensibility (tags, metadata)
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repo
+2. Create a feature branch
+3. Commit changes
+4. Open a pull request
+
+---
+
+## 📄 License
+
+MIT License — see `LICENSE` for details.
+
+---
